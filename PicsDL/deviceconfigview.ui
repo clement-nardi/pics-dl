@@ -1,0 +1,1083 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DeviceConfigView</class>
+ <widget class="QWizard" name="DeviceConfigView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1312</width>
+    <height>866</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Wizard</string>
+  </property>
+  <widget class="QWizardPage" name="TransferPage">
+   <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,4">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>200</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Download</string>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QRadioButton" name="newRadio">
+           <property name="text">
+            <string>Download only NEW files (recommended)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="allRadio">
+           <property name="text">
+            <string>Download ALL files</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="filterType">
+           <property name="sizeAdjustPolicy">
+            <enum>QComboBox::AdjustToContents</enum>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>30</height>
+            </size>
+           </property>
+           <item>
+            <property name="text">
+             <string>From all directories</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>From all directories except:</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Only from these directories:</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="filter"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="minimumSize">
+         <size>
+          <width>350</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Organize</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Download files to:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="DLToLine"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="openButton">
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Open</string>
+               </property>
+               <property name="icon">
+                <iconset resource="resources.qrc">
+                 <normaloff>:/icons/folder</normaloff>:/icons/folder</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>New arborescence/name:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="newNameEdit"/>
+           </item>
+           <item>
+            <widget class="QTableWidget" name="keywordsTable">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="verticalScrollBarPolicy">
+              <enum>Qt::ScrollBarAlwaysOff</enum>
+             </property>
+             <property name="horizontalScrollBarPolicy">
+              <enum>Qt::ScrollBarAlwaysOff</enum>
+             </property>
+             <property name="sizeAdjustPolicy">
+              <enum>QAbstractScrollArea::AdjustToContents</enum>
+             </property>
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::NoSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <attribute name="horizontalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderDefaultSectionSize">
+              <number>19</number>
+             </attribute>
+             <attribute name="verticalHeaderMinimumSectionSize">
+              <number>18</number>
+             </attribute>
+             <attribute name="verticalHeaderStretchLastSection">
+              <bool>false</bool>
+             </attribute>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>day</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>New Row</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>dCom</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>sCom</string>
+              </property>
+             </row>
+             <column>
+              <property name="text">
+               <string>Keyword</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Value</string>
+              </property>
+             </column>
+             <item row="0" column="0">
+              <property name="text">
+               <string>yyyy</string>
+              </property>
+             </item>
+             <item row="0" column="1">
+              <property name="text">
+               <string>Year (4 digits)</string>
+              </property>
+             </item>
+             <item row="1" column="0">
+              <property name="text">
+               <string>yy</string>
+              </property>
+             </item>
+             <item row="1" column="1">
+              <property name="text">
+               <string>Year (2 digits)</string>
+              </property>
+             </item>
+             <item row="2" column="0">
+              <property name="text">
+               <string>MMMM</string>
+              </property>
+             </item>
+             <item row="2" column="1">
+              <property name="text">
+               <string>Month (full)</string>
+              </property>
+             </item>
+             <item row="3" column="0">
+              <property name="text">
+               <string>MMM</string>
+              </property>
+             </item>
+             <item row="3" column="1">
+              <property name="text">
+               <string>Month (abbreviated)</string>
+              </property>
+             </item>
+             <item row="4" column="0">
+              <property name="text">
+               <string>MM</string>
+              </property>
+             </item>
+             <item row="4" column="1">
+              <property name="text">
+               <string>Month (2 digits)</string>
+              </property>
+             </item>
+             <item row="5" column="0">
+              <property name="text">
+               <string>dddd</string>
+              </property>
+             </item>
+             <item row="5" column="1">
+              <property name="text">
+               <string>Day of Week (full)</string>
+              </property>
+             </item>
+             <item row="6" column="0">
+              <property name="text">
+               <string>ddd</string>
+              </property>
+             </item>
+             <item row="6" column="1">
+              <property name="text">
+               <string>Day of Week (abbreviated)</string>
+              </property>
+             </item>
+             <item row="7" column="0">
+              <property name="text">
+               <string>dd</string>
+              </property>
+             </item>
+             <item row="7" column="1">
+              <property name="text">
+               <string>Day (2 digits)</string>
+              </property>
+             </item>
+             <item row="8" column="0">
+              <property name="text">
+               <string>HH</string>
+              </property>
+             </item>
+             <item row="8" column="1">
+              <property name="text">
+               <string>Hour (2 digits)</string>
+              </property>
+             </item>
+             <item row="9" column="0">
+              <property name="text">
+               <string>mm</string>
+              </property>
+             </item>
+             <item row="9" column="1">
+              <property name="text">
+               <string>Minute (2 digits)</string>
+              </property>
+             </item>
+             <item row="10" column="0">
+              <property name="text">
+               <string>ss</string>
+              </property>
+             </item>
+             <item row="10" column="1">
+              <property name="text">
+               <string>Second (2 digits)</string>
+              </property>
+             </item>
+             <item row="11" column="0">
+              <property name="text">
+               <string>oName</string>
+              </property>
+             </item>
+             <item row="11" column="1">
+              <property name="text">
+               <string>Original file name</string>
+              </property>
+             </item>
+             <item row="12" column="0">
+              <property name="text">
+               <string>dCom</string>
+              </property>
+             </item>
+             <item row="12" column="1">
+              <property name="text">
+               <string>Dayly comment</string>
+              </property>
+              <property name="toolTip">
+               <string>requires 1 user input per day</string>
+              </property>
+             </item>
+             <item row="13" column="0">
+              <property name="text">
+               <string>sCom</string>
+              </property>
+             </item>
+             <item row="13" column="1">
+              <property name="text">
+               <string>Session comment</string>
+              </property>
+              <property name="toolTip">
+               <string>requires 1 user input per session</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>100</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="FillCommentsButton">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="text">
+                <string>Fill Comments</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="allowEXIFBox">
+             <property name="text">
+              <string>Allow EXIF Tags. keyword = &lt;tagName&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <item>
+                <widget class="QCheckBox" name="UseEXIFDateBox">
+                 <property name="text">
+                  <string>Use EXIF Date (recommended)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <item>
+                  <widget class="QPushButton" name="seeAvTagsButton">
+                   <property name="text">
+                    <string>See available tags for selected file</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_5">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,0">
+      <item>
+       <widget class="QTableView" name="tableView">
+        <property name="minimumSize">
+         <size>
+          <width>500</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="autoCheckBox" name="autoDLBox" native="true"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWizardPage" name="GeoTagPage">
+   <layout class="QVBoxLayout" name="verticalLayout_10" stretch="0,0,1,0">
+    <item>
+     <widget class="QCheckBox" name="GeoTagBox">
+      <property name="text">
+       <string>Geo-tag the downloaded pictures</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="title">
+       <string>Tracking method</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <widget class="QRadioButton" name="TrackFolderRadio">
+         <property name="text">
+          <string>Folder containing tracking logs</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QLineEdit" name="TrackFolderLine"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="trackOpenButton">
+               <property name="text">
+                <string>Open</string>
+               </property>
+               <property name="icon">
+                <iconset resource="resources.qrc">
+                 <normaloff>:/icons/folder</normaloff>:/icons/folder</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Currently supported track file formats are GPX, NMEA RMC/GGA/GLL, KML, IGC, Garmin XML and TCX, Magellan PMGNTRK, Honeywell PTNTHPR, and Winplus Beacon text files. </string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="OpenPathsRadio">
+         <property name="text">
+          <string>OpenPaths.cc</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Access Key:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="OPAccessKeyLine">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <item>
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>Secret Key:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="OPSecretKeyLine"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>17</width>
+        <height>496</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,0">
+      <item>
+       <spacer name="horizontalSpacer_8">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="autoCheckBox" name="autoGeotagBox" native="true"/>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>autoCheckBox</class>
+   <extends>QWidget</extends>
+   <header>autocheckbox.h</header>
+   <container>1</container>
+   <slots>
+    <signal>clicked()</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>DLToLine</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>221</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1126</x>
+     <y>29</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>newNameEdit</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>348</x>
+     <y>352</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1311</x>
+     <y>30</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>newRadio</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>200</x>
+     <y>113</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1311</x>
+     <y>30</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>allRadio</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>88</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1080</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DeviceConfigView</sender>
+   <signal>currentIdChanged(int)</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>SaveConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>507</x>
+     <y>330</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>507</x>
+     <y>330</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>allowEXIFBox</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>691</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>10</x>
+     <y>795</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseEXIFDateBox</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>183</x>
+     <y>720</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>9</x>
+     <y>737</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>GeoTagBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox_3</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>88</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>GeoTagBox</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>69</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>12</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TrackFolderRadio</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>73</x>
+     <y>97</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>329</x>
+     <y>9</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>OpenPathsRadio</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>76</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>446</x>
+     <y>16</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>TrackFolderLine</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>59</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>575</x>
+     <y>9</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>OPAccessKeyLine</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>73</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>682</x>
+     <y>13</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>OPSecretKeyLine</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>73</x>
+     <y>89</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>793</x>
+     <y>13</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DeviceConfigView</sender>
+   <signal>finished(int)</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>SaveConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>655</x>
+     <y>432</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>655</x>
+     <y>432</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>autoDLBox</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1298</x>
+     <y>854</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>655</x>
+     <y>432</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>autoGeotagBox</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>87</x>
+     <y>79</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>655</x>
+     <y>432</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>filterType</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>165</x>
+     <y>155</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>804</x>
+     <y>35</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>filter</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>743</x>
+     <y>46</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>CopyToConfig()</slot>
+  <slot>SaveConfig()</slot>
+ </slots>
+</ui>

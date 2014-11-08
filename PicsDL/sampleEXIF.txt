@@ -1,0 +1,290 @@
+Dumping IFD '0'...
+Dumping exif content (11 entries)...
+  Tag: 0x10e ('ImageDescription')
+    Format: 2 ('ASCII')
+    Components: 32
+    Size: 32
+    Value:                                
+  Tag: 0x10f ('Make')
+    Format: 2 ('ASCII')
+    Components: 5
+    Size: 5
+    Value: SONY
+  Tag: 0x110 ('Model')
+    Format: 2 ('ASCII')
+    Components: 9
+    Size: 9
+    Value: DSC-TX30
+  Tag: 0x112 ('Orientation')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Top-left
+  Tag: 0x11a ('XResolution')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value: 350
+  Tag: 0x11b ('YResolution')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value: 350
+  Tag: 0x128 ('ResolutionUnit')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: pouces
+  Tag: 0x131 ('Software')
+    Format: 2 ('ASCII')
+    Components: 15
+    Size: 15
+    Value: DSC-TX30 v1.00
+  Tag: 0x132 ('DateTime')
+    Format: 2 ('ASCII')
+    Components: 20
+    Size: 20
+    Value: 2013:11:30 12:11:32
+  Tag: 0x213 ('YCbCrPositioning')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Co-sited
+  Tag: 0xc4a5 ('PrintImageMatching')
+    Format: 7 ('Non défini')
+    Components: 28
+    Size: 28
+    Value: 28 bytes undefined data
+Dumping IFD '1'...
+Dumping exif content (11 entries)...
+  Tag: 0x103 ('Compression')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Compression JPEG
+  Tag: 0x10e ('ImageDescription')
+    Format: 2 ('ASCII')
+    Components: 32
+    Size: 32
+    Value:                                
+  Tag: 0x10f ('Make')
+    Format: 2 ('ASCII')
+    Components: 5
+    Size: 5
+    Value: SONY
+  Tag: 0x110 ('Model')
+    Format: 2 ('ASCII')
+    Components: 9
+    Size: 9
+    Value: DSC-TX30
+  Tag: 0x112 ('Orientation')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Top-left
+  Tag: 0x11a ('XResolution')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value: 72
+  Tag: 0x11b ('YResolution')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value: 72
+  Tag: 0x128 ('ResolutionUnit')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: pouces
+  Tag: 0x131 ('Software')
+    Format: 2 ('ASCII')
+    Components: 15
+    Size: 15
+    Value: DSC-TX30 v1.00
+  Tag: 0x132 ('DateTime')
+    Format: 2 ('ASCII')
+    Components: 20
+    Size: 20
+    Value: 2013:11:30 12:11:32
+  Tag: 0x213 ('YCbCrPositioning')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Co-sited
+Dumping IFD 'EXIF'...
+Dumping exif content (32 entries)...
+  Tag: 0x829a ('ExposureTime')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value: 1/250 sec.
+  Tag: 0x829d ('FNumber')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value: f/3.5
+  Tag: 0x8822 ('ExposureProgram')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Programme normal
+  Tag: 0x8827 ('ISOSpeedRatings')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: 640
+  Tag: 0x9000 ('ExifVersion')
+    Format: 7 ('Non défini')
+    Components: 4
+    Size: 4
+    Value: Version d'exif 2.3
+  Tag: 0x9003 ('DateTimeOriginal')
+    Format: 2 ('ASCII')
+    Components: 20
+    Size: 20
+    Value: 2013:11:30 12:11:32
+  Tag: 0x9004 ('DateTimeDigitized')
+    Format: 2 ('ASCII')
+    Components: 20
+    Size: 20
+    Value: 2013:11:30 12:11:32
+  Tag: 0x9101 ('ComponentsConfiguration')
+    Format: 7 ('Non défini')
+    Components: 4
+    Size: 4
+    Value: Y Cb Cr -
+  Tag: 0x9102 ('CompressedBitsPerPixel')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value:  3
+  Tag: 0x9203 ('BrightnessValue')
+    Format: 10 ('SRational')
+    Components: 1
+    Size: 8
+    Value: 4.78 EV (94.32 cd/m^2)
+  Tag: 0x9204 ('ExposureBiasValue')
+    Format: 10 ('SRational')
+    Components: 1
+    Size: 8
+    Value: 0.00 EV
+  Tag: 0x9205 ('MaxApertureValue')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value: 3.62 EV (f/3.5)
+  Tag: 0x9207 ('MeteringMode')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Motif
+  Tag: 0x9208 ('LightSource')
+    Format: 3 ('Short')
+    Components: 1
+  after 
+  Size: 2
+    Value: Inconnu
+  Tag: 0x9209 ('Flash')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Flash did not fire, auto mode
+  Tag: 0x920a ('FocalLength')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value: 4.7 mm
+  Tag: 0x927c ('MakerNote')
+    Format: 7 ('Non défini')
+    Components: 37767
+    Size: 37767
+    Value: 37767 bytes undefined data
+  Tag: 0x9286 ('UserComment')
+    Format: 7 ('Non défini')
+    Components: 64
+    Size: 64
+    Value: 
+  Tag: 0xa000 ('FlashPixVersion')
+    Format: 7 ('Non défini')
+    Components: 4
+    Size: 4
+    Value: FlashPix Version 1.0
+  Tag: 0xa001 ('ColorSpace')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: sRGB
+  Tag: 0xa002 ('PixelXDimension')
+    Format: 4 ('Long')
+    Components: 1
+    Size: 4
+    Value: 4896
+  Tag: 0xa003 ('PixelYDimension')
+    Format: 4 ('Long')
+    Components: 1
+    Size: 4
+    Value: 2752
+  Tag: 0xa300 ('FileSource')
+    Format: 7 ('Non défini')
+    Components: 1
+    Size: 1
+    Value: DSC
+  Tag: 0xa301 ('SceneType')
+    Format: 7 ('Non défini')
+    Components: 1
+    Size: 1
+    Value: Directly photographed
+  Tag: 0xa401 ('CustomRendered')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Processus normal
+  Tag: 0xa402 ('ExposureMode')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Exposition automatique
+  Tag: 0xa403 ('WhiteBalance')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Balance des blancs automatique
+  Tag: 0xa404 ('DigitalZoomRatio')
+    Format: 5 ('Rational')
+    Components: 1
+    Size: 8
+    Value: 1.00
+  Tag: 0xa406 ('SceneCaptureType')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Standard
+  Tag: 0xa408 ('Contrast')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Normal
+  Tag: 0xa409 ('Saturation')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Normal
+  Tag: 0xa40a ('Sharpness')
+    Format: 3 ('Short')
+    Components: 1
+    Size: 2
+    Value: Normal
+Dumping IFD 'Interoperability'...
+Dumping exif content (2 entries)...
+  Tag: 0x1 ('InteroperabilityIndex')
+    Format: 2 ('ASCII')
+    Components: 4
+    Size: 4
+    Value: R98
+  Tag: 0x2 ('InteroperabilityVersion')
+    Format: 7 ('Non défini')
+    Components: 4
+    Size: 4
+    Value: 0100
+11664 byte(s) thumbnail data available.0xff 0xd8 ... 0xff 0xd9

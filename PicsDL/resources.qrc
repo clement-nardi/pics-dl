@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="drive">resources/1297531509_hd2-backup.png</file>
+        <file alias="remove">resources/1297534672_button_cancel.png</file>
+        <file alias="play">resources/1298744518_player_play.png</file>
+        <file alias="download">resources/1391569544_agt_update_misc.png</file>
+        <file alias="ok">resources/1391569426_button_ok.png</file>
+        <file alias="file">resources/1391895218_unknown.png</file>
+        <file alias="camera">resources/1391895209_camera.png</file>
+        <file alias="film">resources/1391895294_video.png</file>
+        <file alias="picture">resources/1391895594_image.png</file>
+        <file alias="image">resources/1391895583_image2.png</file>
+        <file alias="camcorder">resources/1391895513_cam.png</file>
+        <file alias="folder">resources/1286719705_folder_open.png</file>
+        <file alias="picsDL">PicsDL.ico</file>
+        <file alias="edit">resources/1297534676_edit.png</file>
+    </qresource>
+</RCC>
