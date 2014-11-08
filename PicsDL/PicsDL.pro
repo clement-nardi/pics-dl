@@ -4,7 +4,6 @@
 #
 #-------------------------------------------------
 
-
 #TODO: notification "you can unplug the device"
 #TODO: bug with microSD when files can't be read
 #TODO: bug with exiftool final output reading
