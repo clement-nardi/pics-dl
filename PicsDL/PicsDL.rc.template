@@ -1,0 +1,31 @@
+IDI_ICON1               ICON    DISCARDABLE     "PicsDL.ico"
+#define MAJOR_VERSION 0
+#define MINOR_VERSION 1
+#define PATCH_NUMBER 0
+#define BUILD_NUMBER __BUILD_NUMBER__
+1 VERSIONINFO
+FILEVERSION    	MAJOR_VERSION,MINOR_VERSION,PATCH_NUMBER,BUILD_NUMBER
+PRODUCTVERSION 	MAJOR_VERSION,MINOR_VERSION,PATCH_NUMBER,BUILD_NUMBER
+FILEFLAGSMASK  	0x3fL
+FILEFLAGS      	0x8L
+FILEOS         	0x40004L
+FILETYPE       	0x2L
+FILESUBTYPE    	0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      "Clément Nardi\0"
+            VALUE "FileDescription",  "PicsDL main executable\0"
+            VALUE "FileVersion",      "MAJOR_VERSION.MINOR_VERSION.PATCH_NUMBER\0"
+            VALUE "InternalName",     "\0"
+            VALUE "LegalCopyright",   "Copyright 2014 Clément Nardi\0"
+            VALUE "LegalTrademarks1", "\0"
+            VALUE "LegalTrademarks2", "\0"
+            VALUE "OriginalFilename", "\0"
+            VALUE "ProductName",      "PicsDL\0"
+            VALUE "ProductVersion",   "MAJOR_VERSION.MINOR_VERSION.PATCH_NUMBER\0"
+        END
+    END
+END

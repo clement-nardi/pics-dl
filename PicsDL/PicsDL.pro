@@ -15,13 +15,29 @@
 #TODO: fix issue with DST
 
 
+#note: by default $$DESTDIR is empty, and qmake decides to create "release" and "debug" directories
+#This is useless since QT Creator creates different directories to Release and Debug anyway
+#plus, if this variable is not set, there's no way to know the final location of the application
+DESTDIR = bin
+
+rcfile.target = PicsDL.rc
+rcfile.commands = ..\PicsDL\increment_build_number.bat
+QMAKE_EXTRA_TARGETS += rcfile
+PRE_TARGETDEPS += PicsDL.rc
+
+exiftool.target = exiftool_app
+exiftool.commands = ../exiftool/get_exiftool.sh \"$$OUT_PWD/$$DESTDIR\"
+QMAKE_EXTRA_TARGETS += exiftool
+PRE_TARGETDEPS += exiftool_app
+
+
 include( ../o2-master/src/src.pri )
 
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = StarPicsDL
+TARGET = PicsDL
 TEMPLATE = app
 
 
@@ -76,8 +92,6 @@ LIBS      += -L$$PWD/../libexif-0.6.21/libexif/.libs/ -lexif
 RESOURCES += \
     resources.qrc
 
-RC_FILE = icon.rc
+RC_FILE = PicsDL.rc
 
-
-
-
+QMAKE_POST_LINK += ../PicsDL-win32-installer/build-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
