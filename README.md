@@ -34,7 +34,7 @@ This is because the dll is versionned along with its code: */pics-dl/WPDInterfac
 
 #Step-by-step guide to compile PicsDL:
 
-##1. Download
+##1. Downloads
 * [QT](http://download.qt-project.org/official_releases/qt/5.3/5.3.2/qt-opensource-windows-x86-mingw482_opengl-5.3.2.exe)
 * [Git](http://git-scm.com/download/win)
 * [libexif](http://sourceforge.net/projects/libexif/files/libexif/0.6.21/libexif-0.6.21.zip/download)
@@ -82,7 +82,7 @@ Choose a folder where to download the sources
 right-click on this folder and choose "Git Bash"  
 In the terminal, write:  
 
-    git clone https://code.google.com/p/pics-dl/  
+    git clone https://github.com/clement-nardi/PicsDL.git  
 
 ##4. Compile the libexif  
 
