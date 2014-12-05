@@ -81,6 +81,7 @@ If you don't want to generate the installer, you will need to remove the last li
 Choose a folder where to download the sources  
 right-click on this folder and choose "Git Bash"  
 In the terminal, write:  
+
     git clone https://code.google.com/p/pics-dl/  
 
 ##4. Compile the libexif  
@@ -95,12 +96,16 @@ Save the file
 Extract the content of libexif-0.6.21.zip at the root of the repository.  
 You will then find the build procedure in pics-dl/libexif-0.6.21/README-Win32.txt  
 Open MSYS/MinGW by launching:  
+
     C:\MinGW\msys\1.0\msys.bat  
+	
 In the terminal, write these commands:  
+
     cd /e/.../pics-dl/libexif-0.6.21/        # /e/ is the drive letter. Replace ... by the actual location of the git repository  
     ./configure  
     make  
     make install  
+	
 If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.libs/libexif-12.dll  
 
 ##5. Compile PicsDL  
