@@ -1,14 +1,14 @@
-###Tired of spending 10 minutes each time you want to retrieve pictures from your camera?  
-###With PicsDL, you just plug your device, and... done!  
+**Tired of spending 10 minutes each time you want to retrieve pictures from your camera?**  
+**With PicsDL, you just plug your device, and... done!**  
 
 ##Main features:  
 
-###* Retrieves pictures and videos from any type of device (camera, smartphone, memory card, USB stick, External Hard Drive).
-###* All-automatic mode: simply plug the device and watch your pictures being downloaded and organized.
-###* Organize and rename your files based on date/time and EXIF tags (such as camera brand/name, etc.)
-###* Geo-tag the pictures
+* Retrieves pictures and videos from any type of device (camera, smartphone, memory card, USB stick, External Hard Drive).
+* All-automatic mode: simply plug the device and watch your pictures being downloaded and organized.
+* Organize and rename your files based on date/time and EXIF tags (such as camera brand/name, etc.)
+* Geo-tag the pictures
   
-  
+---
   
 The pics-dl project is composed of of two modules and has 3 dependencies:
 
