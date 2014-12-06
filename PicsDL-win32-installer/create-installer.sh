@@ -20,7 +20,15 @@ if [ ! -f $vcred ] ; then
 fi
 
 echo "C:\Program Files (x86)\Inno Setup 5\ISCC.exe" "/dMyAppPath=$1" "/dMyAppName=$2" "$script_dir/PicsDL-installer-script.iss"
-"C:\Program Files (x86)\Inno Setup 5\ISCC.exe" "-dMyAppPath=$1" "-dMyAppName=$2" "$script_dir/PicsDL-installer-script.iss"
+
+ISCC="C:\Program Files (x86)\Inno Setup 5\ISCC.exe"
+if [ ! -f "$ISCC" ]; then
+	echo "ISCC.exe not found in C:\\Program Files (x86)\\Inno Setup 5\\"
+	echo "trying C:\\Program Files\\Inno Setup 5\\"
+	ISCC="C:\Program Files\Inno Setup 5\ISCC.exe"
+fi
+
+"$ISCC" "-dMyAppPath=$1" "-dMyAppName=$2" "$script_dir/PicsDL-installer-script.iss"
 	
 	
 	

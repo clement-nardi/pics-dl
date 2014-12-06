@@ -31,7 +31,7 @@ QMAKE_EXTRA_TARGETS += exiftool
 PRE_TARGETDEPS += exiftool_app
 
 
-include( ../o2-master/src/src.pri )
+include( ..\o2-master\src\src.pri )
 
 QT       += core gui
 

@@ -37,8 +37,6 @@ This is because the dll is versionned along with its code: */pics-dl/WPDInterfac
 ##1. Downloads
 * [QT](http://download.qt-project.org/official_releases/qt/5.3/5.3.2/qt-opensource-windows-x86-mingw482_opengl-5.3.2.exe)
 * [Git](http://git-scm.com/download/win)
-* [libexif](http://sourceforge.net/projects/libexif/files/libexif/0.6.21/libexif-0.6.21.zip/download)
-* [MSYS/MinGW](https://sourceforge.net/projects/mingw/files/latest/download)
 * [MSVC redistributable 2013](http://www.microsoft.com/en-us/download/confirmation.aspx?id=40784)
 
 Optional but recommended:  
@@ -56,14 +54,6 @@ Otherwise just click on Next
 
 ###2.2 Git  
 Just click Next.  
-
-###2.3 MinGW/MSYS  
-The full install procedure is here: http://www.mingw.org/wiki/Getting_Started  
-Short install procedure:  
-- Leave default options and click Next until you reach the "Installation Manager"  
-- right-click on mingw-developer-toolkit, and mark for installation  
-- go to menu Installation / Apply Changes  
-- close the Installation Manager  
 
 ###2.4 Notepad++    
 Just click Next.  
@@ -83,30 +73,6 @@ right-click on this folder and choose "Git Bash"
 In the terminal, write:  
 
     git clone https://github.com/clement-nardi/PicsDL.git  
-
-##4. Compile the libexif  
-
-###4.1 Prepare the build  
-Go to folder C:\MinGW\msys\1.0\etc\ and rename the file "fstab.sample" into "fstab"  
-Edit the file fstab (right-click / Edit with Notepad++)  
-On the line 16, replace "c:/mingw" by "C:/Qt/Qt5.3.2/Tools/mingw482_32"  
-Save the file  
-
-###4.2 Build  
-Extract the content of libexif-0.6.21.zip at the root of the repository.  
-You will then find the build procedure in pics-dl/libexif-0.6.21/README-Win32.txt  
-Open MSYS/MinGW by launching:  
-
-    C:\MinGW\msys\1.0\msys.bat  
-	
-In the terminal, write these commands:  
-
-    cd /e/.../pics-dl/libexif-0.6.21/        # /e/ is the drive letter. Replace ... by the actual location of the git repository  
-    ./configure  
-    make  
-    make install  
-	
-If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.libs/libexif-12.dll  
 
 ##5. Compile PicsDL  
 Double-click on */pics-dl/PicsDL/PicsDL.pro  
@@ -140,4 +106,41 @@ double-click on */pics-dl/WPDInterface/WPDInterface.sln
 click on the Build button (green triangle)  
 
 
+#(Optional) Step-by-step guide to compile libexif
+
+##1. Downloads
+* [libexif](http://sourceforge.net/projects/libexif/files/libexif/0.6.21/libexif-0.6.21.zip/download)
+* [MSYS/MinGW](https://sourceforge.net/projects/mingw/files/latest/download)
  
+##2 Install MinGW/MSYS  
+The full install procedure is [here](http://www.mingw.org/wiki/Getting_Started)  
+Short install procedure:  
+- Leave default options and click Next until you reach the "Installation Manager"  
+- right-click on mingw-developer-toolkit, and mark for installation  
+- go to menu Installation / Apply Changes  
+- close the Installation Manager  
+
+##4. Compile the libexif  
+
+###4.1 Prepare the build  
+Go to folder C:\MinGW\msys\1.0\etc\ and rename the file "fstab.sample" into "fstab"  
+Edit the file fstab (right-click / Edit with Notepad++)  
+On the line 16, replace "c:/mingw" by "C:/Qt/Qt5.3.2/Tools/mingw482_32"  
+Save the file  
+
+###4.2 Build  
+Extract the content of libexif-0.6.21.zip at the root of the repository.  
+You will then find the build procedure in pics-dl/libexif-0.6.21/README-Win32.txt  
+Open MSYS/MinGW by launching:  
+
+    C:\MinGW\msys\1.0\msys.bat  
+	
+In the terminal, write these commands:  
+
+    cd /e/.../pics-dl/libexif-0.6.21/        # /e/ is the drive letter. Replace ... by the actual location of the git repository  
+    ./configure  
+    make  
+    make install  
+	
+If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.libs/libexif-12.dll  
+
