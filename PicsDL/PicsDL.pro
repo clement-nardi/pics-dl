@@ -4,17 +4,6 @@
 #
 #-------------------------------------------------
 
-#TODO: notification "you can unplug the device"
-#TODO: bug with microSD when files can't be read
-#TODO: bug with exiftool final output reading
-#TODO: start downloading files as soon as card is inserted
-#TODO: when file is downloaded completely for EXIF reading purpose, store it locally
-#TODO: create reorganize mode: select a folder as input, and option to move instead of copy
-#TODO: change default location of temp folder: D:/temp iso dest/temp
-#TODO: change visible pictures when editing "dayly comments" (when clicking on a line)
-#TODO: fix issue with DST
-
-
 #note: by default $$DESTDIR is empty, and qmake decides to create "release" and "debug" directories
 #This is useless since QT Creator creates different directories to Release and Debug anyway
 #plus, if this variable is not set, there's no way to know the final location of the application

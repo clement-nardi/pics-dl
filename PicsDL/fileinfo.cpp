@@ -30,6 +30,7 @@
 #include <QBuffer>
 #include <QImage>
 #include <QRgb>
+#include <QTimeZone>
 
 static QStringList pictureExtensions = QString("jpg,jpeg,dng,raf,bmp,cr2,crw,dcr,dib,erf,fpx,gif,jfif,mos,mrf,mrw,nef,orf,pcx,pef,png,psd,srf,tif,tiff,wdp,x3f,xps").split(",");
 static QStringList JPEGExtensions = QString("jpg,jpeg").split(",");
@@ -946,6 +947,7 @@ static void initTagInfoMap() {
 
 FileInfo::FileInfo(QFileInfo qfi)
 {
+    QFileInfo qfi2("DSCF7140.JPG");
     lastModified = qfi.lastModified().toTime_t();
     absoluteFilePath = qfi.absoluteFilePath();
     size = qfi.size();
@@ -953,6 +955,16 @@ FileInfo::FileInfo(QFileInfo qfi)
     IDPath = "";
     exifData = NULL;
     exifLoadAttempted = false;
+    /*
+    qDebug() << fileName() << ": " << qfi.lastModified()
+             << " " << qfi.lastModified().toLocalTime()
+             << " " << qfi.lastModified().toMSecsSinceEpoch()
+             << " " << qfi.lastModified().toOffsetFromUtc(0)
+             << " " << qfi.lastModified().toTimeZone(QTimeZone(0))
+             << " " << qfi.lastModified().toTime_t()
+             << " " << qfi.lastModified().toUTC()
+             << " " << qfi.lastModified().isDaylightTime();*/
+
 }
 
 FileInfo::FileInfo(uint lastModified_, QString absoluteFilePath_, quint64 size_, bool isDir_, QString IDPath_){
@@ -983,11 +995,24 @@ int FileInfo::operator<(FileInfo other) {
 }
 
 int FileInfo::operator==(const FileInfo &other) const {
-    return lastModified == other.lastModified && size == other.size && fileName() == other.fileName();
+    if (size == other.size && fileName() == other.fileName()) {
+        if (lastModified == other.lastModified) {
+            return true;
+        }
+        /** https://github.com/clement-nardi/PicsDL/issues/9
+         *  https://bugreports.qt-project.org/browse/QTBUG-43185#comment-267721
+         */
+        if (abs(lastModified - other.lastModified) < (26 *60 *60) && // Time zones go from -12 to +14
+            abs(lastModified - other.lastModified)%(30*60) == 0    ) { // Some time zones have 30 minutes shift
+            //qDebug() << "Found the same file with a " << QString("%1").arg((((double)lastModified - (double)(other.lastModified)))/(60*60),0,'f',1) << " hour shift.";
+            return true;
+        }
+    }
+    return false;
 }
 
 uint qHash(FileInfo fi) {
-    return fi.lastModified;
+    return fi.size;
 }
 
 bool FileInfo::isAttachmentOf(FileInfo other) {

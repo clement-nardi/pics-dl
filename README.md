@@ -2,7 +2,6 @@
 **With PicsDL, you just plug your device, and... done!**  
 
 ##Main features:  
-
 * Retrieves pictures and videos from any type of device (camera, smartphone, memory card, USB stick, External Hard Drive).
 * All-automatic mode: simply plug the device and watch your pictures being downloaded and organized.
 * Organize and rename your files based on date/time and EXIF tags (such as camera brand/name, etc.)
@@ -38,9 +37,9 @@ This is because the dll is versionned along with its code: */pics-dl/WPDInterfac
 * [QT](http://download.qt-project.org/official_releases/qt/5.3/5.3.2/qt-opensource-windows-x86-mingw482_opengl-5.3.2.exe)
 * [Git](http://git-scm.com/download/win)
 * [MSVC redistributable 2013](http://www.microsoft.com/en-us/download/confirmation.aspx?id=40784)
+* [Inno Setup](http://www.jrsoftware.org/download.php/is.exe)
 
 Optional but recommended:  
-* [Inno Setup](http://www.jrsoftware.org/download.php/is.exe)
 * [notepad++](http://download.tuxfamily.org/notepadplus/6.6.9/npp.6.6.9.Installer.exe)
 
 Automatically retrieved at build time:
@@ -53,7 +52,8 @@ On the 3rd step, make sure you select all the Tools (including MinGW).
 Otherwise just click on Next  
 
 ###2.2 Git  
-Just click Next.  
+On the 4th step, select the 3rd option: "Use Git and optional Unix tools from the Windows Command Prompt"
+Otherwise Just click Next.  
 
 ###2.4 Notepad++    
 Just click Next.  
