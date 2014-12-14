@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     downloadmodel.cpp \
     openpath.cpp \
     autocheckbox.cpp \
-    verticalscrollarea.cpp
+    verticalscrollarea.cpp \
+    instancemanager.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -61,7 +62,8 @@ HEADERS  += mainwindow.h \
     downloadmodel.h \
     openpath.h \
     autocheckbox.h \
-    verticalscrollarea.h
+    verticalscrollarea.h \
+    instancemanager.h
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \

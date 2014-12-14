@@ -57,6 +57,7 @@ public slots:
     void quit_handle();
     void show_handle();
     void sysTray_handle(QSystemTrayIcon::ActivationReason reason);
+    void applicationLaunched();
 
 };
 

@@ -25,6 +25,7 @@
 #include "devicemanager.h"
 #include "deviceconfig.h"
 #include <QDir>
+#include "instancemanager.h"
 
 QString ExifToolPath;
 
@@ -38,6 +39,13 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion("0.1");
     QCoreApplication::setOrganizationDomain("picsdl.com");
 
+    InstanceManager *im = new InstanceManager();
+    if (!im->isFirstInstance) {
+        qDebug() << "Already running";
+        exit(0);
+        return 0;
+    }
+
     qDebug() << QDir::current().absolutePath();
     qDebug() << QCoreApplication::applicationDirPath();
     ExifToolPath = QCoreApplication::applicationDirPath() + "/exiftool.exe";
@@ -46,6 +54,8 @@ int main(int argc, char *argv[])
     MainWindow w(dc);
     DeviceManager *dm = new DeviceManager(dc);
     DriveNotify *dn = new DriveNotify();
+
+    im->connect(im, SIGNAL(applicationLaunched()),&w, SLOT(applicationLaunched()));
 
     dm->connect(dn,SIGNAL(driveAdded(QString)), dm, SLOT(treatDrive(QString)));
     dm->connect(dm, SIGNAL(newID(QString)), &w, SLOT(insertDrive(QString)));

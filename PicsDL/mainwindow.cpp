@@ -64,6 +64,12 @@ void MainWindow::show_handle() {
     show();
 }
 
+void MainWindow::applicationLaunched() {
+    sysTray.showMessage("PicsDL is running in the background",
+                        "Please plug your device (smartphone, memory card, camera, USB key)",
+                        QSystemTrayIcon::Information);
+}
+
 void MainWindow::quit_handle() {
     QMessageBox msgBox;
     msgBox.setText(QString(tr("Are you sure you want to exit PicsDL?")));
