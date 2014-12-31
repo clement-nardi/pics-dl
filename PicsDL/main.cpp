@@ -26,6 +26,8 @@
 #include "deviceconfig.h"
 #include <QDir>
 #include "instancemanager.h"
+#include "geotagger.h"
+#include <iostream>
 
 QString ExifToolPath;
 
@@ -38,6 +40,15 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("PicsDL");
     QCoreApplication::setApplicationVersion("0.1");
     QCoreApplication::setOrganizationDomain("picsdl.com");
+
+    qDebug()<<"toto 0";
+    std::cout << "toto 0.1\n";
+    std::cout.flush();
+    fprintf(stderr,"toto 0.1.1\n");fflush(stderr);
+    Geotagger *gt = new Geotagger("");
+
+    exit(0);
+    return 0;
 
     InstanceManager *im = new InstanceManager();
     if (!im->isFirstInstance) {

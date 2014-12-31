@@ -46,7 +46,9 @@ SOURCES += main.cpp\
     openpath.cpp \
     autocheckbox.cpp \
     verticalscrollarea.cpp \
-    instancemanager.cpp
+    instancemanager.cpp \
+    geotagger.cpp \
+    exiftoolperlwrapper.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -63,7 +65,9 @@ HEADERS  += mainwindow.h \
     openpath.h \
     autocheckbox.h \
     verticalscrollarea.h \
-    instancemanager.h
+    instancemanager.h \
+    geotagger.h \
+    exiftoolperlwrapper.h
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \
@@ -80,9 +84,15 @@ win32: LIBS += -L"$$PWD/../WPDInterface/Release" -lWPDInterface
 INCLUDEPATH += $$PWD/../libexif-0.6.21/
 LIBS      += -L$$PWD/../libexif-0.6.21/libexif/.libs/ -lexif
 
+INCLUDEPATH += "C:/Strawberry/perl/lib/CORE"
+LIBS        += -LC:/Strawberry/perl/lib/CORE/ -lperl520
+#Path to the DLL. Without this line, the compilation is fine, but QT Creator is unable to launch the app:
+#An exception was triggered: Exception at 0x77e98f05, code: 0xc0000139: DLL entry point not found, flags=0x0. During startup program exited with code 0xc0000139.
+LIBS        += -LC:/Strawberry/perl/bin -lperl520
+
 RESOURCES += \
     resources.qrc
 
 RC_FILE = PicsDL.rc
 
-QMAKE_POST_LINK += ../PicsDL-win32-installer/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
+#QMAKE_POST_LINK += ../PicsDL-win32-installer/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
