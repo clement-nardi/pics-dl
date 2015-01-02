@@ -28,7 +28,7 @@
 #include <QScreen>
 
 DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_, QWidget *parent) :
-    QWizard(parent),
+    QWidget(parent),
     ui(new Ui::DeviceConfigView)
 {
     dc = dc_;
@@ -58,10 +58,12 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
         connect(ui->autoDLBox, SIGNAL(performAction()),this,SLOT(automation()));
         connect(ui->autoGeotagBox, SIGNAL(performAction()),this,SLOT(automation()));
     }
+    //setCornerWidget(new QPushButton("Go",this),Qt::BottomRightCorner);
 
     setAttribute(Qt::WA_DeleteOnClose, true);
     setAttribute(Qt::WA_QuitOnClose, false);
     FillWithConfig(id);
+    updateStatusText();
     showMaximized();
 
     /* automation stuff */
@@ -89,65 +91,12 @@ void DeviceConfigView::makeVisible(QModelIndex mi) {
     ui->tableView->scrollTo(mi);
 }
 
-int DeviceConfigView::nextId() const {
-    qDebug() << "nextId (currentID=" << currentId() << ")";
-    return QWizard::nextId();
-}
 
 void DeviceConfigView::showEvent(QShowEvent * event) {
     qDebug() << "showEvent";
     //automation(currentId());
-    QWizard::showEvent(event);
+    QWidget::showEvent(event);
 }
-
-void DeviceConfigView::automation() {
-    int pageId = currentId();
-    qDebug() << "automation (ID=" << pageId << ")";
-    if (nextId()>=0) {
-        next();
-    } else {
-        accept();
-    }
-}
-
-void DeviceConfigView::initializePage(int PageId){
-    qDebug() << "initializePage (ID=" << PageId << ")";
-    if (!editMode) {
-        switch (PageId) {
-        case 0: //Transfer Page
-            ui->autoDLBox->startCountDown();
-            break;
-        case 1: //Geotag Page
-            ui->autoGeotagBox->startCountDown();
-            break;
-        }
-    }
-}
-
-bool DeviceConfigView::validateCurrentPage(){
-    /* This is called when the user clicks on the "Next" button */
-    qDebug() << "validateCurrentPage (currentID=" << currentId() << ")";
-    if (editMode)  {
-        return true;
-    } else {
-        switch (currentId()) {
-        case 0: //Transfer Page
-            if (dpm->getAllCom()) {
-                if (dpm->downloadToTemp()) {
-                    qDebug() << "  --> Download Page complete";
-                    return true;
-                }
-            }
-            break;
-        case 1: //Geotag Page
-            return dpm->geoTag();
-            break;
-        }
-    }
-    return false;
-}
-
-
 
 void DeviceConfigView::FillWithConfig(QString id_) {
     qDebug() << "FillWithConfig";
@@ -314,6 +263,7 @@ void DeviceConfigView::CopyToConfig() {
     //ui->tableView->resizeRowsToContents();
     //ui->tableView->resizeColumnsToContents();
     updateButton();
+    updateStatusText();
 }
 
 void DeviceConfigView::SaveConfig() {
@@ -347,5 +297,24 @@ void DeviceConfigView::chooseTrackFolder() {
     if (dir.size()>0) {
         ui->TrackFolderLine->setText(dir);
         CopyToConfig();
+    }
+}
+
+void DeviceConfigView::updateStatusText(){
+    qint64 totalToDownload = 0;
+    int nbFilesToDownload = 0;
+
+    if (dpm != NULL) {
+        dpm->getStats(&totalToDownload, &nbFilesToDownload);
+    }
+    ui->statusText->setText(QString("%1 files to download for a total of %2").arg(nbFilesToDownload).arg(File::size2Str(totalToDownload)));
+}
+
+void DeviceConfigView::go(){
+    SaveConfig();
+    if (dpm != NULL) {
+        if (dpm->download()) {
+            deleteLater();
+        }
     }
 }

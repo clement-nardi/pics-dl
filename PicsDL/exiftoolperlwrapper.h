@@ -8,11 +8,11 @@ class ExifToolPerlWrapper
 public:
     ExifToolPerlWrapper();
     ~ExifToolPerlWrapper();
-    void loadTrackFile(char * trackFilePath);
-    void geotag(char *in, int in_size, char **out, int *out_size);
-    static exitPerl();
+    void loadTrackFile(const char *trackFilePath);
+    void geotag(char *in, long in_size, char **out, long *out_size);
+    static void exitPerl();
 private:
-    PerlInterpreter *perl_interpreter;
+    PerlInterpreter *my_perl;
 };
 
 #endif // EXIFTOOLPERLWRAPPER_H

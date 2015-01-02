@@ -21,16 +21,16 @@
 #ifndef DEVICECONFIGVIEW_H
 #define DEVICECONFIGVIEW_H
 
-#include <QWizard>
 #include "deviceconfig.h"
 #include "downloadmodel.h"
 #include <QProgressDialog>
+#include <QWidget>
 
 namespace Ui {
 class DeviceConfigView;
 }
 
-class DeviceConfigView : public QWizard
+class DeviceConfigView : public QWidget
 {
     Q_OBJECT
 
@@ -43,9 +43,6 @@ private:
     bool editMode;
     void FillWithConfig(QString id);
     Ui::DeviceConfigView *ui;
-    int nextId() const;
-    bool validateCurrentPage();
-    void initializePage(int id);
 
     DeviceConfig *dc;
     QProgressDialog *pd;
@@ -60,7 +57,8 @@ public slots:
     void makeVisible(QModelIndex);
     void updateButton();
     void showEXIFTags();
-    void automation();
+    void updateStatusText();
+    void go();
 };
 
 #endif // DEVICECONFIGVIEW_H

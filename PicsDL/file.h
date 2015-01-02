@@ -27,12 +27,17 @@
 #include "libexif/exif-data.h"
 #include <QStringList>
 #include <QPixmap>
+#include <QBuffer>
+#include "geotagger.h"
 
-class FileInfo
+class File
 {
 public:
-    FileInfo(QFileInfo qfi);
-    FileInfo(uint lastModified, QString absoluteFilePath, quint64 size, bool isDir, QString IDPath = "");
+    File(QFileInfo qfi);
+    File(QString path);
+    File(File *fi);
+    File(uint lastModified, QString absoluteFilePath, quint64 size, bool isDir, QString IDPath = "");
+    ~File();
     uint lastModified;
     uint dateTaken() const;
     void loadExifData();
@@ -42,22 +47,33 @@ public:
     QString absoluteFilePath;
     QString IDPath;
     bool isDir;
-    ExifData * exifData;
     QString fileName() const;
     QString extension() const;
     quint64 size;
-    int operator<(FileInfo);
-    int operator==(const FileInfo &other) const;
-    bool isAttachmentOf(FileInfo other);
+    int operator<(File);
+    int operator==(const File &other) const;
+    bool isAttachmentOf(File other);
     bool isPicture() const;
     bool isVideo() const;
     bool isJPEG() const;
     static QString size2Str(qint64 nbBytes);
+
+    QList<File> ls(bool *theresMore);
+    bool copyWithDirs(QString to, Geotagger *geotagger = NULL);
+    bool moveWithDirs(QString to);
+    bool setHidden();
+    QBuffer *getBufferredContent();
+
 private:
     QPixmap thumbnail;
     bool exifLoadAttempted;
+    QBuffer *buffer;
+    ExifData *exifData;
+    void init(QFileInfo qfi);
+    void constructCommonFields();
+    bool FillIODeviceWithContent(QIODevice *out);
 };
 
-uint qHash(FileInfo fi);
+uint qHash(File *fi);
 
 #endif // FILEINFO_H

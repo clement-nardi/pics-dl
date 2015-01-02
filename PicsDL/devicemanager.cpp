@@ -27,7 +27,6 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include <QMessageBox>
-#include "fsutils.h"
 
 static QString getDriveSerial(QString path);
 

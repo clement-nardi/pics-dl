@@ -38,8 +38,6 @@ SOURCES += main.cpp\
     deviceconfig.cpp \
     driveview.cpp \
     deviceconfigview.cpp \
-    fsutils.cpp \
-    fileinfo.cpp \
     dcomdialog.cpp \
     exifdialog.cpp \
     downloadmodel.cpp \
@@ -48,7 +46,8 @@ SOURCES += main.cpp\
     verticalscrollarea.cpp \
     instancemanager.cpp \
     geotagger.cpp \
-    exiftoolperlwrapper.cpp
+    exiftoolperlwrapper.cpp \
+    file.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -57,8 +56,6 @@ HEADERS  += mainwindow.h \
     deviceconfig.h \
     driveview.h \
     deviceconfigview.h \
-    fsutils.h \
-    fileinfo.h \
     dcomdialog.h \
     exifdialog.h \
     downloadmodel.h \
@@ -67,7 +64,8 @@ HEADERS  += mainwindow.h \
     verticalscrollarea.h \
     instancemanager.h \
     geotagger.h \
-    exiftoolperlwrapper.h
+    exiftoolperlwrapper.h \
+    file.h
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \
@@ -84,6 +82,8 @@ win32: LIBS += -L"$$PWD/../WPDInterface/Release" -lWPDInterface
 INCLUDEPATH += $$PWD/../libexif-0.6.21/
 LIBS      += -L$$PWD/../libexif-0.6.21/libexif/.libs/ -lexif
 
+
+QMAKE_CXXFLAGS += -DUSETHREADS -DUSEITHREADS -DMULTIPLICITY
 INCLUDEPATH += "C:/Strawberry/perl/lib/CORE"
 LIBS        += -LC:/Strawberry/perl/lib/CORE/ -lperl520
 #Path to the DLL. Without this line, the compilation is fine, but QT Creator is unable to launch the app:

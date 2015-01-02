@@ -18,7 +18,7 @@
  *
  **/
 
-#include "fileinfo.h"
+#include "file.h"
 #include <QDateTime>
 #include <QStringList>
 #include <QMap>
@@ -31,6 +31,8 @@
 #include <QImage>
 #include <QRgb>
 #include <QTimeZone>
+#include <utime.h>
+#include <QDir>
 
 static QStringList pictureExtensions = QString("jpg,jpeg,dng,raf,bmp,cr2,crw,dcr,dib,erf,fpx,gif,jfif,mos,mrf,mrw,nef,orf,pcx,pef,png,psd,srf,tif,tiff,wdp,x3f,xps").split(",");
 static QStringList JPEGExtensions = QString("jpg,jpeg").split(",");
@@ -945,43 +947,63 @@ static void initTagInfoMap() {
     }
 }
 
-FileInfo::FileInfo(QFileInfo qfi)
+File::File(File *fi) {
+    lastModified = fi->lastModified;
+    absoluteFilePath = fi->absoluteFilePath;
+    size = fi->size;
+    isDir = fi->isDir;
+    IDPath = fi->IDPath;
+    constructCommonFields();
+}
+
+File::File(QString path) {
+    init(QFileInfo(path));
+}
+
+File::File(QFileInfo qfi)
 {
-    QFileInfo qfi2("DSCF7140.JPG");
+    init(qfi);
+}
+
+void File::init(QFileInfo qfi) {
     lastModified = qfi.lastModified().toTime_t();
     absoluteFilePath = qfi.absoluteFilePath();
     size = qfi.size();
     isDir = qfi.isDir();
     IDPath = "";
-    exifData = NULL;
-    exifLoadAttempted = false;
-    /*
-    qDebug() << fileName() << ": " << qfi.lastModified()
-             << " " << qfi.lastModified().toLocalTime()
-             << " " << qfi.lastModified().toMSecsSinceEpoch()
-             << " " << qfi.lastModified().toOffsetFromUtc(0)
-             << " " << qfi.lastModified().toTimeZone(QTimeZone(0))
-             << " " << qfi.lastModified().toTime_t()
-             << " " << qfi.lastModified().toUTC()
-             << " " << qfi.lastModified().isDaylightTime();*/
-
+    constructCommonFields();
 }
 
-FileInfo::FileInfo(uint lastModified_, QString absoluteFilePath_, quint64 size_, bool isDir_, QString IDPath_){
+File::File(uint lastModified_, QString absoluteFilePath_, quint64 size_, bool isDir_, QString IDPath_){
     lastModified = lastModified_;
     absoluteFilePath = absoluteFilePath_;
     size = size_;
     isDir = isDir_;
     IDPath = IDPath_;
-    exifData = NULL;
-    exifLoadAttempted = false;
+    constructCommonFields();
 }
 
-QString FileInfo::fileName() const{
+void File::constructCommonFields() {
+    exifData = NULL;
+    exifLoadAttempted = false;
+    buffer = NULL;
+}
+
+File::~File(){
+    if (exifData != NULL) {
+        free(exifData);
+        exifData = NULL;
+    }
+    if (buffer != NULL) {
+        delete buffer;
+    }
+}
+
+QString File::fileName() const{
     return absoluteFilePath.split("/").last();
 }
 
-QString FileInfo::extension() const {
+QString File::extension() const {
     QStringList split = fileName().split(".");
     if (split.size()>1) {
         return split.last().toLower();
@@ -990,11 +1012,11 @@ QString FileInfo::extension() const {
     }
 }
 
-int FileInfo::operator<(FileInfo other) {
+int File::operator<(File other) {
     return absoluteFilePath < other.absoluteFilePath;
 }
 
-int FileInfo::operator==(const FileInfo &other) const {
+int File::operator==(const File &other) const {
     if (size == other.size && fileName() == other.fileName()) {
         if (lastModified == other.lastModified) {
             return true;
@@ -1011,30 +1033,30 @@ int FileInfo::operator==(const FileInfo &other) const {
     return false;
 }
 
-uint qHash(FileInfo fi) {
-    return fi.size;
+uint qHash(File *fi) {
+    return fi->size;
 }
 
-bool FileInfo::isAttachmentOf(FileInfo other) {
+bool File::isAttachmentOf(File other) {
     return        absoluteFilePath.left(      absoluteFilePath.lastIndexOf(".")) ==
             other.absoluteFilePath.left(other.absoluteFilePath.lastIndexOf("."));
 }
 
-bool FileInfo::isPicture() const {
+bool File::isPicture() const {
     return pictureExtensions.contains(extension());
 }
 
-bool FileInfo::isVideo() const{
+bool File::isVideo() const{
     return videoExtensions.contains(extension());
 }
 
-bool FileInfo::isJPEG() const {
+bool File::isJPEG() const {
     return JPEGExtensions.contains(extension());
 }
 
 static QMap<QString,DWORD> lastSuccessfulTransferSize;
 
-void FileInfo::loadExifData() {
+void File::loadExifData() {
     if (exifData == NULL && !exifLoadAttempted) {
         exifLoadAttempted = true;
         if (IDPath.startsWith("WPD:/")) {
@@ -1120,8 +1142,8 @@ void FileInfo::loadExifData() {
                         .arg((double)initTime*100/totalTime,0,'f',2)
                         .arg((double)transferTime/1000000,0,'f',3)
                         .arg((double)transferTime*100/totalTime,0,'f',2)
-                        .arg(FileInfo::size2Str(totalRead))
-                        .arg(FileInfo::size2Str((qint64)((double)totalRead*1000000000/(double)transferTime)))
+                        .arg(File::size2Str(totalRead))
+                        .arg(File::size2Str((qint64)((double)totalRead*1000000000/(double)transferTime)))
                         .arg((double)closeTime/1000000,0,'f',3)
                         .arg((double)closeTime*100/totalTime,0,'f',2) ;
         } else {
@@ -1130,9 +1152,9 @@ void FileInfo::loadExifData() {
     }
 }
 
-QString FileInfo::getEXIFValue(QString key) const {
+QString File::getEXIFValue(QString key) const {
     //qDebug() << "get EXIF Key" << key << "for" << fileName();
-    if (exifData != NULL) {
+    if (exifData != NULL && exifData->data != NULL) {
         //qDebug() << "calling initTagInfoMap";
         initTagInfoMap();
         //qDebug() << "calling tagInfoMap->value";
@@ -1165,7 +1187,7 @@ QString FileInfo::getEXIFValue(QString key) const {
 }
 
 
-QPixmap FileInfo::getThumbnail() {
+QPixmap File::getThumbnail() {
     if (thumbnail.isNull()) {
         if (exifData != NULL) {
             if (exifData->data && exifData->size) {
@@ -1225,7 +1247,7 @@ QPixmap FileInfo::getThumbnail() {
     return thumbnail;
 }
 
-uint FileInfo::dateTaken() const{
+uint File::dateTaken() const{
     QString exifDate = getEXIFValue("DateTime");
     if (exifDate.size()>0) {
         QStringList exifDateSplit = exifDate.replace(" ",":").split(":");
@@ -1251,7 +1273,7 @@ static bool tagLessThan(QString a, QString b) {
     return tagInfoMap->value(a)->importance > tagInfoMap->value(b)->importance;
 }
 
-QStringList FileInfo::getEXIFTags(){
+QStringList File::getEXIFTags(){
     QStringList results;
     if (exifData != NULL) {
         initTagInfoMap();
@@ -1267,7 +1289,7 @@ QStringList FileInfo::getEXIFTags(){
     return results;
 }
 
-QString FileInfo::size2Str(qint64 nbBytes) {
+QString File::size2Str(qint64 nbBytes) {
     QString baseUnit = "B"; // Byte
     QStringList prefixes;
     prefixes << "" << "K" << "M" << "G" << "T" << "P" << "E" << "Z" << "Y";
@@ -1284,3 +1306,198 @@ QString FileInfo::size2Str(qint64 nbBytes) {
     }
     return QString("%1 %2%3").arg(value,0,'g',3).arg(prefixes[prefixIdx]).arg(baseUnit);
 }
+
+QList<File> File::ls(bool *theresMore) {
+    QList<File> res;
+    *theresMore = false;
+    if (IDPath.startsWith("WPD:/")) {
+        if (absoluteFilePath.count("/") > 5) return res;
+        QString deviceID = IDPath.split("/")[1];
+        WCHAR * deviceID_i = (WCHAR*) malloc(sizeof(WCHAR)*(deviceID.size()+1));
+        QString objectID;
+        if (IDPath.count("/") == 1) {
+            /* this is the root */
+            objectID = "DEVICE";
+        } else {
+            objectID = IDPath.split("/").last();
+        }
+        WCHAR * objectID_i = (WCHAR*) malloc(sizeof(WCHAR)*(objectID.size()+1));
+        deviceID.toWCharArray(deviceID_i);
+        deviceID_i[deviceID.size()] = L'\0';
+        objectID.toWCharArray(objectID_i);
+        objectID_i[objectID.size()] = L'\0';
+        int count;
+        WPDFileInfo WPDList[MAX_REQUESTED_ELEMENTS];
+        /*qDebug() << "Calling WPDI_LS(" << QString::fromWCharArray(deviceID_i)
+                 << "," << QString::fromWCharArray(objectID_i);*/
+        qDebug() << "listing content of" << absoluteFilePath;
+        //qDebug() << "             path=" << IDPath;
+        WPDI_LS(deviceID_i,objectID_i,WPDList,&count);
+        qDebug() << "returned" << count << "elements";
+        for (int i = 0; i<count; i++) {
+            //qDebug() << "appending element " << i << QString::fromWCharArray(WPDList[i].id) << QString::fromWCharArray(WPDList[i].name);
+            //qDebug() << QString::fromWCharArray(WPDList[i].date);
+            res.append(File(QDateTime::fromString(QString::fromWCharArray(WPDList[i].date),
+                                                      "yyyy/MM/dd:HH:mm:ss.zzz").toTime_t(),
+                                absoluteFilePath + "/" + QString::fromWCharArray(WPDList[i].name),
+                                WPDList[i].size,
+                                WPDList[i].isDir,
+                                IDPath + "/" + QString::fromWCharArray(WPDList[i].id)));
+            WPDI_Free(WPDList[i].id);
+            WPDI_Free(WPDList[i].name);
+            WPDI_Free(WPDList[i].date);
+        }
+        if (count >= MAX_REQUESTED_ELEMENTS) {
+            *theresMore = true;
+        }
+        free(deviceID_i);
+        free(objectID_i);
+    } else {
+        QDir dir = QDir(absoluteFilePath);
+        dir.setFilter(dir.filter()|QDir::NoDotAndDotDot|QDir::System);
+        for (int i = 0; i<dir.entryInfoList().size(); i++) {
+            res.append(File(dir.entryInfoList().at(i)));
+        }
+    }
+    return res;
+}
+
+
+QBuffer *File::getBufferredContent() {
+    if (buffer == NULL) {
+        QBuffer *buffer_ = new QBuffer();
+        if (FillIODeviceWithContent(buffer_)) {
+            buffer = buffer_;
+        } else {
+            delete buffer_;
+        }
+    }
+    return buffer;
+}
+
+bool File::copyWithDirs(QString to, Geotagger *geotagger) {
+    QDir().mkpath(QFileInfo(to).absolutePath());
+    QFile toFile(to);
+    bool res;
+    if (geotagger != NULL) {
+        res = geotagger->geotag(getBufferredContent(),&toFile);
+    } else {
+        res = FillIODeviceWithContent(&toFile);
+    }
+
+    if (res) {
+        /* windows specific code to set the date modified */
+        struct utimbuf times;
+        times.actime = lastModified;
+        times.modtime = lastModified;
+        utime(to.toStdString().c_str(),&times);
+    } else {
+        //TODO: Remove the destination file?
+    }
+
+    return res;
+}
+
+
+bool File::FillIODeviceWithContent(QIODevice *out) {
+    if (buffer != NULL || !IDPath.startsWith("WPD:/")) {
+        /* if buffer was filled, use it */
+        QIODevice *in;
+        QFile inFile(absoluteFilePath);
+        if (buffer != NULL) {
+            in = buffer;
+        } else {
+            in = &inFile;
+        }
+
+        if (!in->open(QIODevice::ReadOnly)) {
+            return false;
+        }
+        if (!out->open(QIODevice::WriteOnly)) {
+            in->close();
+            return false;
+        }
+        qint64 written = out->write(in->readAll());
+        out->close();
+        in->close();
+        return written > 0;
+    } else if (IDPath.startsWith("WPD:/")) {
+        QElapsedTimer timer;
+        qint64 initTime;
+        qint64 transferTime = 0;
+        qint64 closeTime;
+        QString deviceID = IDPath.split("/")[1];
+        QString objectID = IDPath.split("/").last();
+        WCHAR * deviceID_i = (WCHAR*) malloc(sizeof(WCHAR)*(deviceID.size()+1));
+        WCHAR * objectID_i = (WCHAR*) malloc(sizeof(WCHAR)*(objectID.size()+1));
+        deviceID.toWCharArray(deviceID_i);
+        deviceID_i[deviceID.size()] = L'\0';
+        objectID.toWCharArray(objectID_i);
+        objectID_i[objectID.size()] = L'\0';
+        DWORD optimalTransferSize;
+        DWORD read;
+        qint64 written;
+        qint64 totalWritten = 0;
+        timer.start();
+        if (!WPDI_InitTransfer(deviceID_i,objectID_i,&optimalTransferSize)) return false;
+        initTime = timer.nsecsElapsed();
+        /* Create the destination file only if InitTransfer worked */
+        if (!out->open(QIODevice::WriteOnly)) return false;
+        //qDebug() << "optimalTransferSize=" << optimalTransferSize;
+        unsigned char * data = (unsigned char *)malloc(sizeof(unsigned char) * optimalTransferSize);
+        timer.restart();
+        while (WPDI_readNextData(data,optimalTransferSize,&read)) {
+            transferTime += timer.nsecsElapsed();
+            written = out->write((char *)data,read);
+            if ( written == -1) {
+                qWarning() << "Problem during toFile.write(data,"<<read<<")";
+                break;
+            }
+            if ( written != read ) {
+                qWarning() << "Problem during toFile.write(data,"<<read<<"), written=" << written;
+            }
+            totalWritten += written;
+            //qDebug() << "Transfered " << totalWritten << "so far!";
+            timer.restart();
+        }
+        free(data);
+        free(deviceID_i);
+        free(objectID_i);
+        out->close();
+        timer.restart();
+        WPDI_CloseTransfer();
+        closeTime = timer.nsecsElapsed();
+        qint64 totalTime = initTime + transferTime + closeTime;
+        qDebug() << QString("Init %1ms (%2\%)), Transfer %3ms (%4\%) %5@%6/s, Close %7ms (%8\%)")
+                    .arg((double)initTime/1000000,0,'f',3)
+                    .arg((double)initTime*100/totalTime,0,'f',2)
+                    .arg((double)transferTime/1000000,0,'f',3)
+                    .arg((double)transferTime*100/totalTime,0,'f',2)
+                    .arg(File::size2Str(totalWritten))
+                    .arg(File::size2Str((qint64)((double)totalWritten*1000000000/(double)transferTime)))
+                    .arg((double)closeTime/1000000,0,'f',3)
+                    .arg((double)closeTime*100/totalTime,0,'f',2) ;
+        if ( written == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+bool File::moveWithDirs(QString to) {
+    QDir().mkpath(QFileInfo(to).absolutePath());
+    return QFile(absoluteFilePath).rename(to);
+}
+
+#include "windows.h"
+bool File::setHidden() {
+    WCHAR * wPath = (WCHAR*) malloc(sizeof(WCHAR)*(absoluteFilePath.size()+1));
+    QString windowsStylePath = absoluteFilePath;
+    windowsStylePath.replace("/","\\").toWCharArray(wPath);
+    DWORD dwAttrs = GetFileAttributes(wPath);
+    SetFileAttributes(wPath, dwAttrs | FILE_ATTRIBUTE_HIDDEN);
+    free(wPath);
+}
+
+

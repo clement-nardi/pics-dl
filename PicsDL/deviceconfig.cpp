@@ -43,8 +43,6 @@ DeviceConfig::DeviceConfig()
     knownFiles_FileName = dir.absolutePath() + "/knownFiles.txt";
     qDebug() << knownFiles_FileName;
 
-    knownFiles = new QSet<FileInfo>();
-
     loadConfig();
     loadKnownFiles();
 }
@@ -88,14 +86,14 @@ void DeviceConfig::saveKnownFiles(){
     QFile knownFiles_File(knownFiles_FileName);
     if (knownFiles_File.open(QIODevice::WriteOnly)) {
         QJsonArray jsa;
-        QSetIterator<FileInfo> i(*knownFiles);
+        QSetIterator<File*> i(knownFiles);
         int count = 0;
         while (i.hasNext()) {
             QJsonObject obj;
-            FileInfo fi = i.next();
-            obj["lastModified"] = QJsonValue(QString("%1").arg(fi.lastModified));
-            obj["absoluteFilePath"] = QJsonValue(fi.absoluteFilePath);
-            obj["size"] = QJsonValue(QString("%1").arg(fi.size));
+            File *fi = i.next();
+            obj["lastModified"] = QJsonValue(QString("%1").arg(fi->lastModified));
+            obj["absoluteFilePath"] = QJsonValue(fi->absoluteFilePath);
+            obj["size"] = QJsonValue(QString("%1").arg(fi->size));
 
             jsa.append(obj);
             count++;
@@ -122,10 +120,10 @@ void DeviceConfig::loadKnownFiles(){
         } else {
             for (int i = 0; i < JKnownFiles.size(); i++) {
                 QJsonObject kfo = JKnownFiles.at(i).toObject();
-                knownFiles->insert(FileInfo(kfo["lastModified"].toString().toUInt(),
-                                            kfo["absoluteFilePath"].toString(),
-                                            kfo["size"].toString().toULongLong(),
-                                            false));
+                knownFiles.insert(new File(kfo["lastModified"].toString().toUInt(),
+                                           kfo["absoluteFilePath"].toString(),
+                                           kfo["size"].toString().toULongLong(),
+                                           false));
             }
             qDebug() << JKnownFiles.size() << " known files Loaded";
         }

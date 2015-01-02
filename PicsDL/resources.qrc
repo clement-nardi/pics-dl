@@ -14,5 +14,6 @@
         <file alias="folder">resources/1286719705_folder_open.png</file>
         <file alias="picsDL">PicsDL.ico</file>
         <file alias="edit">resources/1297534676_edit.png</file>
+        <file alias="gps">resources/1420219735_internt_web_technology-08-128.png</file>
     </qresource>
 </RCC>

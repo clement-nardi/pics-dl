@@ -1,13 +1,18 @@
 #ifndef GEOTAG_H
 #define GEOTAG_H
 
-#include "exiftoolperlwrapper.h"
+#include <QString>
+
+class File;
+class ExifToolPerlWrapper;
+class QBuffer;
+class QIODevice;
 
 class Geotagger
 {
 public:
-    Geotagger(char *trackFilesFolder);
-    void geotag(char *in, char *out);
+    Geotagger(File *trackFilesFolder);
+    bool geotag(QBuffer *in, QIODevice *out);
 
 private:
     ExifToolPerlWrapper * exiftool;

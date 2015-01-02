@@ -22,7 +22,7 @@
 #define DEVICECONFIG_H
 
 #include <QJsonObject>
-#include "fileinfo.h"
+#include "file.h"
 #include <QSet>
 
 class DeviceConfig {
@@ -30,7 +30,7 @@ public:
     explicit DeviceConfig();
 
     QJsonObject conf;
-    QSet<FileInfo> *knownFiles;
+    QSet<File*> knownFiles;
 
     void saveConfig();
     void loadConfig();

@@ -24,9 +24,9 @@ ExifToolPerlWrapper::ExifToolPerlWrapper() {
         globalInitDone = true;
         PERL_SYS_INIT3(&argc,(char ***)&argv,&env);
     }
-    perl_interpreter = perl_alloc();
+    my_perl = perl_alloc();
 
-    PERL_SET_CONTEXT(perl_interpreter);
+    PERL_SET_CONTEXT(my_perl);
 
     perl_construct(my_perl);
     PL_exit_flags |= PERL_EXIT_DESTRUCT_END;
@@ -42,20 +42,22 @@ ExifToolPerlWrapper::ExifToolPerlWrapper() {
     eval_pv("$exifTool->SetNewValue('Geotag', 'E:/Documents/My Dropbox/Apps/GPSLogger for Android/20141213.gpx');", TRUE);
 }
 
-~ExifToolPerlWrapper(){
+ExifToolPerlWrapper::~ExifToolPerlWrapper(){
 
 }
 
 
-void ExifToolPerlWrapper::loadTrackFile(char * trackFilePath) {
+void ExifToolPerlWrapper::loadTrackFile(const char * trackFilePath) {
+    PERL_SET_CONTEXT(my_perl);
     SV* trackFilePath_SV = get_sv("trackFilePath", GV_ADD);
     sv_setpv(trackFilePath_SV, trackFilePath);
-    eval_pv("$exifTool->SetNewValue('Geotag', $trackFilePath);", TRUE);
+    eval_pv("my @loadTrackResults = $exifTool->SetNewValue('Geotag', $trackFilePath);", TRUE);
+    eval_pv("print Dumper(@loadTrackResults);", TRUE);
 }
 
-void ExifToolPerlWrapper::geotag(char *in, int in_size, char **out, int *out_size){
+void ExifToolPerlWrapper::geotag(char *in, long in_size, char **out, long *out_size){
 
-    PERL_SET_CONTEXT(perl_interpreter);
+    PERL_SET_CONTEXT(my_perl);
 
     SV* source = get_sv("sourceFileData", GV_ADD);
     sv_setpvn(source, in, in_size);
@@ -84,6 +86,6 @@ void ExifToolPerlWrapper::geotag(char *in, int in_size, char **out, int *out_siz
  * @brief exitPerl
  * exits Perl properly. To be called only once when closing application.
  */
-static ExifToolPerlWrapper::exitPerl(){
+void ExifToolPerlWrapper::exitPerl(){
     PERL_SYS_TERM();
 }

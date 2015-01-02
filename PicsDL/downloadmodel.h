@@ -23,7 +23,7 @@
 
 #include <QAbstractTableModel>
 #include "deviceconfig.h"
-#include "fileinfo.h"
+#include "file.h"
 #include <QList>
 #include <QProgressDialog>
 #include <QItemDelegate>
@@ -42,24 +42,25 @@ public:
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     void loadPreview(QString id);
-    bool downloadToTemp();
+    bool download();
     void moveToFinalLocation();
-    bool geoTag();
+    Geotagger *getGeoTagger(bool *error);
     void showEXIFTags(int row);
     QString guessCameraName();
+    void getStats(qint64 *totalSize, int *nbFiles);
 private:
     QElapsedTimer pdTimer;
     DeviceConfig *dc;
     bool editMode;
     QString id;
-    QList<FileInfo*> *blacklistedDirectories;
-    QList<FileInfo*> *completeFileList;
-    QList<FileInfo*> *selectedFileList;
-    bool isBlacklisted(FileInfo info);
-    void treatDir(FileInfo dirInfo);
-    QString newPath(FileInfo *fi, bool keepDComStr = false) const;
+    QList<File*> *blacklistedDirectories;
+    QList<File*> *completeFileList;
+    QList<File*> *selectedFileList;
+    bool isBlacklisted(File info);
+    void treatDir(File dirInfo);
+    QString newPath(File *fi, bool keepDComStr = false) const;
     int itemBeingDownloaded;
-    QString getDCom(FileInfo *fi, bool forceQuery = false) const;
+    QString getDCom(File *fi, bool forceQuery = false) const;
     QString sessionComment;
     QProgressDialog *pd;
     int discoveredFolders;
@@ -67,7 +68,7 @@ private:
     int browsedFiles;
     void emptyFileList();
     QString DLTempFolder;
-    QString tempPath(FileInfo *fi) const;
+    QString tempPath(File *fi) const;
 signals:
     void itemOfInterest(QModelIndex);
     void reloaded();
