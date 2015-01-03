@@ -32,6 +32,7 @@ QString ExifToolPath;
 
 int main(int argc, char *argv[])
 {
+
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
 
@@ -67,5 +68,7 @@ int main(int argc, char *argv[])
                               QSystemTrayIcon::Warning);
     }
 
-    return a.exec();
+    int res = a.exec();
+    delete im;
+    return res;
 }

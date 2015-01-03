@@ -10,6 +10,7 @@ class InstanceManager : public QThread
     Q_OBJECT
 public:
     explicit InstanceManager(QObject *parent = 0);
+    ~InstanceManager();
     void run();
     bool isFirstInstance;
 

@@ -18,7 +18,9 @@
  *
  **/
 
-#include "drivenotofy_win.h"
+#ifdef _WIN32
+
+#include "drivenotify_win.h"
 #include <QLibrary>
 #include <QDebug>
 #include "dbt.h"
@@ -255,3 +257,5 @@ static QChar DriveMaskToLetter(int mask)
 
   return letter;
 }
+
+#endif

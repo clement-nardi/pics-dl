@@ -18,6 +18,8 @@
  *
  **/
 
+#ifdef _WIN32
+
 #ifndef DRIVENOTOFY_WIN_H
 #define DRIVENOTOFY_WIN_H
 
@@ -43,3 +45,4 @@ signals:
 
 #endif // DRIVENOTOFY_WIN_H
 
+#endif // _WIN32

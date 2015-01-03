@@ -10,7 +10,7 @@
 DESTDIR = bin
 
 rcfile.target = PicsDL.rc
-rcfile.commands = ..\PicsDL\increment_build_number.bat
+rcfile.commands = ../PicsDL/increment_build_number.sh
 QMAKE_EXTRA_TARGETS += rcfile
 PRE_TARGETDEPS += PicsDL.rc
 
@@ -19,8 +19,10 @@ exiftool.commands = ../exiftool/get_exiftool.sh \"$$OUT_PWD/$$DESTDIR\"
 QMAKE_EXTRA_TARGETS += exiftool
 PRE_TARGETDEPS += exiftool_app
 
+#with "/" it doesn't work under win7
+win32: include( ..\o2-master\src\src.pri )
+unix: include( ../o2-master/src/src.pri )
 
-include( ..\o2-master\src\src.pri )
 
 QT       += core gui
 
@@ -33,7 +35,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     drivenotify.cpp \
-    drivenotofy_win.cpp \
     devicemanager.cpp \
     deviceconfig.cpp \
     driveview.cpp \
@@ -47,11 +48,12 @@ SOURCES += main.cpp\
     instancemanager.cpp \
     geotagger.cpp \
     exiftoolperlwrapper.cpp \
-    file.cpp
+    file.cpp \
+    drivenotify_udev.cpp \
+    drivenotify_win.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
-    drivenotofy_win.h \
     devicemanager.h \
     deviceconfig.h \
     driveview.h \
@@ -65,30 +67,41 @@ HEADERS  += mainwindow.h \
     instancemanager.h \
     geotagger.h \
     exiftoolperlwrapper.h \
-    file.h
+    file.h \
+    drivenotify_udev.h \
+    drivenotify_win.h
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \
             dcomdialog.ui \
             exifdialog.ui
 
-win32: LIBS += -L"C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86/" -lshell32
+win32{
+    LIBS += -L"C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86/" -lshell32
 
+    INCLUDEPATH   += "$$PWD/../WPDInterface/WPDInterface"
+    LIBS += -L"$$PWD/../WPDInterface/Release" -lWPDInterface
 
-INCLUDEPATH   += "$$PWD/../WPDInterface/WPDInterface"
-win32: LIBS += -L"$$PWD/../WPDInterface/Release" -lWPDInterface
+    INCLUDEPATH += $$PWD/../libexif-0.6.21/
+    LIBS      += -L$$PWD/../libexif-0.6.21/libexif/.libs/ -lexif
+} else {
+    LIBS      += -lexif -ludev
+}
 
-
-INCLUDEPATH += $$PWD/../libexif-0.6.21/
-LIBS      += -L$$PWD/../libexif-0.6.21/libexif/.libs/ -lexif
 
 
 QMAKE_CXXFLAGS += -DUSETHREADS -DUSEITHREADS -DMULTIPLICITY
-INCLUDEPATH += "C:/Strawberry/perl/lib/CORE"
-LIBS        += -LC:/Strawberry/perl/lib/CORE/ -lperl520
-#Path to the DLL. Without this line, the compilation is fine, but QT Creator is unable to launch the app:
-#An exception was triggered: Exception at 0x77e98f05, code: 0xc0000139: DLL entry point not found, flags=0x0. During startup program exited with code 0xc0000139.
-LIBS        += -LC:/Strawberry/perl/bin -lperl520
+win32 {
+    INCLUDEPATH += "C:/Strawberry/perl/lib/CORE"
+    LIBS        += -LC:/Strawberry/perl/lib/CORE/ -lperl520
+    #Path to the DLL. Without this line, the compilation is fine, but QT Creator is unable to launch the app:
+    #An exception was triggered: Exception at 0x77e98f05, code: 0xc0000139: DLL entry point not found, flags=0x0. During startup program exited with code 0xc0000139.
+    LIBS        += -LC:/Strawberry/perl/bin -lperl520
+}
+unix {
+    INCLUDEPATH += "/usr/lib/perl/5.18.2/CORE/"
+    LIBS        += -L/usr/lib/ -lperl
+}
 
 RESOURCES += \
     resources.qrc

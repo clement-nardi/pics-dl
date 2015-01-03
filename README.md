@@ -144,3 +144,18 @@ In the terminal, write these commands:
 	
 If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.libs/libexif-12.dll  
 
+
+
+#How to compile on Linux
+
+Install these packages with your favorite package manager:
+ * qt5-default
+ * qtcreator
+ * qtscript5-dev
+ * curl
+ * g++
+ * libexif-dev
+ * libperl-dev
+ * libudev-dev
+
+

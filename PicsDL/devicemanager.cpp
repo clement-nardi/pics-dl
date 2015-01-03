@@ -107,7 +107,10 @@ void DeviceManager::handleDestroyed(QObject *object) {
 #include <windows.h>
 #include <tchar.h>
 #else // linux stuff
-
+#include <unistd.h>      //close()
+#include <fcntl.h>       //File control defs
+#include <sys/ioctl.h>   //IOCTL  defs
+#include <linux/hdreg.h> //Drive specific defs
 #endif // _WIN32
 
 
@@ -119,6 +122,7 @@ static QString getDriveSerial(QString path) {
         return path.mid(5);
     } else {
         // adapted from http://www.developpez.net/forums/d523835/c-cpp/cpp/utilisation-getvolumeinformation/
+        // and http://www.linuxquestions.org/questions/programming-9/problem-with-hdio_get_identity-ioctl-856753/
 
         TCHAR volName[MAX_PATH+1];
         DWORD volSerial;
@@ -140,6 +144,7 @@ static QString getDriveSerial(QString path) {
 #else
     //for linux implementation: http://lists.trolltech.com/qt-interest/2004-11/msg01098.html
 
+    QString res;
     struct hd_driveid id;
 
     int fd = open("/dev/hda", O_RDONLY|O_NONBLOCK);
@@ -150,9 +155,11 @@ static QString getDriveSerial(QString path) {
     }
 
     if(!ioctl(fd, HDIO_GET_IDENTITY, &id)) {
-        hardwareID = id.serial_no;
+        res = QString("%1;%2").arg(QString((char *)id.model)).arg(QString((char *)id.serial_no));
     }
 
+    close(fd);
+    return res;
 #endif
 
 }

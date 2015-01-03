@@ -1,0 +1,3224 @@
+Starting /home/cnardi/Projects/PicsDL/build-PicsDL-Desktop-Debug/bin/PicsDL...
+"/home/cnardi/Projects/PicsDL/build-PicsDL-Desktop-Debug/bin" 
+"/home/cnardi/Projects/PicsDL/build-PicsDL-Desktop-Debug/bin" 
+"/home/cnardi/.config/PicsDL" 
+"/home/cnardi/.config/PicsDL/config.txt" 
+"/home/cnardi/.config/PicsDL/knownFiles.txt" 
+Config Loaded 
+"{
+    "": {
+        "isManaged": false
+    }
+}
+" 
+Could not load the known files from file  "/home/cnardi/.config/PicsDL/knownFiles.txt" 
+libGL error: pci id for fd 10: 80ee:beef, driver (null)
+OpenGL Warning: glFlushVertexArrayRangeNV not found in mesa table
+OpenGL Warning: glVertexArrayRangeNV not found in mesa table
+OpenGL Warning: glCombinerInputNV not found in mesa table
+OpenGL Warning: glCombinerOutputNV not found in mesa table
+OpenGL Warning: glCombinerParameterfNV not found in mesa table
+OpenGL Warning: glCombinerParameterfvNV not found in mesa table
+OpenGL Warning: glCombinerParameteriNV not found in mesa table
+OpenGL Warning: glCombinerParameterivNV not found in mesa table
+OpenGL Warning: glFinalCombinerInputNV not found in mesa table
+OpenGL Warning: glGetCombinerInputParameterfvNV not found in mesa table
+OpenGL Warning: glGetCombinerInputParameterivNV not found in mesa table
+OpenGL Warning: glGetCombinerOutputParameterfvNV not found in mesa table
+OpenGL Warning: glGetCombinerOutputParameterivNV not found in mesa table
+OpenGL Warning: glGetFinalCombinerInputParameterfvNV not found in mesa table
+OpenGL Warning: glGetFinalCombinerInputParameterivNV not found in mesa table
+OpenGL Warning: glDeleteFencesNV not found in mesa table
+OpenGL Warning: glFinishFenceNV not found in mesa table
+OpenGL Warning: glGenFencesNV not found in mesa table
+OpenGL Warning: glGetFenceivNV not found in mesa table
+OpenGL Warning: glIsFenceNV not found in mesa table
+OpenGL Warning: glSetFenceNV not found in mesa table
+OpenGL Warning: glTestFenceNV not found in mesa table
+libGL error: core dri or dri2 extension not found
+libGL error: failed to load driver: vboxvideo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed2810
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed2810, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1efad20
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1efad20, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed0be0
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed0be0, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ecdc60
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ecdc60, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed23b0
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed23b0, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1f043b0
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1f043b0, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2010
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2010, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ecb460
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ecb460, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed0420
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed0420, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed0600
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed0600, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2340
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2340, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2520
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2520, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1f04a80
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1f04a80, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1f04c60
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1f04c60, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2e50
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2e50, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef3030
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef3030, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ecf950
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ecf950, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ecfb30
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ecfb30, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2760
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2760, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2940
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2940, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed2900
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed2900, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1efae10
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1efae10, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ecdb70
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ecdb70, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ecdd50
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ecdd50, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed24a0
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed24a0, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1f044a0
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1f044a0, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2100
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2100, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ecb550
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ecb550, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed0510
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed0510, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed06f0
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed06f0, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2430
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2430, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2610
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2610, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1f04b70
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1f04b70, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ed20e0
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ed20e0, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2f40
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2f40, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef1d40
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef1d40, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ecfa40
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ecfa40, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ecfc20
+OpenGL Warning: Retry with 0x8002 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ecfc20, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2850
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2850, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2a30, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2a30, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2a30, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2a30, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2a30, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2a30, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2a30, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2a30, failed to get XVisualInfo
+OpenGL Warning: XGetVisualInfo returned 0 visuals for 0x1ef2a30
+OpenGL Warning: Retry with 0x8003 returned 0 visuals
+OpenGL Warning: glXGetFBConfigAttrib for 0x1ef2a30, failed to get XVisualInfo
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/input/event0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/input/event1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/sr0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/bsg/1:0:0:0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/sg0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/dri/card0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/input/event5
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/input/js1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/snd/pcmC0D0c
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/snd/pcmC0D0p
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/snd/pcmC0D1c
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/snd/controlC0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/bus/usb/001/001
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+  VID/PID: 1d6b 0001
+  Linux 3.13.0-37-generic ohci_hcd
+  OHCI PCI host controller
+  serial: 0000:00:06.0
+Device Node Path: /dev/bus/usb/001/002
+  VID/PID: 1d6b 0001
+  Linux 3.13.0-37-generic ohci_hcd
+  OHCI PCI host controller
+  serial: 0000:00:06.0
+Device Node Path: (null)
+  VID/PID: 80ee 0021
+  VirtualBox
+  USB Tablet
+  serial: (null)
+Device Node Path: (null)
+  VID/PID: 80ee 0021
+  VirtualBox
+  USB Tablet
+  serial: (null)
+Device Node Path: /dev/hidraw0
+  VID/PID: 80ee 0021
+  VirtualBox
+  USB Tablet
+  serial: (null)
+Device Node Path: (null)
+  VID/PID: 80ee 0021
+  VirtualBox
+  USB Tablet
+  serial: (null)
+Device Node Path: /dev/input/event4
+  VID/PID: 80ee 0021
+  VirtualBox
+  USB Tablet
+  serial: (null)
+Device Node Path: /dev/input/js0
+  VID/PID: 80ee 0021
+  VirtualBox
+  USB Tablet
+  serial: (null)
+Device Node Path: /dev/input/mouse1
+  VID/PID: 80ee 0021
+  VirtualBox
+  USB Tablet
+  serial: (null)
+Device Node Path: /dev/bus/usb/001/007
+  VID/PID: 1d6b 0001
+  Linux 3.13.0-37-generic ohci_hcd
+  OHCI PCI host controller
+  serial: 0000:00:06.0
+Device Node Path: (null)
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: (null)
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: (null)
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: (null)
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: (null)
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: /dev/sdb
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: /dev/sdb1
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: /dev/bsg/6:0:0:0
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: (null)
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: (null)
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: /dev/sg2
+  VID/PID: 054c 0243
+  Sony
+  Storage Media
+  serial: 5A0810280024786
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/sda
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/sda1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/sda2
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/sda5
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/bsg/2:0:0:0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/sg1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/input/event2
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/input/event3
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/input/mouse0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/rtc0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS10
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS11
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS12
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS13
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS14
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS15
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS16
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS17
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS18
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS19
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS2
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS20
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS21
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS22
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS23
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS24
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS25
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS26
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS27
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS28
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS29
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS3
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS30
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS31
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS4
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS5
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS6
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS7
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS8
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyS9
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/fb0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/loop0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/loop1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/loop2
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/loop3
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/loop4
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/loop5
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/loop6
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/loop7
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram10
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram11
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram12
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram13
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram14
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram15
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram2
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram3
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram4
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram5
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram6
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram7
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram8
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ram9
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/input/mice
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/full
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/kmsg
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/mem
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/null
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/port
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/random
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/urandom
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/zero
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/cpu_dma_latency
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/mapper/control
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ecryptfs
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/fuse
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/hpet
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/loop-control
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/mcelog
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/cpu/microcode
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/network_latency
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/network_throughput
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/psaux
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/rfkill
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/snapshot
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/net/tun
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/uinput
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vboxguest
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vboxuser
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vga_arbiter
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ppp
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/snd/seq
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/snd/timer
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/console
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ptmx
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty10
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty11
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty12
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty13
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty14
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty15
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty16
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty17
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty18
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty19
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty2
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty20
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty21
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty22
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty23
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty24
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty25
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty26
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty27
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty28
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty29
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty3
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty30
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty31
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty32
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty33
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty34
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty35
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty36
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty37
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty38
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty39
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty4
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty40
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty41
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty42
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty43
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty44
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty45
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty46
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty47
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty48
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty49
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty5
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty50
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty51
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty52
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty53
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty54
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty55
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty56
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty57
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty58
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty59
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty6
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty60
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty61
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty62
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty63
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty7
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty8
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/tty9
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/ttyprintk
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcs
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcs1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcs2
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcs3
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcs4
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcs5
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcs6
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcs7
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcs8
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcsa
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcsa1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcsa2
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcsa3
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcsa4
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcsa5
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcsa6
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcsa7
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/vcsa8
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: (null)
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/dm-0
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+Device Node Path: /dev/dm-1
+Unable to find parent usb device.  VID/PID: (null) (null)
+  (null)
+  (null)
+  serial: (null)
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/bsg/6:0:0:0
+   subsystem:               bsg
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/bsg/6:0:0:0
+   sysname:                 6:0:0:0
+   sysnum:                  0
+   devnode:                 /dev/bsg/6:0:0:0
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1709
+   usec_since_initialized:  -1328212363
+   property 1:             ACTION=remove
+   property 2:             DEVNAME=/dev/bsg/6:0:0:0
+   property 3:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/bsg/6:0:0:0
+   property 4:             ID_BUS=usb
+   property 5:             ID_INSTANCE=0:0
+   property 6:             ID_MODEL=Storage_Media
+   property 7:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 8:             ID_MODEL_ID=0243
+   property 9:             ID_REVISION=1.00
+   property 10:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 11:             ID_SERIAL_SHORT=5A0810280024786
+   property 12:             ID_TYPE=disk
+   property 13:             ID_USB_DRIVER=usb-storage
+   property 14:             ID_USB_INTERFACES=:080650:
+   property 15:             ID_USB_INTERFACE_NUM=00
+   property 16:             ID_VENDOR=Sony
+   property 17:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 18:             ID_VENDOR_ID=054c
+   property 19:             MAJOR=252
+   property 20:             MINOR=2
+   property 21:             SEQNUM=1709
+   property 22:             SUBSYSTEM=bsg
+   property 23:             USEC_INITIALIZED=108793984
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/scsi_generic/sg2
+   subsystem:               scsi_generic
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/scsi_generic/sg2
+   sysname:                 sg2
+   sysnum:                  2
+   devnode:                 /dev/sg2
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1710
+   usec_since_initialized:  -1328211923
+   property 1:             ACTION=remove
+   property 2:             DEVNAME=/dev/sg2
+   property 3:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/scsi_generic/sg2
+   property 4:             ID_BUS=usb
+   property 5:             ID_INSTANCE=0:0
+   property 6:             ID_MODEL=Storage_Media
+   property 7:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 8:             ID_MODEL_ID=0243
+   property 9:             ID_REVISION=1.00
+   property 10:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 11:             ID_SERIAL_SHORT=5A0810280024786
+   property 12:             ID_TYPE=disk
+   property 13:             ID_USB_DRIVER=usb-storage
+   property 14:             ID_USB_INTERFACES=:080650:
+   property 15:             ID_USB_INTERFACE_NUM=00
+   property 16:             ID_VENDOR=Sony
+   property 17:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 18:             ID_VENDOR_ID=054c
+   property 19:             MAJOR=21
+   property 20:             MINOR=2
+   property 21:             SEQNUM=1710
+   property 22:             SUBSYSTEM=scsi_generic
+   property 23:             USEC_INITIALIZED=108793660
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/scsi_host/host6
+   subsystem:               scsi_host
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/scsi_host/host6
+   sysname:                 host6
+   sysnum:                  6
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1718
+   usec_since_initialized:  -1227172538
+   property 1:             ACTION=remove
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/scsi_host/host6
+   property 3:             ID_BUS=usb
+   property 4:             ID_MODEL=Storage_Media
+   property 5:             ID_MODEL_ENC=Storage\x20Media
+   property 6:             ID_MODEL_ID=0243
+   property 7:             ID_REVISION=0200
+   property 8:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 9:             ID_SERIAL_SHORT=5A0810280024786
+   property 10:             ID_TYPE=scsi
+   property 11:             ID_USB_DRIVER=usb-storage
+   property 12:             ID_USB_INTERFACES=:080650:
+   property 13:             ID_USB_INTERFACE_NUM=00
+   property 14:             ID_VENDOR=Sony
+   property 15:             ID_VENDOR_ENC=Sony
+   property 16:             ID_VENDOR_ID=054c
+   property 17:             SEQNUM=1718
+   property 18:             SUBSYSTEM=scsi_host
+   property 19:             USEC_INITIALIZED=7754319
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/virtual/bdi/8:16
+   subsystem:               bdi
+   devtype:                 (null)
+   syspath:                 /sys/devices/virtual/bdi/8:16
+   sysname:                 8:16
+   sysnum:                  16
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1714
+   usec_since_initialized:  -1474719904
+   property 1:             ACTION=remove
+   property 2:             DEVPATH=/devices/virtual/bdi/8:16
+   property 3:             SEQNUM=1714
+   property 4:             SUBSYSTEM=bdi
+   property 5:             USEC_INITIALIZED=255301724
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/scsi_disk/6:0:0:0
+   subsystem:               scsi_disk
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/scsi_disk/6:0:0:0
+   sysname:                 6:0:0:0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1712
+   usec_since_initialized:  -1228209631
+   property 1:             ACTION=remove
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/scsi_disk/6:0:0:0
+   property 3:             ID_BUS=usb
+   property 4:             ID_INSTANCE=0:0
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=1.00
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=disk
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             SEQNUM=1712
+   property 19:             SUBSYSTEM=scsi_disk
+   property 20:             USEC_INITIALIZED=8791473
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/block/sdb/sdb1
+   subsystem:               block
+   devtype:                 partition
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/block/sdb/sdb1
+   sysname:                 sdb1
+   sysnum:                  1
+   devnode:                 /dev/sdb1
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1713
+   usec_since_initialized:  -1228399681
+   property 1:             ACTION=remove
+   property 2:             DEVLINKS=/dev/disk/by-id/usb-Sony_Storage_Media_5A0810280024786-0:0-part1 /dev/disk/by-path/pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0-part1 /dev/disk/by-uuid/9E1A05EC1A05C1EF
+   property 3:             DEVNAME=/dev/sdb1
+   property 4:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/block/sdb/sdb1
+   property 5:             DEVTYPE=partition
+   property 6:             ID_BUS=usb
+   property 7:             ID_FS_TYPE=ntfs
+   property 8:             ID_FS_USAGE=filesystem
+   property 9:             ID_FS_UUID=9E1A05EC1A05C1EF
+   property 10:             ID_FS_UUID_ENC=9E1A05EC1A05C1EF
+   property 11:             ID_INSTANCE=0:0
+   property 12:             ID_MODEL=Storage_Media
+   property 13:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 14:             ID_MODEL_ID=0243
+   property 15:             ID_PART_ENTRY_DISK=8:16
+   property 16:             ID_PART_ENTRY_FLAGS=0x80
+   property 17:             ID_PART_ENTRY_NUMBER=1
+   property 18:             ID_PART_ENTRY_OFFSET=63
+   property 19:             ID_PART_ENTRY_SCHEME=dos
+   property 20:             ID_PART_ENTRY_SIZE=15663041
+   property 21:             ID_PART_ENTRY_TYPE=0x7
+   property 22:             ID_PART_TABLE_TYPE=dos
+   property 23:             ID_PATH=pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0
+   property 24:             ID_PATH_TAG=pci-0000_00_06_0-usb-0_2_1_0-scsi-0_0_0_0
+   property 25:             ID_REVISION=1.00
+   property 26:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 27:             ID_SERIAL_SHORT=5A0810280024786
+   property 28:             ID_TYPE=disk
+   property 29:             ID_USB_DRIVER=usb-storage
+   property 30:             ID_USB_INTERFACES=:080650:
+   property 31:             ID_USB_INTERFACE_NUM=00
+   property 32:             ID_VENDOR=Sony
+   property 33:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 34:             ID_VENDOR_ID=054c
+   property 35:             MAJOR=8
+   property 36:             MINOR=17
+   property 37:             SEQNUM=1713
+   property 38:             SUBSYSTEM=block
+   property 39:             UDISKS_PARTITION=1
+   property 40:             UDISKS_PARTITION_ALIGNMENT_OFFSET=0
+   property 41:             UDISKS_PARTITION_FLAGS=boot
+   property 42:             UDISKS_PARTITION_NUMBER=1
+   property 43:             UDISKS_PARTITION_OFFSET=32256
+   property 44:             UDISKS_PARTITION_SCHEME=mbr
+   property 45:             UDISKS_PARTITION_SIZE=8019476992
+   property 46:             UDISKS_PARTITION_SLAVE=/sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/block/sdb
+   property 47:             UDISKS_PARTITION_TYPE=0x07
+   property 48:             UDISKS_PRESENTATION_NOPOLICY=0
+   property 49:             USEC_INITIALIZED=8981650
+   devlink 1:              /dev/disk/by-id/usb-Sony_Storage_Media_5A0810280024786-0:0-part1=(null)
+   devlink 2:              /dev/disk/by-path/pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0-part1=(null)
+   devlink 3:              /dev/disk/by-uuid/9E1A05EC1A05C1EF=(null)
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/block/sdb
+   subsystem:               block
+   devtype:                 disk
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/block/sdb
+   sysname:                 sdb
+   sysnum:                  (null)
+   devnode:                 /dev/sdb
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1715
+   usec_since_initialized:  -1228399530
+   property 1:             ACTION=remove
+   property 2:             DEVLINKS=/dev/disk/by-id/usb-Sony_Storage_Media_5A0810280024786-0:0 /dev/disk/by-path/pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0
+   property 3:             DEVNAME=/dev/sdb
+   property 4:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/block/sdb
+   property 5:             DEVTYPE=disk
+   property 6:             ID_BUS=usb
+   property 7:             ID_INSTANCE=0:0
+   property 8:             ID_MODEL=Storage_Media
+   property 9:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 10:             ID_MODEL_ID=0243
+   property 11:             ID_PART_TABLE_TYPE=dos
+   property 12:             ID_PATH=pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0
+   property 13:             ID_PATH_TAG=pci-0000_00_06_0-usb-0_2_1_0-scsi-0_0_0_0
+   property 14:             ID_REVISION=1.00
+   property 15:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 16:             ID_SERIAL_SHORT=5A0810280024786
+   property 17:             ID_TYPE=disk
+   property 18:             ID_USB_DRIVER=usb-storage
+   property 19:             ID_USB_INTERFACES=:080650:
+   property 20:             ID_USB_INTERFACE_NUM=00
+   property 21:             ID_VENDOR=Sony
+   property 22:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 23:             ID_VENDOR_ID=054c
+   property 24:             MAJOR=8
+   property 25:             MINOR=16
+   property 26:             SEQNUM=1715
+   property 27:             SUBSYSTEM=block
+   property 28:             UDISKS_PARTITION_TABLE=1
+   property 29:             UDISKS_PARTITION_TABLE_COUNT=1
+   property 30:             UDISKS_PARTITION_TABLE_SCHEME=mbr
+   property 31:             UDISKS_PRESENTATION_NOPOLICY=0
+   property 32:             USEC_INITIALIZED=8981617
+   devlink 1:              /dev/disk/by-id/usb-Sony_Storage_Media_5A0810280024786-0:0=(null)
+   devlink 2:              /dev/disk/by-path/pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/scsi_device/6:0:0:0
+   subsystem:               scsi_device
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/scsi_device/6:0:0:0
+   sysname:                 6:0:0:0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1711
+   usec_since_initialized:  -1328209358
+   property 1:             ACTION=remove
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0/scsi_device/6:0:0:0
+   property 3:             ID_BUS=usb
+   property 4:             ID_INSTANCE=0:0
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=1.00
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=disk
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             SEQNUM=1711
+   property 19:             SUBSYSTEM=scsi_device
+   property 20:             USEC_INITIALIZED=108791480
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/virtual/bdi/8:17-fuseblk
+   subsystem:               bdi
+   devtype:                 (null)
+   syspath:                 /sys/devices/virtual/bdi/8:17-fuseblk
+   sysname:                 8:17-fuseblk
+   sysnum:                  (null)
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1722
+   usec_since_initialized:  -1224737590
+   property 1:             ACTION=remove
+   property 2:             DEVPATH=/devices/virtual/bdi/8:17-fuseblk
+   property 3:             SEQNUM=1722
+   property 4:             SUBSYSTEM=bdi
+   property 5:             USEC_INITIALIZED=5319733
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0
+   subsystem:               scsi
+   devtype:                 scsi_device
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0
+   sysname:                 6:0:0:0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1716
+   usec_since_initialized:  -1228209304
+   property 1:             ACTION=remove
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0/6:0:0:0
+   property 3:             DEVTYPE=scsi_device
+   property 4:             ID_BUS=usb
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=0200
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=scsi
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             MODALIAS=scsi:t-0x00
+   property 19:             SEQNUM=1716
+   property 20:             SUBSYSTEM=scsi
+   property 21:             USEC_INITIALIZED=8791465
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0
+   subsystem:               scsi
+   devtype:                 scsi_target
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0
+   sysname:                 target6:0:0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1717
+   usec_since_initialized:  -1228209248
+   property 1:             ACTION=remove
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6/target6:0:0
+   property 3:             DEVTYPE=scsi_target
+   property 4:             ID_BUS=usb
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=0200
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=scsi
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             SEQNUM=1717
+   property 19:             SUBSYSTEM=scsi
+   property 20:             USEC_INITIALIZED=8791431
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6
+   subsystem:               scsi
+   devtype:                 scsi_host
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6
+   sysname:                 host6
+   sysnum:                  6
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1719
+   usec_since_initialized:  -1227172102
+   property 1:             ACTION=remove
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host6
+   property 3:             DEVTYPE=scsi_host
+   property 4:             ID_BUS=usb
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=0200
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=scsi
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             SEQNUM=1719
+   property 19:             SUBSYSTEM=scsi
+   property 20:             USEC_INITIALIZED=7754306
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0
+   subsystem:               usb
+   devtype:                 usb_interface
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0
+   sysname:                 1-2:1.0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1720
+   usec_since_initialized:  -1227171961
+   property 1:             ACTION=remove
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0
+   property 3:             DEVTYPE=usb_interface
+   property 4:             ID_MODEL_FROM_DATABASE=MicroVault Flash Drive
+   property 5:             ID_VENDOR_FROM_DATABASE=Sony Corp.
+   property 6:             INTERFACE=8/6/80
+   property 7:             MODALIAS=usb:v054Cp0243d0200dc00dsc00dp00ic08isc06ip50in00
+   property 8:             PRODUCT=54c/243/200
+   property 9:             SEQNUM=1720
+   property 10:             SUBSYSTEM=usb
+   property 11:             TYPE=0/0/0
+   property 12:             USEC_INITIALIZED=7754184
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2
+   subsystem:               usb
+   devtype:                 usb_device
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2
+   sysname:                 1-2
+   sysnum:                  2
+   devnode:                 /dev/bus/usb/001/007
+   is_initialized:          0
+   driver:                  (null)
+   action:                  remove
+   seqnum:                  1721
+   usec_since_initialized:  -1327166770
+   property 1:             ACTION=remove
+   property 2:             BUSNUM=001
+   property 3:             DEVNAME=/dev/bus/usb/001/007
+   property 4:             DEVNUM=007
+   property 5:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2
+   property 6:             DEVTYPE=usb_device
+   property 7:             ID_BUS=usb
+   property 8:             ID_MODEL=Storage_Media
+   property 9:             ID_MODEL_ENC=Storage\x20Media
+   property 10:             ID_MODEL_FROM_DATABASE=MicroVault Flash Drive
+   property 11:             ID_MODEL_ID=0243
+   property 12:             ID_REVISION=0200
+   property 13:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 14:             ID_SERIAL_SHORT=5A0810280024786
+   property 15:             ID_USB_INTERFACES=:080650:
+   property 16:             ID_VENDOR=Sony
+   property 17:             ID_VENDOR_ENC=Sony
+   property 18:             ID_VENDOR_FROM_DATABASE=Sony Corp.
+   property 19:             ID_VENDOR_ID=054c
+   property 20:             MAJOR=189
+   property 21:             MINOR=6
+   property 22:             PRODUCT=54c/243/200
+   property 23:             SEQNUM=1721
+   property 24:             SUBSYSTEM=usb
+   property 25:             TYPE=0/0/0
+   property 26:             USEC_INITIALIZED=107749086
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2
+   subsystem:               usb
+   devtype:                 usb_device
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2
+   sysname:                 1-2
+   sysnum:                  2
+   devnode:                 /dev/bus/usb/001/008
+   is_initialized:          0
+   driver:                  usb
+   action:                  add
+   seqnum:                  1723
+   usec_since_initialized:  -1474744519
+   property 1:             ACTION=add
+   property 2:             BUSNUM=001
+   property 3:             DEVNAME=/dev/bus/usb/001/008
+   property 4:             DEVNUM=008
+   property 5:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2
+   property 6:             DEVTYPE=usb_device
+   property 7:             ID_BUS=usb
+   property 8:             ID_MODEL=Storage_Media
+   property 9:             ID_MODEL_ENC=Storage\x20Media
+   property 10:             ID_MODEL_FROM_DATABASE=MicroVault Flash Drive
+   property 11:             ID_MODEL_ID=0243
+   property 12:             ID_REVISION=0200
+   property 13:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 14:             ID_SERIAL_SHORT=5A0810280024786
+   property 15:             ID_USB_INTERFACES=:080650:
+   property 16:             ID_VENDOR=Sony
+   property 17:             ID_VENDOR_ENC=Sony
+   property 18:             ID_VENDOR_FROM_DATABASE=Sony Corp.
+   property 19:             ID_VENDOR_ID=054c
+   property 20:             MAJOR=189
+   property 21:             MINOR=7
+   property 22:             PRODUCT=54c/243/200
+   property 23:             SEQNUM=1723
+   property 24:             SUBSYSTEM=usb
+   property 25:             TYPE=0/0/0
+   property 26:             USEC_INITIALIZED=267364177
+   sysattr 1:              dev=(null)
+   sysattr 2:              port=(null)
+   sysattr 3:              bDeviceSubClass=(null)
+   sysattr 4:              bDeviceProtocol=(null)
+   sysattr 5:              devpath=(null)
+   sysattr 6:              idVendor=(null)
+   sysattr 7:              speed=(null)
+   sysattr 8:              bNumInterfaces=(null)
+   sysattr 9:              bConfigurationValue=(null)
+   sysattr 10:              bMaxPacketSize0=(null)
+   sysattr 11:              descriptors=(null)
+   sysattr 12:              busnum=(null)
+   sysattr 13:              devnum=(null)
+   sysattr 14:              configuration=(null)
+   sysattr 15:              bMaxPower=(null)
+   sysattr 16:              driver=(null)
+   sysattr 17:              authorized=(null)
+   sysattr 18:              bmAttributes=(null)
+   sysattr 19:              bNumConfigurations=(null)
+   sysattr 20:              subsystem=(null)
+   sysattr 21:              maxchild=(null)
+   sysattr 22:              bcdDevice=(null)
+   sysattr 23:              avoid_reset_quirk=(null)
+   sysattr 24:              quirks=(null)
+   sysattr 25:              serial=(null)
+   sysattr 26:              version=(null)
+   sysattr 27:              uevent=(null)
+   sysattr 28:              urbnum=(null)
+   sysattr 29:              ltm_capable=(null)
+   sysattr 30:              manufacturer=(null)
+   sysattr 31:              removable=(null)
+   sysattr 32:              idProduct=(null)
+   sysattr 33:              bDeviceClass=(null)
+   sysattr 34:              product=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0
+   subsystem:               usb
+   devtype:                 usb_interface
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0
+   sysname:                 1-2:1.0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  usb-storage
+   action:                  add
+   seqnum:                  1724
+   usec_since_initialized:  -1214750477
+   property 1:             ACTION=add
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0
+   property 3:             DEVTYPE=usb_interface
+   property 4:             ID_MODEL_FROM_DATABASE=MicroVault Flash Drive
+   property 5:             ID_VENDOR_FROM_DATABASE=Sony Corp.
+   property 6:             INTERFACE=8/6/80
+   property 7:             MODALIAS=usb:v054Cp0243d0200dc00dsc00dp00ic08isc06ip50in00
+   property 8:             PRODUCT=54c/243/200
+   property 9:             SEQNUM=1724
+   property 10:             SUBSYSTEM=usb
+   property 11:             TYPE=0/0/0
+   property 12:             USEC_INITIALIZED=7370198
+   sysattr 1:              bInterfaceClass=(null)
+   sysattr 2:              modalias=(null)
+   sysattr 3:              bInterfaceSubClass=(null)
+   sysattr 4:              bInterfaceProtocol=(null)
+   sysattr 5:              bNumEndpoints=(null)
+   sysattr 6:              driver=(null)
+   sysattr 7:              supports_autosuspend=(null)
+   sysattr 8:              subsystem=(null)
+   sysattr 9:              bAlternateSetting=(null)
+   sysattr 10:              uevent=(null)
+   sysattr 11:              bInterfaceNumber=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7
+   subsystem:               scsi
+   devtype:                 scsi_host
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7
+   sysname:                 host7
+   sysnum:                  7
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1725
+   usec_since_initialized:  -1214750593
+   property 1:             ACTION=add
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7
+   property 3:             DEVTYPE=scsi_host
+   property 4:             ID_BUS=usb
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=0200
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=scsi
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             SEQNUM=1725
+   property 19:             SUBSYSTEM=scsi
+   property 20:             USEC_INITIALIZED=7370382
+   sysattr 1:              subsystem=(null)
+   sysattr 2:              uevent=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/scsi_host/host7
+   subsystem:               scsi_host
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/scsi_host/host7
+   sysname:                 host7
+   sysnum:                  7
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1726
+   usec_since_initialized:  -1214750541
+   property 1:             ACTION=add
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/scsi_host/host7
+   property 3:             ID_BUS=usb
+   property 4:             ID_MODEL=Storage_Media
+   property 5:             ID_MODEL_ENC=Storage\x20Media
+   property 6:             ID_MODEL_ID=0243
+   property 7:             ID_REVISION=0200
+   property 8:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 9:             ID_SERIAL_SHORT=5A0810280024786
+   property 10:             ID_TYPE=scsi
+   property 11:             ID_USB_DRIVER=usb-storage
+   property 12:             ID_USB_INTERFACES=:080650:
+   property 13:             ID_USB_INTERFACE_NUM=00
+   property 14:             ID_VENDOR=Sony
+   property 15:             ID_VENDOR_ENC=Sony
+   property 16:             ID_VENDOR_ID=054c
+   property 17:             SEQNUM=1726
+   property 18:             SUBSYSTEM=scsi_host
+   property 19:             USEC_INITIALIZED=7370392
+   sysattr 1:              unchecked_isa_dma=(null)
+   sysattr 2:              state=(null)
+   sysattr 3:              cmd_per_lun=(null)
+   sysattr 4:              sg_tablesize=(null)
+   sysattr 5:              active_mode=(null)
+   sysattr 6:              sg_prot_tablesize=(null)
+   sysattr 7:              unique_id=(null)
+   sysattr 8:              supported_mode=(null)
+   sysattr 9:              device=(null)
+   sysattr 10:              subsystem=(null)
+   sysattr 11:              uevent=(null)
+   sysattr 12:              proc_name=(null)
+   sysattr 13:              prot_capabilities=(null)
+   sysattr 14:              can_queue=(null)
+   sysattr 15:              prot_guard_type=(null)
+   sysattr 16:              eh_deadline=(null)
+   sysattr 17:              host_busy=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0
+   subsystem:               scsi
+   devtype:                 scsi_target
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0
+   sysname:                 target7:0:0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1727
+   usec_since_initialized:  -1214781231
+   property 1:             ACTION=add
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0
+   property 3:             DEVTYPE=scsi_target
+   property 4:             ID_BUS=usb
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=0200
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=scsi
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             SEQNUM=1727
+   property 19:             SUBSYSTEM=scsi
+   property 20:             USEC_INITIALIZED=8402715
+   sysattr 1:              subsystem=(null)
+   sysattr 2:              uevent=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0
+   subsystem:               scsi
+   devtype:                 scsi_device
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0
+   sysname:                 7:0:0:0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  sd
+   action:                  add
+   seqnum:                  1728
+   usec_since_initialized:  -1214781199
+   property 1:             ACTION=add
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0
+   property 3:             DEVTYPE=scsi_device
+   property 4:             ID_BUS=usb
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=0200
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=scsi
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             MODALIAS=scsi:t-0x00
+   property 19:             SEQNUM=1728
+   property 20:             SUBSYSTEM=scsi
+   property 21:             USEC_INITIALIZED=8402751
+   sysattr 1:              rev=(null)
+   sysattr 2:              type=(null)
+   sysattr 3:              scsi_level=(null)
+   sysattr 4:              model=(null)
+   sysattr 5:              state=(null)
+   sysattr 6:              queue_type=(null)
+   sysattr 7:              modalias=(null)
+   sysattr 8:              iodone_cnt=(null)
+   sysattr 9:              iorequest_cnt=(null)
+   sysattr 10:              device_busy=(null)
+   sysattr 11:              evt_capacity_change_reported=(null)
+   sysattr 12:              timeout=(null)
+   sysattr 13:              evt_media_change=(null)
+   sysattr 14:              max_sectors=(null)
+   sysattr 15:              driver=(null)
+   sysattr 16:              ioerr_cnt=(null)
+   sysattr 17:              generic=(null)
+   sysattr 18:              subsystem=(null)
+   sysattr 19:              queue_depth=(null)
+   sysattr 20:              uevent=(null)
+   sysattr 21:              vendor=(null)
+   sysattr 22:              evt_soft_threshold_reached=(null)
+   sysattr 23:              device_blocked=(null)
+   sysattr 24:              evt_mode_parameter_change_reported=(null)
+   sysattr 25:              evt_lun_change_reported=(null)
+   sysattr 26:              evt_inquiry_change_reported=(null)
+   sysattr 27:              dh_state=(null)
+   sysattr 28:              iocounterbits=(null)
+   sysattr 29:              eh_timeout=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/scsi_disk/7:0:0:0
+   subsystem:               scsi_disk
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/scsi_disk/7:0:0:0
+   sysname:                 7:0:0:0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1729
+   usec_since_initialized:  -1214781025
+   property 1:             ACTION=add
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/scsi_disk/7:0:0:0
+   property 3:             ID_BUS=usb
+   property 4:             ID_INSTANCE=0:0
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=1.00
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=disk
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             SEQNUM=1729
+   property 19:             SUBSYSTEM=scsi_disk
+   property 20:             USEC_INITIALIZED=8402759
+   sysattr 1:              FUA=(null)
+   sysattr 2:              protection_mode=(null)
+   sysattr 3:              protection_type=(null)
+   sysattr 4:              cache_type=(null)
+   sysattr 5:              device=(null)
+   sysattr 6:              max_medium_access_timeouts=(null)
+   sysattr 7:              thin_provisioning=(null)
+   sysattr 8:              subsystem=(null)
+   sysattr 9:              provisioning_mode=(null)
+   sysattr 10:              uevent=(null)
+   sysattr 11:              manage_start_stop=(null)
+   sysattr 12:              max_write_same_blocks=(null)
+   sysattr 13:              allow_restart=(null)
+   sysattr 14:              app_tag_own=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/scsi_device/7:0:0:0
+   subsystem:               scsi_device
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/scsi_device/7:0:0:0
+   sysname:                 7:0:0:0
+   sysnum:                  0
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1730
+   usec_since_initialized:  -1474780926
+   property 1:             ACTION=add
+   property 2:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/scsi_device/7:0:0:0
+   property 3:             ID_BUS=usb
+   property 4:             ID_INSTANCE=0:0
+   property 5:             ID_MODEL=Storage_Media
+   property 6:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 7:             ID_MODEL_ID=0243
+   property 8:             ID_REVISION=1.00
+   property 9:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 10:             ID_SERIAL_SHORT=5A0810280024786
+   property 11:             ID_TYPE=disk
+   property 12:             ID_USB_DRIVER=usb-storage
+   property 13:             ID_USB_INTERFACES=:080650:
+   property 14:             ID_USB_INTERFACE_NUM=00
+   property 15:             ID_VENDOR=Sony
+   property 16:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 17:             ID_VENDOR_ID=054c
+   property 18:             SEQNUM=1730
+   property 19:             SUBSYSTEM=scsi_device
+   property 20:             USEC_INITIALIZED=268402765
+   sysattr 1:              device=(null)
+   sysattr 2:              subsystem=(null)
+   sysattr 3:              uevent=(null)
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/bsg/7:0:0:0
+   subsystem:               bsg
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/bsg/7:0:0:0
+   sysname:                 7:0:0:0
+   sysnum:                  0
+   devnode:                 /dev/bsg/7:0:0:0
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1732
+   usec_since_initialized:  -1474783129
+   property 1:             ACTION=add
+   property 2:             DEVNAME=/dev/bsg/7:0:0:0
+   property 3:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/bsg/7:0:0:0
+   property 4:             ID_BUS=usb
+   property 5:             ID_INSTANCE=0:0
+   property 6:             ID_MODEL=Storage_Media
+   property 7:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 8:             ID_MODEL_ID=0243
+   property 9:             ID_REVISION=1.00
+   property 10:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 11:             ID_SERIAL_SHORT=5A0810280024786
+   property 12:             ID_TYPE=disk
+   property 13:             ID_USB_DRIVER=usb-storage
+   property 14:             ID_USB_INTERFACES=:080650:
+   property 15:             ID_USB_INTERFACE_NUM=00
+   property 16:             ID_VENDOR=Sony
+   property 17:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 18:             ID_VENDOR_ID=054c
+   property 19:             MAJOR=252
+   property 20:             MINOR=2
+   property 21:             SEQNUM=1732
+   property 22:             SUBSYSTEM=bsg
+   property 23:             USEC_INITIALIZED=268405185
+   sysattr 1:              dev=(null)
+   sysattr 2:              device=(null)
+   sysattr 3:              subsystem=(null)
+   sysattr 4:              uevent=(null)
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/scsi_generic/sg2
+   subsystem:               scsi_generic
+   devtype:                 (null)
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/scsi_generic/sg2
+   sysname:                 sg2
+   sysnum:                  2
+   devnode:                 /dev/sg2
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1731
+   usec_since_initialized:  -1474782791
+   property 1:             ACTION=add
+   property 2:             DEVNAME=/dev/sg2
+   property 3:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/scsi_generic/sg2
+   property 4:             ID_BUS=usb
+   property 5:             ID_INSTANCE=0:0
+   property 6:             ID_MODEL=Storage_Media
+   property 7:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 8:             ID_MODEL_ID=0243
+   property 9:             ID_REVISION=1.00
+   property 10:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 11:             ID_SERIAL_SHORT=5A0810280024786
+   property 12:             ID_TYPE=disk
+   property 13:             ID_USB_DRIVER=usb-storage
+   property 14:             ID_USB_INTERFACES=:080650:
+   property 15:             ID_USB_INTERFACE_NUM=00
+   property 16:             ID_VENDOR=Sony
+   property 17:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 18:             ID_VENDOR_ID=054c
+   property 19:             MAJOR=21
+   property 20:             MINOR=2
+   property 21:             SEQNUM=1731
+   property 22:             SUBSYSTEM=scsi_generic
+   property 23:             USEC_INITIALIZED=268405005
+   sysattr 1:              dev=(null)
+   sysattr 2:              device=(null)
+   sysattr 3:              subsystem=(null)
+   sysattr 4:              uevent=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/virtual/bdi/8:16
+   subsystem:               bdi
+   devtype:                 (null)
+   syspath:                 /sys/devices/virtual/bdi/8:16
+   sysname:                 8:16
+   sysnum:                  16
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1733
+   usec_since_initialized:  -1214645673
+   property 1:             ACTION=add
+   property 2:             DEVPATH=/devices/virtual/bdi/8:16
+   property 3:             SEQNUM=1733
+   property 4:             SUBSYSTEM=bdi
+   property 5:             USEC_INITIALIZED=8468216
+   sysattr 1:              min_ratio=(null)
+   sysattr 2:              stable_pages_required=(null)
+   sysattr 3:              read_ahead_kb=(null)
+   sysattr 4:              subsystem=(null)
+   sysattr 5:              uevent=(null)
+   sysattr 6:              max_ratio=(null)
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/block/sdb
+   subsystem:               block
+   devtype:                 disk
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/block/sdb
+   sysname:                 sdb
+   sysnum:                  (null)
+   devnode:                 /dev/sdb
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1734
+   usec_since_initialized:  -1212963912
+   property 1:             ACTION=add
+   property 2:             DEVLINKS=/dev/disk/by-id/usb-Sony_Storage_Media_5A0810280024786-0:0 /dev/disk/by-path/pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0
+   property 3:             DEVNAME=/dev/sdb
+   property 4:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/block/sdb
+   property 5:             DEVTYPE=disk
+   property 6:             ID_BUS=usb
+   property 7:             ID_INSTANCE=0:0
+   property 8:             ID_MODEL=Storage_Media
+   property 9:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 10:             ID_MODEL_ID=0243
+   property 11:             ID_PART_TABLE_TYPE=dos
+   property 12:             ID_PATH=pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0
+   property 13:             ID_PATH_TAG=pci-0000_00_06_0-usb-0_2_1_0-scsi-0_0_0_0
+   property 14:             ID_REVISION=1.00
+   property 15:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 16:             ID_SERIAL_SHORT=5A0810280024786
+   property 17:             ID_TYPE=disk
+   property 18:             ID_USB_DRIVER=usb-storage
+   property 19:             ID_USB_INTERFACES=:080650:
+   property 20:             ID_USB_INTERFACE_NUM=00
+   property 21:             ID_VENDOR=Sony
+   property 22:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 23:             ID_VENDOR_ID=054c
+   property 24:             MAJOR=8
+   property 25:             MINOR=16
+   property 26:             SEQNUM=1734
+   property 27:             SUBSYSTEM=block
+   property 28:             UDISKS_PARTITION_TABLE=1
+   property 29:             UDISKS_PARTITION_TABLE_COUNT=1
+   property 30:             UDISKS_PARTITION_TABLE_SCHEME=mbr
+   property 31:             UDISKS_PRESENTATION_NOPOLICY=0
+   property 32:             USEC_INITIALIZED=8592312
+   devlink 1:              /dev/disk/by-id/usb-Sony_Storage_Media_5A0810280024786-0:0=(null)
+   devlink 2:              /dev/disk/by-path/pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0=(null)
+   sysattr 1:              ro=(null)
+   sysattr 2:              bdi=(null)
+   sysattr 3:              dev=(null)
+   sysattr 4:              size=(null)
+   sysattr 5:              stat=(null)
+   sysattr 6:              range=(null)
+   sysattr 7:              discard_alignment=(null)
+   sysattr 8:              device=(null)
+   sysattr 9:              events=(null)
+   sysattr 10:              subsystem=(null)
+   sysattr 11:              ext_range=(null)
+   sysattr 12:              uevent=(null)
+   sysattr 13:              events_poll_msecs=(null)
+   sysattr 14:              alignment_offset=(null)
+   sysattr 15:              inflight=(null)
+   sysattr 16:              removable=(null)
+   sysattr 17:              capability=(null)
+   sysattr 18:              events_async=(null)
+
+select() says there should be data
+Got Device
+   devpath:                 /devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/block/sdb/sdb1
+   subsystem:               block
+   devtype:                 partition
+   syspath:                 /sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/block/sdb/sdb1
+   sysname:                 sdb1
+   sysnum:                  1
+   devnode:                 /dev/sdb1
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1735
+   usec_since_initialized:  -1211161842
+   property 1:             ACTION=add
+   property 2:             DEVLINKS=/dev/disk/by-id/usb-Sony_Storage_Media_5A0810280024786-0:0-part1 /dev/disk/by-path/pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0-part1 /dev/disk/by-uuid/9E1A05EC1A05C1EF
+   property 3:             DEVNAME=/dev/sdb1
+   property 4:             DEVPATH=/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/block/sdb/sdb1
+   property 5:             DEVTYPE=partition
+   property 6:             ID_BUS=usb
+   property 7:             ID_FS_TYPE=ntfs
+   property 8:             ID_FS_USAGE=filesystem
+   property 9:             ID_FS_UUID=9E1A05EC1A05C1EF
+   property 10:             ID_FS_UUID_ENC=9E1A05EC1A05C1EF
+   property 11:             ID_INSTANCE=0:0
+   property 12:             ID_MODEL=Storage_Media
+   property 13:             ID_MODEL_ENC=Storage\x20Media\x20\x20\x20
+   property 14:             ID_MODEL_ID=0243
+   property 15:             ID_PART_ENTRY_DISK=8:16
+   property 16:             ID_PART_ENTRY_FLAGS=0x80
+   property 17:             ID_PART_ENTRY_NUMBER=1
+   property 18:             ID_PART_ENTRY_OFFSET=63
+   property 19:             ID_PART_ENTRY_SCHEME=dos
+   property 20:             ID_PART_ENTRY_SIZE=15663041
+   property 21:             ID_PART_ENTRY_TYPE=0x7
+   property 22:             ID_PART_TABLE_TYPE=dos
+   property 23:             ID_PATH=pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0
+   property 24:             ID_PATH_TAG=pci-0000_00_06_0-usb-0_2_1_0-scsi-0_0_0_0
+   property 25:             ID_REVISION=1.00
+   property 26:             ID_SERIAL=Sony_Storage_Media_5A0810280024786-0:0
+   property 27:             ID_SERIAL_SHORT=5A0810280024786
+   property 28:             ID_TYPE=disk
+   property 29:             ID_USB_DRIVER=usb-storage
+   property 30:             ID_USB_INTERFACES=:080650:
+   property 31:             ID_USB_INTERFACE_NUM=00
+   property 32:             ID_VENDOR=Sony
+   property 33:             ID_VENDOR_ENC=Sony\x20\x20\x20\x20
+   property 34:             ID_VENDOR_ID=054c
+   property 35:             MAJOR=8
+   property 36:             MINOR=17
+   property 37:             SEQNUM=1735
+   property 38:             SUBSYSTEM=block
+   property 39:             UDISKS_PARTITION=1
+   property 40:             UDISKS_PARTITION_ALIGNMENT_OFFSET=0
+   property 41:             UDISKS_PARTITION_FLAGS=boot
+   property 42:             UDISKS_PARTITION_NUMBER=1
+   property 43:             UDISKS_PARTITION_OFFSET=32256
+   property 44:             UDISKS_PARTITION_SCHEME=mbr
+   property 45:             UDISKS_PARTITION_SIZE=8019476992
+   property 46:             UDISKS_PARTITION_SLAVE=/sys/devices/pci0000:00/0000:00:06.0/usb1/1-2/1-2:1.0/host7/target7:0:0/7:0:0:0/block/sdb
+   property 47:             UDISKS_PARTITION_TYPE=0x07
+   property 48:             UDISKS_PRESENTATION_NOPOLICY=0
+   property 49:             USEC_INITIALIZED=8592348
+   devlink 1:              /dev/disk/by-id/usb-Sony_Storage_Media_5A0810280024786-0:0-part1=(null)
+   devlink 2:              /dev/disk/by-path/pci-0000:00:06.0-usb-0:2:1.0-scsi-0:0:0:0-part1=(null)
+   devlink 3:              /dev/disk/by-uuid/9E1A05EC1A05C1EF=(null)
+   sysattr 1:              ro=(null)
+   sysattr 2:              dev=(null)
+   sysattr 3:              size=(null)
+   sysattr 4:              stat=(null)
+   sysattr 5:              partition=(null)
+   sysattr 6:              start=(null)
+   sysattr 7:              discard_alignment=(null)
+   sysattr 8:              subsystem=(null)
+   sysattr 9:              uevent=(null)
+   sysattr 10:              alignment_offset=(null)
+   sysattr 11:              inflight=(null)
+
+select() says there should be data
+Got Device
+   without devnode
+   devpath:                 /devices/virtual/bdi/8:17-fuseblk
+   subsystem:               bdi
+   devtype:                 (null)
+   syspath:                 /sys/devices/virtual/bdi/8:17-fuseblk
+   sysname:                 8:17-fuseblk
+   sysnum:                  (null)
+   devnode:                 (null)
+   is_initialized:          0
+   driver:                  (null)
+   action:                  add
+   seqnum:                  1736
+   usec_since_initialized:  -1474672850
+   property 1:             ACTION=add
+   property 2:             DEVPATH=/devices/virtual/bdi/8:17-fuseblk
+   property 3:             SEQNUM=1736
+   property 4:             SUBSYSTEM=bdi
+   property 5:             USEC_INITIALIZED=288149081
+   sysattr 1:              min_ratio=(null)
+   sysattr 2:              stable_pages_required=(null)
+   sysattr 3:              read_ahead_kb=(null)
+   sysattr 4:              subsystem=(null)
+   sysattr 5:              uevent=(null)
+   sysattr 6:              max_ratio=(null)
+QThread: Destroyed while thread is still running
+/home/cnardi/Projects/PicsDL/build-PicsDL-Desktop-Debug/bin/PicsDL exited with code 0
+

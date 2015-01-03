@@ -22,11 +22,23 @@
 #include <QWidget>
 #include <QDebug>
 
+#ifdef _WIN32
+#include "drivenotify_win.h"
+#else
+#include "drivenotify_udev.h"
+#endif
 
-#include "drivenotofy_win.h"
 DriveNotify::DriveNotify(QObject *parent) :
     QObject(parent)
 {
+
+#ifdef _WIN32
     DriveNotofy_win *dnw = new DriveNotofy_win();
     connect(dnw,SIGNAL(driveAdded(QString)),this,SIGNAL(driveAdded(QString)));
+#else
+    DriveNotify_udev *dnu = new DriveNotify_udev();
+    connect(dnu,SIGNAL(driveAdded(QString)),this,SIGNAL(driveAdded(QString)));
+    dnu->start();
+#endif
+
 }

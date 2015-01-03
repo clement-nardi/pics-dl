@@ -15,9 +15,13 @@ InstanceManager::InstanceManager(QObject *parent) :
     }
 }
 
+InstanceManager::~InstanceManager() {
+    delete sm;
+}
+
 void InstanceManager::run() {
     while (true) {
         sem->acquire();
-        applicationLaunched();
+        emit applicationLaunched();
     }
 }

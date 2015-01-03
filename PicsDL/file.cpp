@@ -23,7 +23,6 @@
 #include <QStringList>
 #include <QMap>
 #include <QDebug>
-#include "WPDInterface.h"
 #include "libexif/exif-loader.h"
 #include <QElapsedTimer>
 #include <QImageReader>
@@ -33,6 +32,10 @@
 #include <QTimeZone>
 #include <utime.h>
 #include <QDir>
+
+#ifdef _WIN32
+#include "WPDInterface.h"
+#endif
 
 static QStringList pictureExtensions = QString("jpg,jpeg,dng,raf,bmp,cr2,crw,dcr,dib,erf,fpx,gif,jfif,mos,mrf,mrw,nef,orf,pcx,pef,png,psd,srf,tif,tiff,wdp,x3f,xps").split(",");
 static QStringList JPEGExtensions = QString("jpg,jpeg").split(",");
@@ -1054,12 +1057,13 @@ bool File::isJPEG() const {
     return JPEGExtensions.contains(extension());
 }
 
-static QMap<QString,DWORD> lastSuccessfulTransferSize;
-
 void File::loadExifData() {
     if (exifData == NULL && !exifLoadAttempted) {
         exifLoadAttempted = true;
         if (IDPath.startsWith("WPD:/")) {
+
+#ifdef _WIN32
+            static QMap<QString,DWORD> lastSuccessfulTransferSize;
             qDebug() << "loadExifData for" << absoluteFilePath;
             QElapsedTimer timer;
             qint64 initTime;
@@ -1146,6 +1150,7 @@ void File::loadExifData() {
                         .arg(File::size2Str((qint64)((double)totalRead*1000000000/(double)transferTime)))
                         .arg((double)closeTime/1000000,0,'f',3)
                         .arg((double)closeTime*100/totalTime,0,'f',2) ;
+#endif
         } else {
             exifData = exif_data_new_from_file (absoluteFilePath.toStdString().c_str());
         }
@@ -1311,6 +1316,8 @@ QList<File> File::ls(bool *theresMore) {
     QList<File> res;
     *theresMore = false;
     if (IDPath.startsWith("WPD:/")) {
+
+#ifdef _WIN32
         if (absoluteFilePath.count("/") > 5) return res;
         QString deviceID = IDPath.split("/")[1];
         WCHAR * deviceID_i = (WCHAR*) malloc(sizeof(WCHAR)*(deviceID.size()+1));
@@ -1352,6 +1359,7 @@ QList<File> File::ls(bool *theresMore) {
         }
         free(deviceID_i);
         free(objectID_i);
+#endif
     } else {
         QDir dir = QDir(absoluteFilePath);
         dir.setFilter(dir.filter()|QDir::NoDotAndDotDot|QDir::System);
@@ -1421,6 +1429,7 @@ bool File::FillIODeviceWithContent(QIODevice *out) {
         out->close();
         in->close();
         return written > 0;
+#ifdef _WIN32
     } else if (IDPath.startsWith("WPD:/")) {
         QElapsedTimer timer;
         qint64 initTime;
@@ -1482,6 +1491,7 @@ bool File::FillIODeviceWithContent(QIODevice *out) {
         } else {
             return true;
         }
+#endif
     }
 }
 
@@ -1490,14 +1500,20 @@ bool File::moveWithDirs(QString to) {
     return QFile(absoluteFilePath).rename(to);
 }
 
+#ifdef _WIN32
 #include "windows.h"
+#endif
+
 bool File::setHidden() {
+#ifdef _WIN32
     WCHAR * wPath = (WCHAR*) malloc(sizeof(WCHAR)*(absoluteFilePath.size()+1));
     QString windowsStylePath = absoluteFilePath;
     windowsStylePath.replace("/","\\").toWCharArray(wPath);
     DWORD dwAttrs = GetFileAttributes(wPath);
     SetFileAttributes(wPath, dwAttrs | FILE_ATTRIBUTE_HIDDEN);
     free(wPath);
+#endif
 }
+
 
 
