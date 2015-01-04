@@ -12,6 +12,7 @@ class Geotagger
 {
 public:
     Geotagger(File *trackFilesFolder);
+    ~Geotagger();
     bool geotag(QBuffer *in, QIODevice *out);
 
 private:

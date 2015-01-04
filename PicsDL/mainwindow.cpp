@@ -107,7 +107,7 @@ void MainWindow::load() {
 
 void MainWindow::insertDrive(QString id){
     int col;
-    DriveView *dv = new DriveView(id,dc);
+    DriveView *dv = new DriveView(id,dc, this);
     col = 0;
     gl->setRowMinimumHeight(row,30);
     gl->addWidget(dv->driveIcon,row,col++);

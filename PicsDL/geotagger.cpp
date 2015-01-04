@@ -25,6 +25,11 @@ Geotagger::Geotagger(File *trackFilesFolder)
     }
 }
 
+Geotagger::~Geotagger()
+{
+    delete exiftool;
+}
+
 bool Geotagger::geotag(QBuffer *in, QIODevice *out) {
     char *geotaggedContent = NULL;
     qint64 geotaggedContent_size = 0;

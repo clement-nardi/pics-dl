@@ -995,7 +995,7 @@ void File::constructCommonFields() {
 
 File::~File(){
     if (exifData != NULL) {
-        free(exifData);
+        exif_data_free(exifData);
         exifData = NULL;
     }
     if (buffer != NULL) {
@@ -1037,8 +1037,8 @@ int File::operator==(const File &other) const {
     return false;
 }
 
-uint qHash(File *fi) {
-    return fi->size;
+uint qHash(File fi) {
+    return fi.size;
 }
 
 bool File::isAttachmentOf(File other) {

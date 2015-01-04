@@ -27,12 +27,12 @@
 #include <QDir>
 #include "instancemanager.h"
 #include <iostream>
+#include <geotagger.h>
 
 QString ExifToolPath;
 
 int main(int argc, char *argv[])
 {
-
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
 
@@ -70,5 +70,8 @@ int main(int argc, char *argv[])
 
     int res = a.exec();
     delete im;
+    delete dn;
+    delete dm;
+    delete dc;
     return res;
 }

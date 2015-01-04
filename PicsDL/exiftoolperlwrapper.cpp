@@ -39,11 +39,12 @@ ExifToolPerlWrapper::ExifToolPerlWrapper() {
 
     eval_pv("$exifTool = new Image::ExifTool;", TRUE);
 
-    eval_pv("$exifTool->SetNewValue('Geotag', 'E:/Documents/My Dropbox/Apps/GPSLogger for Android/20141213.gpx');", TRUE);
 }
 
 ExifToolPerlWrapper::~ExifToolPerlWrapper(){
-
+    PERL_SET_CONTEXT(my_perl);
+    perl_destruct(my_perl);
+    perl_free(my_perl);
 }
 
 

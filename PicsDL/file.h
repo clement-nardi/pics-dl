@@ -74,6 +74,6 @@ private:
     bool FillIODeviceWithContent(QIODevice *out);
 };
 
-uint qHash(File *fi);
+uint qHash(File fi);
 
 #endif // FILEINFO_H
