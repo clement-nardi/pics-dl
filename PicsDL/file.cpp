@@ -927,6 +927,7 @@ static void initTagInfoMap() {
         }
         setImportance("Make", v--);
         setImportance("Model", v--);
+        setImportance("DateTimeOriginal", v--);
         setImportance("DateTime", v--);
         setImportance("ExposureTime", v--);
         setImportance("ISOSpeedRatings", v--);
@@ -1253,7 +1254,13 @@ QPixmap File::getThumbnail() {
 }
 
 uint File::dateTaken() const{
-    QString exifDate = getEXIFValue("DateTime");
+    QString exifDate = getEXIFValue("DateTimeDigitized");
+    if (exifDate.size() == 0) {
+        exifDate = getEXIFValue("DateTimeOriginal");
+    }
+    if (exifDate.size() == 0) {
+        exifDate = getEXIFValue("DateTime");
+    }
     if (exifDate.size()>0) {
         QStringList exifDateSplit = exifDate.replace(" ",":").split(":");
         if (exifDateSplit.size()>=6) {
@@ -1275,7 +1282,13 @@ uint File::dateTaken() const{
 
 
 static bool tagLessThan(QString a, QString b) {
-    return tagInfoMap->value(a)->importance > tagInfoMap->value(b)->importance;
+    int ia = tagInfoMap->value(a)->importance;
+    int ib = tagInfoMap->value(b)->importance;
+    if (ia!=ib) {
+        return ia>ib;
+    } else {
+        return a < b;
+    }
 }
 
 QStringList File::getEXIFTags(){

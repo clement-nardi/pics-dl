@@ -158,4 +158,9 @@ Install these packages with your favorite package manager:
  * libperl-dev
  * libudev-dev
 
+Install the Perl package Image::ExifTool and others:
+ * wget -O - http://cpanmin.us | perl - --self-upgrade --sudo
+ * cpanm Image::ExifTool --sudo
+ * cpanm IO::Scalar --sudo
+
 

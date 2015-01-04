@@ -37,8 +37,11 @@ DeviceManager::DeviceManager(DeviceConfig *deviceConfig, QObject *parent) :
     dc = deviceConfig;
 }
 
-void DeviceManager::treatDrive(QString drivePath){
-    QString serial = getDriveSerial(drivePath);
+void DeviceManager::treatDrive(QString driveID){
+    QStringList driveIDsplit= driveID.split(";");
+    QString drivePath = driveIDsplit.first();
+
+    QString serial = getDriveSerial(driveIDsplit.last());
     qDebug() << "treating drive " << drivePath << serial;
 
     if (dc->conf[serial].isUndefined() || dc->conf[serial].isNull() ) {
@@ -111,6 +114,8 @@ void DeviceManager::handleDestroyed(QObject *object) {
 #include <fcntl.h>       //File control defs
 #include <sys/ioctl.h>   //IOCTL  defs
 #include <linux/hdreg.h> //Drive specific defs
+#include <libudev.h>
+#include <stdio.h>
 #endif // _WIN32
 
 
@@ -142,23 +147,58 @@ static QString getDriveSerial(QString path) {
     }
 
 #else
-    //for linux implementation: http://lists.trolltech.com/qt-interest/2004-11/msg01098.html
-
     QString res;
-    struct hd_driveid id;
 
-    int fd = open("/dev/hda", O_RDONLY|O_NONBLOCK);
+    // inspired from http://www.signal11.us/oss/udev/
+    struct udev *udev;
+    struct udev_enumerate *enumerate;
+    struct udev_list_entry *devices, *dev_list_entry;
+    struct udev_device *dev;
 
-    if (fd < 0)
-    {
-        perror("/dev/hda");
+    int fd;
+
+    /* Create the udev object */
+    udev = udev_new();
+    if (!udev) {
+        printf("Can't create udev\n");
+        exit(1);
     }
 
-    if(!ioctl(fd, HDIO_GET_IDENTITY, &id)) {
-        res = QString("%1;%2").arg(QString((char *)id.model)).arg(QString((char *)id.serial_no));
+    /* Create a list of the devices in the 'hidraw' subsystem. */
+    enumerate = udev_enumerate_new(udev);
+    //udev_enumerate_add_match_subsystem(enumerate, "hidraw");
+    udev_enumerate_scan_devices(enumerate);
+    devices = udev_enumerate_get_list_entry(enumerate);
+    /* For each item enumerated, print out its information.
+       udev_list_entry_foreach is a macro which expands to
+       a loop. The loop will be executed for each member in
+       devices, setting dev_list_entry to a list entry
+       which contains the device's path in /sys. */
+    qDebug() << "Looking for " << path;
+    udev_list_entry_foreach(dev_list_entry, devices) {
+        const char *syspath;
+
+        /* Get the filename of the /sys entry for the device
+           and create a udev_device object (dev) representing it */
+        syspath = udev_list_entry_get_name(dev_list_entry);
+        dev = udev_device_new_from_syspath(udev, syspath);
+
+        /* usb_device_get_devnode() returns the path to the device node
+           itself in /dev. */
+        printf("Device Node Path: %s\n", udev_device_get_devnode(dev));
+        if (udev_device_get_devnode(dev) == path) {
+            printf("Match!");
+            res = QString(udev_device_get_property_value(dev,"ID_SERIAL"));
+            break;
+        }
+
+        udev_device_unref(dev);
     }
 
-    close(fd);
+    /* Free the enumerator object */
+    udev_enumerate_unref(enumerate);
+    udev_unref(udev);
+
     return res;
 #endif
 

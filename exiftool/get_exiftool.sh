@@ -8,30 +8,32 @@ echo 1=$1
 
 cd $script_dir
 
-if [ ! -f $script_dir/exiftool.exe ]; then
-	#check for the latest version at http://www.sno.phy.queensu.ca/~phil/exiftool/
-	zipfilename=exiftool-9.77.zip
-	exifURL=http://www.sno.phy.queensu.ca/~phil/exiftool/$zipfilename
-	echo Downloading exiftool.exe from $exifURL
-	curl -o $script_dir/$zipfilename $exifURL
-	unzip -o $script_dir/$zipfilename
-	ls $script_dir
-	mv $script_dir/exiftool\(-k\).exe exiftool.exe
+missingPerlPackage=0;
+
+if perl -MImage::ExifTool -e 1 2>/dev/null; then 
+	echo "INFO: the perl module Image::ExifTool is properly installed"; 
+else 
+	echo "ERROR: the perl module Image::ExifTool is not installed"; 
+	missingPerlPackage=1;
 fi
-if [ ! -f $script_dir/exiftool.exe ]; then
-	echo "MISSING FILE: $script_dir/exiftool.exe"
-	echo "This file should be retrieved automatically by $script_dir/get_exiftool.sh ..."
+
+if perl -MIO::Scalar -e 1 2>/dev/null; then 
+	echo "INFO: the perl module IO::Scalar is properly installed"; 
+else 
+	echo "ERROR: the perl module IO::Scalar is not installed"; 
+	missingPerlPackage=1;
+fi
+
+if [ "$missingPerlPackage" = "1" ]; then
+	echo "Please launch these comands in a terminal:";
+        echo "";
+	echo "wget -O - http://cpanmin.us | perl - --self-upgrade --sudo";
+	echo "cpanm Image::ExifTool --sudo";
+	echo "cpanm IO::Scalar --sudo";
+        echo "";
 	exit 1;
 fi
 
-if [ ! -f $1/exiftool.exe ]; then
-	echo "Copying exiftool.exe into target directory"
-	cp $script_dir/exiftool.exe $1/
-fi
-if [ ! -f $1/exiftool.exe ]; then
-	echo "Unable to copy exiftool.exe into $1/ ..."
-	exit 1;
-fi
 
 if [ ! -f $1/exiftool.exe.config ]; then
 	echo "Copying exiftool.exe.config into target directory"

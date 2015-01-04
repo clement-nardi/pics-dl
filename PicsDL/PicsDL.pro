@@ -49,8 +49,8 @@ SOURCES += main.cpp\
     geotagger.cpp \
     exiftoolperlwrapper.cpp \
     file.cpp \
-    drivenotify_udev.cpp \
-    drivenotify_win.cpp
+    drivenotify_win.cpp \
+    drivenotify_unix.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -68,8 +68,8 @@ HEADERS  += mainwindow.h \
     geotagger.h \
     exiftoolperlwrapper.h \
     file.h \
-    drivenotify_udev.h \
-    drivenotify_win.h
+    drivenotify_win.h \
+    drivenotify_unix.h
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \
