@@ -10,7 +10,7 @@
 DESTDIR = bin
 
 rcfile.target = PicsDL.rc
-rcfile.commands = ../PicsDL/increment_build_number.sh
+rcfile.commands = ../PicsDL/increment_build_number.sh \"$$OUT_PWD/$$DESTDIR\"
 QMAKE_EXTRA_TARGETS += rcfile
 PRE_TARGETDEPS += PicsDL.rc
 
@@ -48,9 +48,7 @@ SOURCES += main.cpp\
     instancemanager.cpp \
     geotagger.cpp \
     exiftoolperlwrapper.cpp \
-    file.cpp \
-    drivenotify_win.cpp \
-    drivenotify_unix.cpp
+    file.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -67,9 +65,7 @@ HEADERS  += mainwindow.h \
     instancemanager.h \
     geotagger.h \
     exiftoolperlwrapper.h \
-    file.h \
-    drivenotify_win.h \
-    drivenotify_unix.h
+    file.h
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \
@@ -87,8 +83,6 @@ win32{
 } else {
     LIBS      += -lexif -ludev
 }
-
-
 
 QMAKE_CXXFLAGS += -DUSETHREADS -DUSEITHREADS -DMULTIPLICITY
 win32 {
