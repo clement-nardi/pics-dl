@@ -1,0 +1,1 @@
+PicsDL.exe -v > debug_third_party.txt 2>&1

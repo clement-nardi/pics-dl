@@ -79,9 +79,15 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "{#MyAppPath}{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\WPDInterface\Release\WPDInterface.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\exiftool\exiftool.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Strawberry\perl\bin\perl520.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Strawberry\perl\bin\libgcc_s_sjlj-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Strawberry\perl\bin\libstdc++-6.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Strawberry\perl\bin\libwinpthread-1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "PicsDL_debug.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Strawberry\perl\bin\perl520.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\exiftool\exiftool.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: vcredist_2013_x86.exe; DestDir: {app}\bin\;
+Source: ".\perl\*"; DestDir: "{app}\perl\"; Flags: recursesubdirs;
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

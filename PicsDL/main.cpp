@@ -28,12 +28,57 @@
 #include "instancemanager.h"
 #include <iostream>
 #include <geotagger.h>
+#include <QFile>
+#include <QDateTime>
 
-QString ExifToolPath;
+static QFile * debugFile;
+
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QString prefix;
+    switch (type) {
+    case QtDebugMsg:
+        prefix = "Debug   ";
+        break;
+    case QtWarningMsg:
+        prefix = "Warning ";
+        break;
+    case QtCriticalMsg:
+        prefix = "Critical";
+        break;
+    case QtFatalMsg:
+        prefix = "Fatal   ";
+        break;
+    }
+    debugFile->write(QString("%1: %2 (%3:%4, %5)\n")
+                     .arg(prefix)
+                     .arg(msg)
+                     .arg(context.file)
+                     .arg(context.line)
+                     .arg(context.function)
+                     .toStdString().c_str());
+    debugFile->flush();
+}
+
+const char *perlIncludeDir;
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    perlIncludeDir = QString(QCoreApplication::applicationDirPath() + "/perl").toStdString().c_str();
+    if (argc > 1 && QString(argv[1]) == "-v") {
+        debugFile = new QFile(QCoreApplication::applicationDirPath() + "/debug" + QDateTime::currentDateTime().toString("_yyyy-MM-dd_hh-mm-ss") + ".txt");
+        debugFile->open(QIODevice::WriteOnly);
+        qInstallMessageHandler(myMessageOutput);
+        qDebug() << "Verbose Mode ON";
+    }
+
+    if (0) {
+        Geotagger *gt = new Geotagger(new File("./track"));
+        gt->geotag(new QBuffer(new QByteArray("toto_data")),new QFile("toto"));
+    }
+
+
     a.setQuitOnLastWindowClosed(false);
 
     QCoreApplication::setOrganizationName("PicsDL");
@@ -50,7 +95,6 @@ int main(int argc, char *argv[])
 
     qDebug() << QDir::current().absolutePath();
     qDebug() << QCoreApplication::applicationDirPath();
-    ExifToolPath = QCoreApplication::applicationDirPath() + "/exiftool.exe";
 
     DeviceConfig *dc = new DeviceConfig();
     MainWindow w(dc);
@@ -62,16 +106,14 @@ int main(int argc, char *argv[])
     dm->connect(dn,SIGNAL(driveAdded(QString)), dm, SLOT(treatDrive(QString)));
     dm->connect(dm, SIGNAL(newID(QString)), &w, SLOT(insertDrive(QString)));
     //w.show();
-    if (!QFile(ExifToolPath).exists()) {
-        w.sysTray.showMessage("PicsDL may not work properly",
-                              "A file is missing: " + ExifToolPath + "\n" + "You can retrieve it from here: http://www.sno.phy.queensu.ca/~phil/exiftool/",
-                              QSystemTrayIcon::Warning);
-    }
 
     int res = a.exec();
     delete im;
     delete dn;
     delete dm;
     delete dc;
+    if (argc > 1 && argv[1] == "-v") {
+        debugFile->close();
+    }
     return res;
 }

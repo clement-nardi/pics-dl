@@ -6,7 +6,7 @@ typedef struct interpreter PerlInterpreter;
 class ExifToolPerlWrapper
 {
 public:
-    ExifToolPerlWrapper();
+    ExifToolPerlWrapper(const char *);
     ~ExifToolPerlWrapper();
     void loadTrackFile(const char *trackFilePath);
     void geotag(char *in, long in_size, char **out, long *out_size);

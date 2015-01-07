@@ -7,11 +7,12 @@
 #include "file.h"
 #include <QBuffer>
 #include <QIODevice>
+#include <QApplication>
 
 Geotagger::Geotagger(File *trackFilesFolder)
 {
     qDebug() << trackFilesFolder->absoluteFilePath;
-    exiftool = new ExifToolPerlWrapper();
+    exiftool = new ExifToolPerlWrapper(QString(QCoreApplication::applicationDirPath() + "/perl").toStdString().c_str());
 
     bool theresMore = true;
     while (theresMore) {
