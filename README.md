@@ -148,19 +148,17 @@ If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.li
 
 #How to compile on Linux
 
-Install these packages with your favorite package manager:
- * qt5-default
- * qtcreator
- * qtscript5-dev
- * curl
- * g++
- * libexif-dev
- * libperl-dev
- * libudev-dev
+##Install dependencies:
 
-Install the Perl package Image::ExifTool and others:
- * wget -O - http://cpanmin.us | perl - --self-upgrade --sudo
- * cpanm Image::ExifTool --sudo
- * cpanm IO::Scalar --sudo
+    sudo apt-get install -y git qt5-default qtcreator qtscript5-dev curl g++ libexif-dev libperl-dev libudev-dev
+    wget -O - http://cpanmin.us | perl - --self-upgrade --sudo
+    cpanm Image::ExifTool --sudo
+    cpanm IO::Scalar --sudo
+    
+##Clone & Build
 
+    git clone https://github.com/clement-nardi/PicsDL.git
+    qtcreator PicsDL/PicsDL.pro
+
+Then you just need to click on the green triangle
 
