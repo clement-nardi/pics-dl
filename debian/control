@@ -1,0 +1,19 @@
+Source: pics-dl
+Maintainer: Clément Nardi <clement@nardi.fr>
+Section: graphics
+Priority: optional
+Standards-Version: 3.9.5
+Build-Depends: git, qt5-default, qtcreator, qtscript5-dev, curl, libexif-dev, libperl-dev, libudev-dev, debhelper, cdbs
+
+Package: pics-dl
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: PicsDL - The Pictures Downloader
+ Tired of spending 10 minutes each time you want to retrieve pictures from your camera? 
+ With PicsDL, you just plug your device, and... done!
+ Main features:
+  * Retrieves pictures and videos from any type of device (camera, smartphone, memory card, USB stick, External Hard Drive).
+  * All-automatic mode: simply plug the device and watch your pictures being downloaded and organized.
+  * Organize and rename your files based on date/time and EXIF tags (such as camera brand/name, etc.)
+  * Geo-tag the pictures
+
