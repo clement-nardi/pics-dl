@@ -8,12 +8,12 @@ if git diff --quiet; then
 	rcfile=$script_dir/../PicsDL/PicsDL.rc
 	major=`grep MAJOR_VERSION $rcfile | cut -d " " -f3`
 	minor=`grep MINOR_VERSION $rcfile | cut -d " " -f3`
-	patch=`grep PATCH_NUMBER $rcfile | cut -d " " -f3`
+	patch=`grep PATCH_VERSION $rcfile | cut -d " " -f3`
 
 	version=$major.$minor.$patch
 	workingDir=$script_dir/Build-debian-package
 	packageName=pics-dl
-	upstreamTarballName=$packageName"_"$version.orig.tar.gz
+	upstreamTarballName=$packageName_$version.orig.tar.gz
 
 	rm -rf $workingDir
 	mkdir $workingDir
