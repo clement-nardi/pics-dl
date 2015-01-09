@@ -150,7 +150,7 @@ If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.li
 
 ##Install dependencies:
 
-    sudo apt-get install -y git qt5-default qtcreator qtscript5-dev curl g++ libexif-dev libperl-dev libudev-dev
+    sudo apt-get install -y git qt5-default qtcreator qtscript5-dev curl g++ libexif-dev libperl-dev libudev-dev debhelper cdbs devscripts build-essential
     wget -O - http://cpanmin.us | perl - --self-upgrade --sudo
     cpanm Image::ExifTool --sudo
     cpanm IO::Scalar --sudo
