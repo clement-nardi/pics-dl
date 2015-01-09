@@ -6,6 +6,3 @@ include /usr/share/cdbs/1/class/qmake.mk
 DEB_BUILDDIR = Build_debian
 DEB_QMAKE_ARGS = $(CURDIR)/PicsDL/PicsDL.pro "BUILD_NUMBER_UPDATE=false"
 
-binaries.path = $(INSTALL_ROOT)
-binaries.files = bin/*
-INSTALLS += binaries

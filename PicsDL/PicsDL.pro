@@ -105,3 +105,7 @@ RESOURCES += \
 RC_FILE = PicsDL.rc
 
 QMAKE_POST_LINK += ../PicsDL-win32-installer/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
+
+binaries.path = $(INSTALL_ROOT)
+binaries.files = bin/*
+INSTALLS += binaries
