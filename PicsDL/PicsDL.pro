@@ -104,7 +104,8 @@ RESOURCES += \
 
 RC_FILE = PicsDL.rc
 
-QMAKE_POST_LINK += ../PicsDL-win32-installer/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
+win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
+unix: QMAKE_POST_LINK += ../package-debian/create-debian-package.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 
 #This is needed for debian packaging. It only works if INSTALL_ROOT is passed as parameter of qmake
 binaries.path = "$${INSTALL_ROOT}"
