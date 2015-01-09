@@ -72,7 +72,7 @@ Choose a folder where to download the sources
 right-click on this folder and choose "Git Bash"  
 In the terminal, write:  
 
-    git clone https://github.com/clement-nardi/PicsDL.git  
+    git clone https://github.com/clement-nardi/pics-dl.git  
 
 ##5. Compile PicsDL  
 Double-click on */pics-dl/PicsDL/PicsDL.pro  
@@ -157,8 +157,10 @@ If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.li
     
 ##Clone & Build
 
-    git clone https://github.com/clement-nardi/PicsDL.git
+    git clone https://github.com/clement-nardi/pics-dl.git
+    cd pics-dl
     qtcreator PicsDL/PicsDL.pro
 
+Let QT Creator configure the project automatically.
 Then you just need to click on the green triangle
 
