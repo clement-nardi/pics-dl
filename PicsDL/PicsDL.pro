@@ -9,10 +9,12 @@
 #plus, if this variable is not set, there's no way to know the final location of the application
 DESTDIR = bin
 
-rcfile.target = PicsDL.rc
-rcfile.commands = ../PicsDL/increment_build_number.sh \"$$OUT_PWD/$$DESTDIR\"
-QMAKE_EXTRA_TARGETS += rcfile
-PRE_TARGETDEPS += PicsDL.rc
+!contains(BUILD_NUMBER_UPDATE,false) {
+    rcfile.target = PicsDL.rc
+    rcfile.commands = ../PicsDL/increment_build_number.sh \"$$OUT_PWD/$$DESTDIR\"
+    QMAKE_EXTRA_TARGETS += rcfile
+    PRE_TARGETDEPS += PicsDL.rc
+}
 
 exiftool.target = exiftool_app
 exiftool.commands = ../exiftool/get_exiftool.sh \"$$OUT_PWD/$$DESTDIR\"
