@@ -1,5 +1,6 @@
 
-if git diff --quiet; then
+#if git diff --quiet; then
+if echo; then
 	current_dir=`pwd`
 	script_dir=$current_dir/`dirname $0`/
 	script_dir=`cd $script_dir;pwd`
@@ -11,12 +12,13 @@ if git diff --quiet; then
 	patch=`grep PATCH_NUMBER $rcfile | cut -d " " -f3`
 
 	version=$major.$minor.$patch
-	workingDir=$script_dir/Build-debian-package
+	workingDir=$script_dir/build-debian-package
 	packageName=pics-dl
 	upstreamTarballName=$packageName"_"$version.orig.tar.gz
 
 	rm -rf $workingDir
 	mkdir $workingDir
+	cd $script_dir/..
 	git archive --format tar.gz --prefix $packageName-$version/ -o $workingDir/$upstreamTarballName HEAD
 	cd $workingDir
 	tar -zxvf $upstreamTarballName
