@@ -106,6 +106,8 @@ RC_FILE = PicsDL.rc
 
 QMAKE_POST_LINK += ../PicsDL-win32-installer/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 
-binaries.path = $(INSTALL_ROOT)
-binaries.files = bin/*
+#This is needed for debian packaging. It only works if INSTALL_ROOT is passed as parameter of qmake
+binaries.path = "$${INSTALL_ROOT}"
+binaries.files = $$DESTDIR/$$TARGET $$DESTDIR/exiftool.exe.config
 INSTALLS += binaries
+
