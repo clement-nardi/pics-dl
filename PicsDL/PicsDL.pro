@@ -79,7 +79,8 @@ win32{
 
     INCLUDEPATH   += "$$PWD/../WPDInterface/WPDInterface"
     LIBS += -L"$$PWD/../WPDInterface/Release" -lWPDInterface
-
+}
+win32|mac {
     INCLUDEPATH += $$PWD/../libexif-0.6.21/
     LIBS      += -L$$PWD/../libexif-0.6.21/libexif/.libs/ -lexif
 } else {
@@ -94,9 +95,13 @@ win32 {
     #An exception was triggered: Exception at 0x77e98f05, code: 0xc0000139: DLL entry point not found, flags=0x0. During startup program exited with code 0xc0000139.
     LIBS        += -LC:/Strawberry/perl/bin -lperl520
 }
-unix {
+unix:!mac {
     INCLUDEPATH += "/usr/lib/perl/5.18.2/CORE/"
     LIBS        += -L/usr/lib/ -lperl
+}
+mac {
+    INCLUDEPATH += "/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/"
+    LIBS        += -L/System/Library/Perl/5.18/darwin-thread-multi-2level/CORE/ -lperl
 }
 
 RESOURCES += \

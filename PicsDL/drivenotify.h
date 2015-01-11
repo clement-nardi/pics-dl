@@ -21,6 +21,7 @@
 #ifndef DRIVENOTIFY_H
 #define DRIVENOTIFY_H
 
+//moc doesn't recognize _WIN32
 #if defined(_WIN32) || defined(WIN32)
 
 #include <shlobj.h>
@@ -51,6 +52,7 @@ signals:
 #include <QString>
 #include <QFileSystemWatcher>
 #include <QThread>
+#include <QStorageInfo>
 
 class DriveNotify : public QThread
 {
@@ -65,10 +67,9 @@ public slots:
     void reloadMountPoints(bool firstTime = false);
 
 private:
-    QMap<QString,QString> mountPoints;
+    QList<QStorageInfo> mountPoints;
     QFileSystemWatcher syswatch;
     QString fileToWatch;
-    bool useQFileSystemWatcher;
     void run();
 };
 #endif

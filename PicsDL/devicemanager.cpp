@@ -106,100 +106,14 @@ void DeviceManager::handleDestroyed(QObject *object) {
 }
 
 
-#ifdef _WIN32
-#include <windows.h>
-#include <tchar.h>
-#else // linux stuff
-#include <unistd.h>      //close()
-#include <fcntl.h>       //File control defs
-#include <sys/ioctl.h>   //IOCTL  defs
-#include <linux/hdreg.h> //Drive specific defs
-#include <libudev.h>
-#include <stdio.h>
-#endif // _WIN32
+#include <QStorageInfo>
 
 
 static QString getDriveSerial(QString path) {
-
-#ifdef _WIN32
-
-    if (path.startsWith("WPD:/")) {
+    if (path.startsWith("WPD:/")) { /* Only on Windows */
         return path.mid(5);
     } else {
-        // adapted from http://www.developpez.net/forums/d523835/c-cpp/cpp/utilisation-getvolumeinformation/
-        // and http://www.linuxquestions.org/questions/programming-9/problem-with-hdio_get_identity-ioctl-856753/
-
-        TCHAR volName[MAX_PATH+1];
-        DWORD volSerial;
-        DWORD nameLen;
-        DWORD volFlags;
-        TCHAR volFS[MAX_PATH+1];
-
-        QDir::setCurrent( path );
-
-        GetVolumeInformation(NULL, volName, MAX_PATH+1, &volSerial, &nameLen, &volFlags, volFS, MAX_PATH+1);
-
-        qDebug() << "Serial=" << volSerial
-                 << " Name="  << QString((QChar*)volName)
-                 << " FS="    << QString((QChar*)volFS)
-                 << " for "   << path;
-        return QString("%1;%2;%3").arg(volSerial).arg(QString((QChar*)volName)).arg(QString((QChar*)volFS)) ;
+        QStorageInfo si(path);
+        return QString("%1;%2;%3").arg(si.displayName()).arg(QString(si.fileSystemType())).arg(si.bytesTotal());
     }
-
-#else
-    QString res;
-
-    // inspired from http://www.signal11.us/oss/udev/
-    struct udev *udev;
-    struct udev_enumerate *enumerate;
-    struct udev_list_entry *devices, *dev_list_entry;
-    struct udev_device *dev;
-
-    int fd;
-
-    /* Create the udev object */
-    udev = udev_new();
-    if (!udev) {
-        printf("Can't create udev\n");
-        exit(1);
-    }
-
-    /* Create a list of the devices in the 'hidraw' subsystem. */
-    enumerate = udev_enumerate_new(udev);
-    //udev_enumerate_add_match_subsystem(enumerate, "hidraw");
-    udev_enumerate_scan_devices(enumerate);
-    devices = udev_enumerate_get_list_entry(enumerate);
-    /* For each item enumerated, print out its information.
-       udev_list_entry_foreach is a macro which expands to
-       a loop. The loop will be executed for each member in
-       devices, setting dev_list_entry to a list entry
-       which contains the device's path in /sys. */
-    qDebug() << "Looking for " << path;
-    udev_list_entry_foreach(dev_list_entry, devices) {
-        const char *syspath;
-
-        /* Get the filename of the /sys entry for the device
-           and create a udev_device object (dev) representing it */
-        syspath = udev_list_entry_get_name(dev_list_entry);
-        dev = udev_device_new_from_syspath(udev, syspath);
-
-        /* usb_device_get_devnode() returns the path to the device node
-           itself in /dev. */
-        printf("Device Node Path: %s\n", udev_device_get_devnode(dev));
-        if (udev_device_get_devnode(dev) == path) {
-            printf("Match!");
-            res = QString(udev_device_get_property_value(dev,"ID_SERIAL"));
-            break;
-        }
-
-        udev_device_unref(dev);
-    }
-
-    /* Free the enumerator object */
-    udev_enumerate_unref(enumerate);
-    udev_unref(udev);
-
-    return res;
-#endif
-
 }
