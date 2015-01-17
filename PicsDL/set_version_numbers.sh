@@ -8,5 +8,5 @@ bn=`cat build_number.txt`
 bn=$((bn + 1))
 echo $bn > build_number.txt
 
-sed "s/__BUILD_NUMBER__/$bn/g" PicsDL.rc.template > PicsDL.rc
+sed -e "s/__MAJOR_VERSION__/$1/g;s/__MINOR_VERSION__/$2/g;s/__PATCH_NUMBER__/$3/g;s/__BUILD_NUMBER__/$bn/g" PicsDL.rc.template > PicsDL.rc
 

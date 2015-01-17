@@ -30,7 +30,7 @@ public:
     explicit DeviceConfig();
 
     QJsonObject conf;
-    QSet<File *> knownFiles;
+    QSet<File> knownFiles;
 
     void saveConfig();
     void loadConfig();

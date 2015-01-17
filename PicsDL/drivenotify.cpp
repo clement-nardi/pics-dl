@@ -19,20 +19,29 @@
  **/
 
 #include "drivenotify.h"
-
+#include <QDebug>
+#include "file.h"
 
 #ifdef _WIN32
 
 #include <QLibrary>
-#include <QDebug>
 #include "dbt.h"
 #include "shobjidl.h"
 #include "WPDInterface.h"
 
-static QChar DriveMaskToLetter(int mask);
+#else
 
-DriveNotify::DriveNotify(QWidget *parent) :
-    QWidget(parent), id(0) {
+#endif
+
+
+DriveNotify::DriveNotify(DRIVENOTIFY_PARENT_TYPE *parent) :
+    DRIVENOTIFY_PARENT_TYPE(parent) {
+
+    reloadMountPoints(true);
+
+#ifdef _WIN32
+
+    id = 0;
 
     ITEMIDLIST* pidl;
 
@@ -55,38 +64,66 @@ DriveNotify::DriveNotify(QWidget *parent) :
 
 
     WPDI_Init();
+
+#else
+
+#ifdef __APPLE__
+    fileToWatch = "/Volumes/";
+#else
+    fileToWatch = "/etc/mtab";
+#endif
+    connect(&syswatch,SIGNAL(directoryChanged(QString)),this,SLOT(handleMountFileChange()),Qt::QueuedConnection);
+    connect(&syswatch,SIGNAL(fileChanged(QString))     ,this,SLOT(handleMountFileChange()),Qt::QueuedConnection);
+
+#endif
 }
 
 DriveNotify::~DriveNotify() {
-    if (id) {
-        if (!SHChangeNotifyDeregister) {
-            qDebug() << "Could not get SHChangeNotifyDeregister entry point.";
-            return;
+
+}
+
+void DriveNotify::reloadMountPoints(bool firstTime) {
+    qDebug() << "Reloading mount points...";
+
+
+    QList<QStorageInfo> oldList = mountPoints;
+    mountPoints = QStorageInfo::mountedVolumes();
+    qDebug() << "Number of mount points: " << oldList.size() << " -> " << mountPoints.size();
+
+    for (int i = 0; i< mountPoints.size(); i++) {
+        QStorageInfo si = mountPoints.at(i);
+        if (!oldList.contains(si)) {
+            qDebug() << "New Mount Point: " << si.rootPath() << si.displayName();
+            if (!firstTime) {
+                driveAdded(si.rootPath(),
+                           QString("%1;%2;%3").arg(si.name()).arg(QString(si.fileSystemType())).arg(si.bytesTotal()),
+                           si.displayName() );
+            }
         }
-        SHChangeNotifyDeregister(id);
     }
 }
+
+
+#ifdef _WIN32
 
 bool DriveNotify::nativeEvent(const QByteArray & eventType, void * message, long * result) {
 
     MSG* msg = reinterpret_cast<MSG*> (message);
+    qDebug() << msg->message;
 
-    if (msg->message == WM_DEVICECHANGE || msg->message == msgShellChange) {
+    if (msg->message == WM_DEVICECHANGE) {
         qDebug() << "DriveNotify::nativeEvent " << msg->message << msg->wParam << msg->lParam << msg->time << msg->pt.x << msg->pt.y ;
         if (msg->wParam == DBT_DEVICEARRIVAL) {
             DEV_BROADCAST_HDR *deviceInfo = reinterpret_cast<DEV_BROADCAST_HDR*> (msg->lParam);
             qDebug() << "DriveNotify::nativeEvent DBT_DEVICEARRIVAL devicetype = " << deviceInfo->dbch_devicetype ;
             if (deviceInfo->dbch_devicetype == DBT_DEVTYP_VOLUME) {
-                DEV_BROADCAST_VOLUME *volumeInfo = reinterpret_cast<DEV_BROADCAST_VOLUME*> (msg->lParam);
-                QChar driveLetter = DriveMaskToLetter(volumeInfo->dbcv_unitmask);
-                qDebug() << "DriveNotify::nativeEvent DBT_DEVICEARRIVAL DBT_DEVTYP_VOLUME " << driveLetter << volumeInfo->dbcv_flags ;
-                driveAdded(QString("%1:/").arg(driveLetter));
+                reloadMountPoints();
             }
         }
         if (msg->wParam == DBT_DEVICEREMOVECOMPLETE) {
             DEV_BROADCAST_HDR *deviceInfo = reinterpret_cast<DEV_BROADCAST_HDR*> (msg->lParam);
-
             qDebug() << "DriveNotify::nativeEvent DBT_DEVICEREMOVECOMPLETE devicetype = " << deviceInfo->dbch_devicetype ;
+            reloadMountPoints();
         }
         if (msg->wParam == DBT_DEVNODES_CHANGED) {
             WCHAR * id_             = NULL;
@@ -110,199 +147,46 @@ bool DriveNotify::nativeEvent(const QByteArray & eventType, void * message, long
                 } else {
                     name = manufacturer + " " + description;
                 }
-                driveAdded("WPD:/" + id + "/" + name);
+
+                File fi(0,name,0,true,"WPD:/" + id);
+                bool more;
+                bool isStandard = false;
+                QList<File> content = fi.ls(&more);
+                qDebug() << "Listing content at the root of this drive: " << content.size() << " elements";
+                for (int i = 0; i<content.size(); i++) {
+                    qDebug() << content.at(i).absoluteFilePath;
+                    if (content.at(i).absoluteFilePath.endsWith(':')) {
+                        /* This is a standard drive, do not treat it as a WPD drive */
+                        qDebug() << "ignoring a WPD drive because it is a standard drive";
+                        isStandard = true;
+                        //reloadMountPoints(); //just in case
+                        break;
+                    }
+                }
+                if (!isStandard) {
+                    if (content.size() == 0) {
+                        qDebug() << "ignoring a WPD drive because it is empty";
+                    } else {
+                        driveAdded("WPD:/" + id, id, name);
+                    }
+                }
             }
         }
     }
-
-    if (msg->message != msgShellChange) return false;
-    HANDLE lock;
-    long event;
-    ITEMIDLIST** items;
-    if (SHChangeNotification_Lock)
-        lock = SHChangeNotification_Lock((HANDLE) msg->wParam, msg->lParam, &items, &event);
-    else {
-        event = msg->lParam;
-        items = (ITEMIDLIST**) msg->wParam;
-    }
-    QString n1 = getPidlPath(items[0]);
-    QString n2 = getPidlPath(items[1]);
-    /*
-    WCHAR path[MAX_PATH];
-    QString n1 = "?";
-    QString n2 = "?";
-    if (items[0]) {
-        DWORD r1 = SHGetPathFromIDList(items[0], path);
-        if (r1) {
-            n1 = QString::fromWCharArray(path);
-        }
-    }
-    if (items[1]) {
-        DWORD r2 = SHGetPathFromIDList(items[1], path);
-        if (r2) {
-            n2 = QString::fromWCharArray(path);
-        }
-    }
-    */
-
-    switch (event) {
-    case SHCNE_ATTRIBUTES: {
-        qDebug() << QString("Got change ATTRIBUTES for %1.").arg(n1);
-        break;
-    }
-    case SHCNE_CREATE: {
-        qDebug() << QString("Got change CREATE for %1.").arg(n1);
-        break;
-    }
-    case SHCNE_DELETE: {
-        qDebug() << QString("Got change DELETE %1.").arg(n1);
-        break;
-    }
-    case SHCNE_DRIVEADD: {
-        qDebug() << QString("Got change DRIVEADD %1.").arg(n1);
-        break;
-    }
-    case SHCNE_DRIVEADDGUI: {
-        qDebug() << QString("Got change DRIVEADDGUI %1.").arg(n1);
-        break;
-    }
-    case SHCNE_DRIVEREMOVED: {
-        qDebug() << QString("Got change DRIVEREMOVED %1.").arg(n1);
-        break;
-    }
-    case SHCNE_MEDIAINSERTED: {
-        qDebug() << QString("Got change MEDIAINSERTED %1.").arg(n1);
-        break;
-    }
-    case SHCNE_MEDIAREMOVED: {
-        qDebug() << QString("Got change MEDIAREMOVED %1.").arg(n1);
-        break;
-    }
-    case SHCNE_MKDIR: {
-        qDebug() << QString("Got change MKDIR %1.").arg(n1);
-        break;
-    }
-    case SHCNE_RENAMEFOLDER: {
-        qDebug() << QString("Got change RENAMEFOLDER %1 to %2.").arg(n1).arg(n2);
-        break;
-    }
-    case SHCNE_RENAMEITEM: {
-        qDebug() << QString("Got change RENAMEITEM %1 to %2.").arg(n1).arg(n2);
-        break;
-    }
-    case SHCNE_RMDIR: {
-        qDebug() << QString("Got change RMDIR %1.").arg(n1);
-        break;
-    }
-    case SHCNE_UPDATEDIR: {
-        qDebug() << QString("Got change UPDATEDIR %1.").arg(n1);
-        break;
-    }
-    case SHCNE_UPDATEITEM: {
-        qDebug() << QString("Got change UPDATEITEM %1.").arg(n1);
-        break;
-    }
-    default: qDebug() << "Got unrecognized change.";
-    }
-    if (SHChangeNotification_Lock) SHChangeNotification_Unlock(lock);
-    result = 0;
     return true;
-
-
-    return false;
 }
 
-
-QString DriveNotify::getPidlPath(ITEMIDLIST* pidl) {
-    if (!pidl) return "";
-    SHFILEINFO shfi;
-    QString name =
-       ( SHGetFileInfo((WCHAR*) pidl, 0, &shfi, sizeof(shfi), SHGFI_PIDL | SHGFI_DISPLAYNAME) )
-       ? QString::fromWCharArray(shfi.szDisplayName) : "<unknown>";
-    ITEMIDLIST* p = pidl;
-    if (p->mkid.cb) {
-        for (;;) {
-            ITEMIDLIST* q = (ITEMIDLIST*) (((char*) p) + p->mkid.cb);
-            if (q->mkid.cb == 0) break;
-            p = q;
-        }
-        int n = (char*)p - (char*)pidl;
-        char *s = new char[n+2];
-        memcpy(s, pidl, n);
-        s[n] = s[n+1] = 0;
-        name = getPidlPath((ITEMIDLIST*) s) + "\\" + name;
-    }
-    return name;
-}
-
-static QChar DriveMaskToLetter(int mask)
-{
-  QChar letter;
-  QString drives = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  // 1 = A
-  // 2 = B
-  // 4 = C...
-  int cnt = 0;
-  int pom = mask / 2;
-  while (pom != 0)
-  {
-    // while there is any bit set in the mask
-    // shift it to the righ...
-    pom = pom / 2;
-    cnt++;
-  }
-
-  if (cnt < drives.length())
-    letter = drives[cnt];
-  else
-    letter = '?';
-
-  return letter;
-}
 
 #else
 
-
-#include <QFile>
-#include <QStringList>
-#include <QDebug>
-
-DriveNotify::DriveNotify(QObject *parent)
-    :QThread(parent)
-{
-
-#ifdef __APPLE__
-    fileToWatch = "/Volumes/";
-#else
-    fileToWatch = "/etc/mtab";
-#endif
-    reloadMountPoints(true);
-
-    connect(&syswatch,SIGNAL(directoryChanged(QString)),this,SLOT(reloadMountPoints()),Qt::QueuedConnection);
-    connect(&syswatch,SIGNAL(fileChanged(QString))     ,this,SLOT(reloadMountPoints()),Qt::QueuedConnection);
-
-}
 
 void DriveNotify::run() {
     /** If QFileSystem doesn't work, implement here any blocking API like inotifiy
       * See previous versions of this file for an example */
 }
 
-
-void DriveNotify::reloadMountPoints(bool firstTime) {
-    qDebug() << "Reloading mount points...";
-
-    QList<QStorageInfo> newList = QStorageInfo::mountedVolumes();
-
-    for (int i = 0; i< newList.size(); i++) {
-        if (!mountPoints.contains(newList.at(i))) {
-            if (!firstTime) {
-                driveAdded(newList.at(i).rootPath());
-            }
-        }
-    }
-    mountPoints = newList;
-
+void DriveNotify::handleMountFileChange() {
+    reloadMountPoints(false);
     /* sometimes the watcher stops... */
     if (syswatch.addPath(fileToWatch)) {
         qDebug() << "Now watching " << fileToWatch;
@@ -312,6 +196,6 @@ void DriveNotify::reloadMountPoints(bool firstTime) {
 }
 
 
-
-
 #endif
+
+

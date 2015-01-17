@@ -9,9 +9,13 @@
 #plus, if this variable is not set, there's no way to know the final location of the application
 DESTDIR = bin
 
+MAJOR=0
+MINOR=2
+PATCH=1
+
 !contains(BUILD_NUMBER_UPDATE,false) {
     rcfile.target = PicsDL.rc
-    rcfile.commands = ../PicsDL/increment_build_number.sh \"$$OUT_PWD/$$DESTDIR\"
+    rcfile.commands = ../PicsDL/set_version_numbers.sh \"$$MAJOR\" \"$$MINOR\" \"$$PATCH\"
     QMAKE_EXTRA_TARGETS += rcfile
     PRE_TARGETDEPS += PicsDL.rc
 }
@@ -81,13 +85,13 @@ win32{
     LIBS += -L"$$PWD/../WPDInterface/Release" -lWPDInterface
 }
 win32|mac {
-    INCLUDEPATH += $$PWD/../libexif-0.6.21/
-    LIBS      += -L$$PWD/../libexif-0.6.21/libexif/.libs/ -lexif
+    INCLUDEPATH += $$PWD/../libexif/libexif-0.6.21/
+    LIBS      += -L$$PWD/../libexif/libexif-0.6.21/libexif/.libs/ -lexif
 } else {
     LIBS      += -lexif -ludev
 }
 
-QMAKE_CXXFLAGS += -DUSETHREADS -DUSEITHREADS -DMULTIPLICITY
+QMAKE_CXXFLAGS += -DUSETHREADS -DUSEITHREADS -DMULTIPLICITY -DMAJOR=$$MAJOR -DMINOR=$$MINOR -DPATCH=$$PATCH
 win32 {
     INCLUDEPATH += "C:/Strawberry/perl/lib/CORE"
     LIBS        += -LC:/Strawberry/perl/lib/CORE/ -lperl520
@@ -109,7 +113,7 @@ RESOURCES += \
 
 RC_FILE = PicsDL.rc
 
-win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
+#win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 #unix: QMAKE_POST_LINK += ../package-debian/create-debian-package.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 
 #This is needed for debian packaging. It only works if INSTALL_ROOT is passed as parameter of make

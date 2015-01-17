@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setOrganizationName("PicsDL");
     QCoreApplication::setApplicationName("PicsDL");
-    QCoreApplication::setApplicationVersion("0.1");
+    QCoreApplication::setApplicationVersion(QString("%1.%2.%3").arg(MAJOR).arg(MINOR).arg(PATCH));
     QCoreApplication::setOrganizationDomain("picsdl.com");
 
     InstanceManager *im = new InstanceManager();
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
     im->connect(im, SIGNAL(applicationLaunched()),&w, SLOT(applicationLaunched()));
 
-    dm->connect(dn,SIGNAL(driveAdded(QString)), dm, SLOT(treatDrive(QString)));
+    dm->connect(dn,SIGNAL(driveAdded(QString,QString,QString)), dm, SLOT(treatDrive(QString,QString,QString)));
     dm->connect(dm, SIGNAL(newID(QString)), &w, SLOT(insertDrive(QString)));
     //w.show();
 

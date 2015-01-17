@@ -951,7 +951,16 @@ static void initTagInfoMap() {
     }
 }
 
-File::File(File *fi) {
+
+File::File(const File &fi) {
+    shallowCopy(&fi);
+}
+
+File &File::operator=(const File &fi) {
+    shallowCopy(&fi);
+}
+
+void File::shallowCopy(const File *fi) {
     lastModified = fi->lastModified;
     absoluteFilePath = fi->absoluteFilePath;
     size = fi->size;

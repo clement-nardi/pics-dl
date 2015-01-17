@@ -102,6 +102,14 @@ void DeviceConfigView::FillWithConfig(QString id_) {
     qDebug() << "FillWithConfig";
     id = id_;
     QJsonObject obj = dc->conf[id].toObject();
+    QString displayName = obj["displayName"].toString();
+    QString path = obj["path"].toString();
+    QString title = QCoreApplication::applicationName() + " v" + QCoreApplication::applicationVersion()
+                    + " - " + displayName;
+    if (displayName != title) {
+        title += " - " + path;
+    }
+    this->setWindowTitle(title);
 
     /* Download part */
     if (obj["FilesToDownLoad"].isNull() || obj["FilesToDownLoad"].isUndefined()) {

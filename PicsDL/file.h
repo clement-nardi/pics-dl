@@ -35,7 +35,10 @@ class File
 public:
     File(QFileInfo qfi);
     File(QString path);
-    File(File *fi);
+    File(const File &fi);
+    File &operator=(const File &fi);
+    void shallowCopy(const File *fi);
+
     File(uint lastModified, QString absoluteFilePath, quint64 size, bool isDir, QString IDPath = "");
     ~File();
     uint lastModified;

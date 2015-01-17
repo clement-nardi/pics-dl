@@ -28,8 +28,6 @@
 #include <QCoreApplication>
 #include <QMessageBox>
 
-static QString getDriveSerial(QString path);
-
 
 DeviceManager::DeviceManager(DeviceConfig *deviceConfig, QObject *parent) :
     QObject(parent)
@@ -37,18 +35,26 @@ DeviceManager::DeviceManager(DeviceConfig *deviceConfig, QObject *parent) :
     dc = deviceConfig;
 }
 
-void DeviceManager::treatDrive(QString driveID){
-    QStringList driveIDsplit= driveID.split(";");
-    QString drivePath = driveIDsplit.first();
+void DeviceManager::treatDrive(QString drivePath, QString serial, QString displayName){
 
-    QString serial = getDriveSerial(driveIDsplit.last());
-    qDebug() << "treating drive " << drivePath << serial;
+    qDebug() << "treating drive " << drivePath << serial << displayName;
 
     if (dc->conf[serial].isUndefined() || dc->conf[serial].isNull() ) {
         qDebug() << "first time";
         QJsonObject driveConfig;
+
+        /* avoid asking twice the same question */
+        driveConfig.insert("isManaged",QJsonValue(false));
+        driveConfig.insert("displayName",QJsonValue(displayName));
+        dc->conf.insert(serial,driveConfig);
+        QString deviceDescription = displayName;
+        if (displayName != drivePath) {
+            deviceDescription += " (" + drivePath + ")";
+        }
+
         QMessageBox mb(QMessageBox::Question,
-                       "New device detected!",
+                       QCoreApplication::applicationName(),
+                       "New device detected: " + deviceDescription +  "\n" +
                        "Would you like to manage this device with " + QCoreApplication::applicationName() + "?",
                        QMessageBox::Yes | QMessageBox::No);
         int answer = mb.exec();
@@ -77,9 +83,8 @@ void DeviceManager::treatDrive(QString driveID){
             qDebug() << "treat this drive now !";
             QJsonObject obj = dc->conf[serial].toObject();
             if (drivePath.startsWith("WPD:/")) {
-                /* TODO: retrieve display name of the device */
-                obj["path"] = drivePath.split("/").at(2);
-                obj["IDPath"] = "WPD:/" + drivePath.split("/").at(1);
+                obj["path"] = displayName;
+                obj["IDPath"] = drivePath;
             } else {
                 obj["path"] = drivePath;
             }
@@ -105,15 +110,3 @@ void DeviceManager::handleDestroyed(QObject *object) {
     openedViews.remove((DeviceConfigView *)object);
 }
 
-
-#include <QStorageInfo>
-
-
-static QString getDriveSerial(QString path) {
-    if (path.startsWith("WPD:/")) { /* Only on Windows */
-        return path.mid(5);
-    } else {
-        QStorageInfo si(path);
-        return QString("%1;%2;%3").arg(si.displayName()).arg(QString(si.fileSystemType())).arg(si.bytesTotal());
-    }
-}

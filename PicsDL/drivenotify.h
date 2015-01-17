@@ -21,58 +21,53 @@
 #ifndef DRIVENOTIFY_H
 #define DRIVENOTIFY_H
 
+
+#include <QObject>
+#include <QStorageInfo>
+#include <QString>
+
 //moc doesn't recognize _WIN32
 #if defined(_WIN32) || defined(WIN32)
-
 #include <shlobj.h>
 #include <shlwapi.h>
 #include <QWidget>
-#include <QObject>
+#define DRIVENOTIFY_PARENT_TYPE QWidget
+#else
+#include <QFileSystemWatcher>
+#include <QThread>
+#define DRIVENOTIFY_PARENT_TYPE QThread
+#endif
 
-class DriveNotify : public QWidget
+class DriveNotify : public DRIVENOTIFY_PARENT_TYPE
 {
     Q_OBJECT
 public:
-    explicit DriveNotify(QWidget *parent = 0);
+    explicit DriveNotify(DRIVENOTIFY_PARENT_TYPE *parent = 0);
     ~DriveNotify();
+private:
+    QList<QStorageInfo> mountPoints;
+    void reloadMountPoints(bool firstTime = false);
+signals:
+    void driveAdded(QString path,QString serial,QString name);
+
+#if defined(_WIN32) || defined(WIN32)
 protected:
     bool nativeEvent(const QByteArray & eventType, void * message, long * result);
 private:
     static const unsigned int msgShellChange = WM_USER + 1;
     unsigned long id;
-    static QString getPidlPath(ITEMIDLIST* pidl);
-signals:
-    void driveAdded(QString);
-};
-
 #else
-
-#include <QObject>
-#include <QMap>
-#include <QString>
-#include <QFileSystemWatcher>
-#include <QThread>
-#include <QStorageInfo>
-
-class DriveNotify : public QThread
-{
-    Q_OBJECT
-public:
-    explicit DriveNotify(QObject *parent = 0);
-
-signals:
-    void driveAdded(QString);
-
 public slots:
-    void reloadMountPoints(bool firstTime = false);
+    void handleMountFileChange();
 
 private:
-    QList<QStorageInfo> mountPoints;
     QFileSystemWatcher syswatch;
     QString fileToWatch;
     void run();
-};
+
 #endif
+};
+
 
 
 #endif // DRIVENOTIFY_H

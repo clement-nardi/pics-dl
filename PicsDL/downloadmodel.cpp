@@ -351,7 +351,7 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
         if (index.column() == 3) {
             if (index.row() == itemBeingDownloaded) {
                 return QIcon(":/icons/download");
-            } else if (dc->knownFiles.contains(fi)) {
+            } else if (dc->knownFiles.contains(*fi)) {
                 return QIcon(":/icons/ok");
             } else if (QFile(newPath(fi)).exists()) {
                 return QIcon(":/icons/ok");
@@ -413,11 +413,6 @@ void DownloadModel::loadPreview(QString id_) {
     sessionComment = "";
     QString path = obj["path"].toString();
     QString IDPath = obj["IDPath"].toString();
-
-    if (DLTempFolder.size() <=0) {
-        /* This assumes that the config is already filled (at least with default values) */
-        DLTempFolder = obj["DownloadTo"].toString() + "/.PicsDL_temp_" + QUuid::createUuid().toString();
-    }
 
     emptyFileList();
 
@@ -558,7 +553,7 @@ void DownloadModel::reloadSelection() {
     for (int i = 0; i < completeFileList->size(); i++) {
         File *fi = completeFileList->at(i);
         if (fi->isPicture() || fi->isVideo()) {
-            if ((selectall || !dc->knownFiles.contains(fi)) &&
+            if ((selectall || !dc->knownFiles.contains(*fi)) &&
                 !isBlacklisted(*fi)) {
                 selectedFileList->append(fi);
                 //if (count++ > 8) break;
@@ -656,13 +651,13 @@ bool DownloadModel::download() {
             dataChanged(ci,ci,roles);
             QApplication::processEvents();
             if (QFile(fi_newPath).exists()) {
-                dc->knownFiles.insert(new File(fi));
+                dc->knownFiles.insert(*fi);
                 qDebug() << "Will not overwrite " << fi_newPath;
             } else {
 
                 bool copied = fi->copyWithDirs(fi_newPath, geotagger);
                 if (copied) {
-                    dc->knownFiles.insert(new File(fi));
+                    dc->knownFiles.insert(*fi);
                     qDebug() << "copied " << fi->absoluteFilePath << " to " << fi_newPath;
                     totalCopied += fi->size;
                     totalElapsed = timer.nsecsElapsed();

@@ -40,7 +40,7 @@ signals:
     void newID(QString);
 
 public slots:
-    void treatDrive(QString);
+    void treatDrive(QString, QString serial, QString displayName);
     void handleDestroyed(QObject*);
 };
 

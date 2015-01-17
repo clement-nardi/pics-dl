@@ -154,6 +154,22 @@ If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.li
     wget -O - http://cpanmin.us | perl - --self-upgrade --sudo
     cpanm Image::ExifTool --sudo
     cpanm IO::Scalar --sudo
+	
+	sudo apt-get install -y libfontconfig1-dev libfreetype6-dev libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libdbus-1-dev xz-utils
+	
+	curl http://ftp.fau.de/qtproject/archive/qt/5.4/5.4.0/single/qt-everywhere-opensource-src-5.4.0.tar.xz -o qt-everywhere-opensource-src-5.4.0.tar.xz
+	tar -xf qt-everywhere-opensource-src-5.4.0.tar.xz
+	cd qt-everywhere-opensource-src-5.4.0
+	curl https://codereview.qt-project.org/cat/101810%2C9%2Cconfigure%5E0 -o configure_new.zip
+    unzip configure_new.zip
+	mv qtbase/configure qtbase/configure.original
+	cp configure_new-* qtbase/configure
+	chmod 755 qtbase/configure
+	./configure -static -qt-xcb -opensource -confirm-license
+	make
+	sudo make install
+	
+	
     
 ##Clone & Build
 
