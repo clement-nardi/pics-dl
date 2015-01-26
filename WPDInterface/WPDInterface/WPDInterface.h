@@ -22,6 +22,7 @@ extern "C" {
 	__declspec(dllexport) void WPDI_Free(void * p);
 	__declspec(dllexport) void WPDI_LookForNewDevice(WCHAR ** id, WCHAR ** displayName, WCHAR ** manufacturer, WCHAR ** description);
 	__declspec(dllexport) void WPDI_LS(PWSTR deviceID, PWSTR objectID, WPDFileInfo* result, int * count);
+	__declspec(dllexport) void WPDI_Reset_LS();
 
 	__declspec(dllexport) bool WPDI_InitTransfer(PWSTR deviceID, PWSTR objectID, DWORD *optimalTransferSize);
 	__declspec(dllexport) bool WPDI_readNextData(BYTE * data, DWORD size, DWORD *read);

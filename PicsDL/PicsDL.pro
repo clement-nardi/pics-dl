@@ -11,7 +11,7 @@ DESTDIR = bin
 
 MAJOR=0
 MINOR=2
-PATCH=1
+PATCH=2
 
 !contains(BUILD_NUMBER_UPDATE,false) {
     rcfile.target = PicsDL.rc
@@ -19,15 +19,27 @@ PATCH=1
     QMAKE_EXTRA_TARGETS += rcfile
     PRE_TARGETDEPS += PicsDL.rc
 }
+BUILD=$$cat(../PicsDL/build_number.txt)
 
 exiftool.target = exiftool_app
 exiftool.commands = ../exiftool/get_exiftool.sh \"$$OUT_PWD/$$DESTDIR\"
 QMAKE_EXTRA_TARGETS += exiftool
 PRE_TARGETDEPS += exiftool_app
 
+#doesn't work from here. Under windows, the sh.exe bundled with git doesn't support parentheses in test,
+#so you need to launch the script from an MSYS shell (see README)
+#on linux and mac, sudo is needed to install the lib, so you need to launch the script manually
+#win32 {
+#    libexif.target = libexif_lib
+#    libexif.commands = ../libexif/get_libexif.sh \"$$OUT_PWD/$$DESTDIR\"
+#    QMAKE_EXTRA_TARGETS += libexif
+#    PRE_TARGETDEPS += libexif_lib
+#}
+
 #with "/" it doesn't work under win7
-win32: include( ..\o2-master\src\src.pri )
-unix: include( ../o2-master/src/src.pri )
+#and with "\" it doesn't work on my brand new windows 8.1 ...
+#win32: include( ..\o2-master\src\src.pri )
+include( ../o2-master/src/src.pri )
 
 
 QT       += core gui
@@ -91,7 +103,7 @@ win32|mac {
     LIBS      += -lexif -ludev
 }
 
-QMAKE_CXXFLAGS += -DUSETHREADS -DUSEITHREADS -DMULTIPLICITY -DMAJOR=$$MAJOR -DMINOR=$$MINOR -DPATCH=$$PATCH
+QMAKE_CXXFLAGS += -DUSETHREADS -DUSEITHREADS -DMULTIPLICITY -DMAJOR=$$MAJOR -DMINOR=$$MINOR -DPATCH=$$PATCH -DBUILD=$$BUILD
 win32 {
     INCLUDEPATH += "C:/Strawberry/perl/lib/CORE"
     LIBS        += -LC:/Strawberry/perl/lib/CORE/ -lperl520

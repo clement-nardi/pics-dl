@@ -34,16 +34,14 @@ This is because the dll is versionned along with its code: */pics-dl/WPDInterfac
 #Step-by-step guide to compile PicsDL:
 
 ##1. Downloads
-* [QT](http://download.qt-project.org/official_releases/qt/5.3/5.3.2/qt-opensource-windows-x86-mingw482_opengl-5.3.2.exe)
+* [QT 5.4](http://download.qt.io/official_releases/qt/5.4/5.4.0/qt-opensource-windows-x86-mingw491_opengl-5.4.0.exe)
 * [Git](http://git-scm.com/download/win)
 * [MSVC redistributable 2013](http://www.microsoft.com/en-us/download/confirmation.aspx?id=40784)
 * [Inno Setup](http://www.jrsoftware.org/download.php/is.exe)
+* [Strawberry perl](http://strawberryperl.com/download/5.20.1.1/strawberry-perl-5.20.1.1-32bit.msi)
 
 Optional but recommended:  
 * [notepad++](http://download.tuxfamily.org/notepadplus/6.6.9/npp.6.6.9.Installer.exe)
-
-Automatically retrieved at build time:
-* [exiftool](http://www.sno.phy.queensu.ca/~phil/exiftool/exiftool-9.77.zip)
 
 ##2. Install (in whatever order)  
 
@@ -52,17 +50,22 @@ On the 3rd step, make sure you select all the Tools (including MinGW).
 Otherwise just click on Next  
 
 ###2.2 Git  
-On the 4th step, select the 3rd option: "Use Git and optional Unix tools from the Windows Command Prompt"
+**At the 4th step, select the 3rd option**: "Use Git and optional Unix tools from the Windows Command Prompt"
 Otherwise Just click Next.  
 
 ###2.4 Notepad++    
 Just click Next.  
 
 ###2.5 Microsoft Visual C++ Redistributable Packages for Visual Studio 2013  
-
 Just click Next.  
 
-###2.6 Inno Setup 5  
+###2.6 Perl and Exiftool module
+Install Strawberry Perl, leave all default settings.  
+Once installed, launch "CPAN Client", and write in the terminal:  
+
+    install Image::ExifTool
+
+###2.7 Inno Setup 5  
 Just Click Next (leave default options)  
 Note: Inno Setup is used to generate the windows installer.   
 If you don't want to generate the installer, you will need to remove the last line in the .pro file  
@@ -79,9 +82,10 @@ Double-click on */pics-dl/PicsDL/PicsDL.pro
 let QT Creator configure the project automatically  
 click on the compile button (green triangle)  
 
-##6. (optional) Compile PicsDL with static linking  
-This is strongly recommended if you plan to produce an installer for PicsDL (the final file will be much smaller).  
-Follow the instructions here: http://qt-project.org/wiki/How-to-build-a-static-Qt-for-Windows-MinGW  
+##6. (optional, 2 hours, recommended) Compile PicsDL with static linking  
+This is strongly recommended if you plan to produce an installer for PicsDL (the final file will be much smaller).    
+You just need to execute de script "*/Qt/launch-static-buid.ps1" (Right-click, execute with PowerShell).  
+inspired from: http://qt-project.org/wiki/How-to-build-a-static-Qt-for-Windows-MinGW  
 Note: the current Inno setup script is only designed to work with a statically linked executable  
 
 
@@ -109,7 +113,6 @@ click on the Build button (green triangle)
 #(Optional) Step-by-step guide to compile libexif
 
 ##1. Downloads
-* [libexif](http://sourceforge.net/projects/libexif/files/libexif/0.6.21/libexif-0.6.21.zip/download)
 * [MSYS/MinGW](https://sourceforge.net/projects/mingw/files/latest/download)
  
 ##2 Install MinGW/MSYS  
@@ -125,7 +128,7 @@ Short install procedure:
 ###4.1 Prepare the build  
 Go to folder C:\MinGW\msys\1.0\etc\ and rename the file "fstab.sample" into "fstab"  
 Edit the file fstab (right-click / Edit with Notepad++)  
-On the line 16, replace "c:/mingw" by "C:/Qt/Qt5.3.2/Tools/mingw482_32"  
+On the line 16, replace "c:/mingw" by "C:/Qt/Qt5.4.0/Tools/mingw491_32"  
 Save the file  
 
 ###4.2 Build  
@@ -137,10 +140,8 @@ Open MSYS/MinGW by launching:
 	
 In the terminal, write these commands:  
 
-    cd /e/.../pics-dl/libexif-0.6.21/        # /e/ is the drive letter. Replace ... by the actual location of the git repository  
-    ./configure  
-    make  
-    make install  
+    cd /e/.../pics-dl/libexif/        # /e/ is the drive letter. Replace ... by the actual location of the git repository  
+    ./get_libexif.sh
 	
 If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.libs/libexif-12.dll  
 

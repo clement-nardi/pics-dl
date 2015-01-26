@@ -106,7 +106,7 @@ void DeviceConfigView::FillWithConfig(QString id_) {
     QString path = obj["path"].toString();
     QString title = QCoreApplication::applicationName() + " v" + QCoreApplication::applicationVersion()
                     + " - " + displayName;
-    if (displayName != title) {
+    if ( displayName != path) {
         title += " - " + path;
     }
     this->setWindowTitle(title);

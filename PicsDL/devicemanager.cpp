@@ -45,7 +45,6 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
 
         /* avoid asking twice the same question */
         driveConfig.insert("isManaged",QJsonValue(false));
-        driveConfig.insert("displayName",QJsonValue(displayName));
         dc->conf.insert(serial,driveConfig);
         QString deviceDescription = displayName;
         if (displayName != drivePath) {
@@ -88,6 +87,7 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
             } else {
                 obj["path"] = drivePath;
             }
+            obj["displayName"] = displayName;
             dc->conf[serial] = obj;
             dc->saveConfig();
 

@@ -211,10 +211,6 @@ bool openDevice(PWSTR deviceID, bool force = false) {
 					return false;
 				}
 			}
-			else {
-				printf("! Failed to Open the device (RW), hr = 0x%lx\n", hr); std::cout.flush();
-				return false;
-			}
 		}
 		hr = pDevice->Content(&pContent);
 		if (!SUCCEEDED(hr)) { std::cout << "pDevice->Content failed\n"; std::cout.flush(); return false; }
@@ -334,6 +330,14 @@ __declspec(dllexport) void WPDI_LS(PWSTR deviceID, PWSTR objectID, WPDFileInfo* 
 	std::cout.flush();
 	return;
 }
+
+__declspec(dllexport) void WPDI_Reset_LS() {
+	free(lastObjectID);
+	lastObjectID = (PWSTR)malloc(sizeof(WCHAR)* 2);
+	lastObjectID[0] = L'\0';
+}
+
+
 __declspec(dllexport) void WPDI_LookForNewDevice(WCHAR ** id, WCHAR ** displayName, WCHAR ** manufacturer, WCHAR ** description) {
 	DWORD  nbDevices = 0;
 	PWSTR* devices = NULL;

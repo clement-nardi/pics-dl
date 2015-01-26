@@ -1378,6 +1378,8 @@ QList<File> File::ls(bool *theresMore) {
         }
         if (count >= MAX_REQUESTED_ELEMENTS) {
             *theresMore = true;
+        } else {
+            WPDI_Reset_LS();
         }
         free(deviceID_i);
         free(objectID_i);

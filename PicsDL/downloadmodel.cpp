@@ -64,7 +64,7 @@ int DownloadModel::rowCount(const QModelIndex & parent) const{
     return selectedFileList->size();
 }
 int DownloadModel::columnCount(const QModelIndex & parent) const {
-    return 4;
+    return 5;
 }
 
 QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
@@ -299,11 +299,16 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             break;
         case 2:
         {
+            return File::size2Str(fi->size);
+        }
+            break;
+        case 3:
+        {
             QDateTime lm = QDateTime::fromTime_t(fi->lastModified);
             return lm.toString("yyyy/MM/dd HH:mm:ss");
         }
             break;
-        case 3:
+        case 4:
             return newPath(fi);
             break;
         }
@@ -322,11 +327,16 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             break;
         case 2:
         {
+            return QString("%1 Bytes").arg(fi->size);
+        }
+            break;
+        case 3:
+        {
             QDateTime lm = QDateTime::fromTime_t(fi->lastModified);
             return lm.toString(Qt::SystemLocaleLongDate);
         }
             break;
-        case 3:
+        case 4:
             return newPath(fi);
             break;
         }
@@ -348,7 +358,7 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
                 }
             }
         }
-        if (index.column() == 3) {
+        if (index.column() == 4) {
             if (index.row() == itemBeingDownloaded) {
                 return QIcon(":/icons/download");
             } else if (dc->knownFiles.contains(*fi)) {
@@ -617,6 +627,11 @@ void DownloadModel::reloadSelection() {
 
 bool DownloadModel::download() {
     qDebug() << "dpm.download";
+
+    if (!getAllCom()) {
+        return false;
+    }
+
     bool stopped = false;
     bool error = false;
     if (selectedFileList->size() > 0) {
