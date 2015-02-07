@@ -10,7 +10,7 @@
     <height>972</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_11">
+  <layout class="QVBoxLayout" name="verticalLayout_11" stretch="1,0">
    <item>
     <widget class="QTabWidget" name="Tabs">
      <property name="windowTitle">
@@ -556,7 +556,7 @@
         </layout>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,0">
+        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1">
          <item>
           <widget class="QTableView" name="tableView">
            <property name="minimumSize">
@@ -572,26 +572,6 @@
             <bool>true</bool>
            </attribute>
           </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
-           <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="autoCheckBox" name="autoDLBox" native="true"/>
-           </item>
-          </layout>
          </item>
         </layout>
        </item>
@@ -764,7 +744,7 @@
         </spacer>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1">
          <item>
           <spacer name="horizontalSpacer_8">
            <property name="orientation">
@@ -778,9 +758,6 @@
            </property>
           </spacer>
          </item>
-         <item>
-          <widget class="autoCheckBox" name="autoGeotagBox" native="true"/>
-         </item>
         </layout>
        </item>
       </layout>
@@ -788,7 +765,7 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_13">
+    <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="0,1,0,0">
      <item>
       <widget class="QLabel" name="statusText">
        <property name="text">
@@ -808,6 +785,9 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="autoCheckBox" name="automation" native="true"/>
      </item>
      <item>
       <widget class="QPushButton" name="goButton">
@@ -846,8 +826,8 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>221</x>
-     <y>295</y>
+     <x>253</x>
+     <y>331</y>
     </hint>
     <hint type="destinationlabel">
      <x>1126</x>
@@ -862,8 +842,8 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>348</x>
-     <y>352</y>
+     <x>370</x>
+     <y>399</y>
     </hint>
     <hint type="destinationlabel">
      <x>1311</x>
@@ -926,8 +906,8 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>100</x>
-     <y>691</y>
+     <x>131</x>
+     <y>753</y>
     </hint>
     <hint type="destinationlabel">
      <x>10</x>
@@ -942,8 +922,8 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>183</x>
-     <y>720</y>
+     <x>245</x>
+     <y>787</y>
     </hint>
     <hint type="destinationlabel">
      <x>9</x>
@@ -962,8 +942,8 @@
      <y>64</y>
     </hint>
     <hint type="destinationlabel">
-     <x>88</x>
-     <y>69</y>
+     <x>103</x>
+     <y>142</y>
     </hint>
    </hints>
   </connection>
@@ -990,8 +970,8 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>97</y>
+     <x>102</x>
+     <y>146</y>
     </hint>
     <hint type="destinationlabel">
      <x>329</x>
@@ -1006,8 +986,8 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>76</x>
-     <y>87</y>
+     <x>105</x>
+     <y>275</y>
     </hint>
     <hint type="destinationlabel">
      <x>446</x>
@@ -1022,8 +1002,8 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>95</y>
+     <x>120</x>
+     <y>188</y>
     </hint>
     <hint type="destinationlabel">
      <x>575</x>
@@ -1038,8 +1018,8 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>85</y>
+     <x>226</x>
+     <y>312</y>
     </hint>
     <hint type="destinationlabel">
      <x>682</x>
@@ -1054,44 +1034,12 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>89</y>
+     <x>222</x>
+     <y>348</y>
     </hint>
     <hint type="destinationlabel">
      <x>793</x>
      <y>13</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>autoDLBox</sender>
-   <signal>clicked()</signal>
-   <receiver>DeviceConfigView</receiver>
-   <slot>CopyToConfig()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1298</x>
-     <y>854</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>655</x>
-     <y>432</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>autoGeotagBox</sender>
-   <signal>clicked()</signal>
-   <receiver>DeviceConfigView</receiver>
-   <slot>CopyToConfig()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>87</x>
-     <y>79</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>655</x>
-     <y>432</y>
     </hint>
    </hints>
   </connection>
@@ -1102,8 +1050,8 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>165</x>
-     <y>155</y>
+     <x>195</x>
+     <y>181</y>
     </hint>
     <hint type="destinationlabel">
      <x>804</x>
@@ -1118,12 +1066,28 @@
    <slot>CopyToConfig()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>136</x>
-     <y>186</y>
+     <x>166</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel">
      <x>743</x>
      <y>46</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>automation</sender>
+   <signal>clicked()</signal>
+   <receiver>DeviceConfigView</receiver>
+   <slot>CopyToConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1176</x>
+     <y>940</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>655</x>
+     <y>485</y>
     </hint>
    </hints>
   </connection>

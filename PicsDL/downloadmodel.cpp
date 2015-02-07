@@ -34,6 +34,7 @@
 #include <QProcess>
 #include <QUuid>
 #include <QCryptographicHash>
+#include "geotagger.h"
 
 static QStringList dateKeywords = QString("yyyy;yy;MMMM;MMM;MM;dddd;ddd;dd;HH;mm;ss").split(";");
 
@@ -42,26 +43,21 @@ DownloadModel::DownloadModel(DeviceConfig *dc_, QProgressDialog *pd_, bool editM
 {
     dc = dc_;
     editMode = editMode_;
-    completeFileList = new QList<File*>();
-    selectedFileList = new QList<File*>();
-    blacklistedDirectories = new QList<File*>();
     itemBeingDownloaded = -1;
+    geotagger = NULL;
     pd = pd_;
 
 }
 
 DownloadModel::~DownloadModel() {
     emptyFileList();
-    delete completeFileList;
-    delete selectedFileList;
-    delete blacklistedDirectories;
     if (DLTempFolder.size() > 0) {
         QDir(DLTempFolder).removeRecursively();
     }
 }
 
 int DownloadModel::rowCount(const QModelIndex & parent) const{
-    return selectedFileList->size();
+    return selectedFileList.size();
 }
 int DownloadModel::columnCount(const QModelIndex & parent) const {
     return 5;
@@ -130,8 +126,8 @@ QString DownloadModel::tempPath(File *fi) const {
 
 QString DownloadModel::guessCameraName() {
     if (dc->conf[id].toObject()["AllowEXIF"].toBool()) {
-        for (int i = selectedFileList->size()-1; i>=0; i--) {
-            File * fi = selectedFileList->at(i);
+        for (int i = selectedFileList.size()-1; i>=0; i--) {
+            File * fi = selectedFileList.at(i);
             QString makeModel = fi->getEXIFValue("Make") + " " + fi->getEXIFValue("Model");
             if (makeModel.size() > 1) {
                 return makeModel;
@@ -168,7 +164,7 @@ bool DownloadModel::getAllCom(){
     qDebug() << "dpm.getAllCom";
     QString newName = dc->conf[id].toObject()["newName"].toString();
     int res = QDialog::Accepted;
-    if (selectedFileList->size() > 0 &&
+    if (selectedFileList.size() > 0 &&
         (newName.contains("dCom") ||
          newName.contains("sCom")   )  ) {
         QJsonObject obj = dc->conf["dCom"].toObject();
@@ -179,8 +175,8 @@ bool DownloadModel::getAllCom(){
         int numberOfQueries = 0;
         queryTable->setColumnCount(2);
         if (newName.contains("dCom")) {
-            for (int i = 0; i < selectedFileList->size(); i++) {
-                File *fi = selectedFileList->at(i);
+            for (int i = 0; i < selectedFileList.size(); i++) {
+                File *fi = selectedFileList.at(i);
                 QDate fileDate = QDateTime::fromTime_t(fi->lastModified).date();
                 QString dayKey = fileDate.toString("yyyy-MM-dd");
                 QJsonValue com = obj[dayKey];
@@ -259,14 +255,14 @@ bool DownloadModel::getAllCom(){
         dc->saveConfig();
 
         dataChanged(createIndex(0,2),
-                    createIndex(selectedFileList->size(),2));
+                    createIndex(selectedFileList.size(),2));
         delete daylycomments;
     }
     return (res == QDialog::Accepted);
 }
 
 void DownloadModel::showEXIFTags(int row) {
-    File *fi = selectedFileList->at(row);
+    File *fi = selectedFileList.at(row);
     QStringList tags = fi->getEXIFTags();
     if (tags.size() > 0) {
         EXIFDialog *d = new EXIFDialog();
@@ -288,7 +284,7 @@ void DownloadModel::showEXIFTags(int row) {
 
 
 QVariant DownloadModel::data(const QModelIndex & index, int role) const{
-    File *fi = selectedFileList->at(index.row());
+    File *fi = selectedFileList.at(index.row());
     switch (role) {
     case Qt::DisplayRole:
         switch (index.column()) {
@@ -393,8 +389,9 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
             switch (section) {
             case 0: return ""; break;
             case 1: return "File"; break;
-            case 2: return "Date"; break;
-            case 3: return "Destination"; break;
+            case 2: return "Size"; break;
+            case 3: return "Date"; break;
+            case 4: return "Destination"; break;
             }
             break;
         case Qt::Vertical:
@@ -409,11 +406,11 @@ bool pathLessThan(File *a, File *b) {
 }
 
 void DownloadModel::emptyFileList() {
-    for (int i = 0; i < completeFileList->size(); i++) {
-        delete completeFileList->at(i);
+    for (int i = 0; i < completeFileList.size(); i++) {
+        delete completeFileList.at(i);
     }
-    completeFileList->clear();
-    selectedFileList->clear();
+    completeFileList.clear();
+    selectedFileList.clear();
 }
 
 void DownloadModel::loadPreview(QString id_) {
@@ -424,6 +421,9 @@ void DownloadModel::loadPreview(QString id_) {
     QString path = obj["path"].toString();
     QString IDPath = obj["IDPath"].toString();
 
+    bool error;
+    getGeoTagger(&error);
+
     emptyFileList();
 
     discoveredFolders = 1;
@@ -433,7 +433,7 @@ void DownloadModel::loadPreview(QString id_) {
     treatDir(File(0,path,0,true,IDPath));
     pd->hide();
     /* Sort by path */
-    qSort(completeFileList->begin(), completeFileList->end(), pathLessThan);
+    qSort(completeFileList.begin(), completeFileList.end(), pathLessThan);
     reloadSelection();
 }
 
@@ -526,12 +526,12 @@ void DownloadModel::treatDir(File dirInfo) {
         if (element.isDir) {            
             if (isBlacklisted(element)) {
                 qDebug() << "Do NOT list content of" << element.fileName();
-                blacklistedDirectories->append(new File(element));
+                blacklistedDirectories.append(new File(element));
             } else {
                 treatDir(element);
             }
         } else {
-            completeFileList->append(new File(element));
+            completeFileList.append(new File(element));
         }
     }
 }
@@ -540,11 +540,11 @@ void DownloadModel::reloadSelection() {
     qDebug() << "dpm.reloadSelection";
     bool selectall = (dc->conf[id].toObject()["FilesToDownLoad"].toString() == "All");    
     beginResetModel();
-    selectedFileList->clear();
+    selectedFileList.clear();
 
     /* 1st step: check if some blacklisted directories need to be browsed */
     pdTimer.start();
-    QMutableListIterator<File*> bli(*blacklistedDirectories);
+    QMutableListIterator<File*> bli(blacklistedDirectories);
     bool sortNeeded = false;
     while (bli.hasNext()) {
         File *element = bli.next();
@@ -555,22 +555,22 @@ void DownloadModel::reloadSelection() {
         }
     }
     if (sortNeeded) {
-        qSort(completeFileList->begin(), completeFileList->end(), pathLessThan);
+        qSort(completeFileList.begin(), completeFileList.end(), pathLessThan);
     }
     pd->hide();
 
     int count = 0;
-    for (int i = 0; i < completeFileList->size(); i++) {
-        File *fi = completeFileList->at(i);
+    for (int i = 0; i < completeFileList.size(); i++) {
+        File *fi = completeFileList.at(i);
         if (fi->isPicture() || fi->isVideo()) {
             if ((selectall || !dc->knownFiles.contains(*fi)) &&
                 !isBlacklisted(*fi)) {
-                selectedFileList->append(fi);
+                selectedFileList.append(fi);
                 //if (count++ > 8) break;
                 /* Search for attached files */
                 for (int j = i-2; j < i+2; j++) {
-                    if (j>=0 && j!=i && j<completeFileList->size()) {
-                        File *attachedFile = completeFileList->at(j);
+                    if (j>=0 && j!=i && j<completeFileList.size()) {
+                        File *attachedFile = completeFileList.at(j);
                         if (i>0 && attachedFile->isAttachmentOf(*fi)) {
                             if (! (attachedFile->isPicture() || attachedFile->isVideo())) {
                                 QString afp = attachedFile->absoluteFilePath;
@@ -578,7 +578,7 @@ void DownloadModel::reloadSelection() {
                                 /* Attached files must share the same information as the picture or video they are attached to.
                                    This way they will continue to share the same name once downloaded */
                                 attachedFile->absoluteFilePath = afp;
-                                selectedFileList->append(attachedFile);
+                                selectedFileList.append(attachedFile);
                                 qDebug() << "           this file " << fi->absoluteFilePath;
                                 qDebug() << "has an attached file " << attachedFile->absoluteFilePath;
                             }
@@ -591,8 +591,8 @@ void DownloadModel::reloadSelection() {
     if (dc->conf[id].toObject()["AllowEXIF"].toBool()) {
         pdTimer.start();
         pd->hide();
-        for (int i = 0; i < selectedFileList->size(); i++) {
-            File *fi = selectedFileList->at(i);
+        for (int i = 0; i < selectedFileList.size(); i++) {
+            File *fi = selectedFileList.at(i);
             if (pd->isVisible()) {
                 pd->setValue(i);
                 if (pd->wasCanceled()) {
@@ -610,7 +610,7 @@ void DownloadModel::reloadSelection() {
                 pd->reset();
                 pd->setLabelText("Loading EXIF Data");
                 pd->setMinimum(0);
-                pd->setMaximum(selectedFileList->size());
+                pd->setMaximum(selectedFileList.size());
                 pd->setWindowModality(Qt::WindowModal);
                 pd->setValue(0);
                 pd->show();
@@ -625,7 +625,7 @@ void DownloadModel::reloadSelection() {
     reloaded();
 }
 
-bool DownloadModel::download() {
+bool DownloadModel::launchDownload() {
     qDebug() << "dpm.download";
 
     if (!getAllCom()) {
@@ -634,12 +634,12 @@ bool DownloadModel::download() {
 
     bool stopped = false;
     bool error = false;
-    if (selectedFileList->size() > 0) {
+    if (selectedFileList.size() > 0) {
         Geotagger * geotagger = getGeoTagger(&error);
-        qint64 totalCopied = 0;
-        qint64 totalElapsed = 0;
-        qint64 lastElapsed = 0;
-        QElapsedTimer timer;
+        totalCopied = 0;
+        totalElapsed = 0;
+        lastElapsed = 0;
+
         if (error) {
             delete geotagger;
             return false;
@@ -648,7 +648,7 @@ bool DownloadModel::download() {
         pd->reset();
         pd->setLabelText("Downloading the files");
         pd->setMinimum(0);
-        pd->setMaximum(selectedFileList->size());
+        pd->setMaximum(selectedFileList.size());
         pd->setWindowModality(Qt::WindowModal);
         pd->setValue(0);
         pd->show();
@@ -656,9 +656,18 @@ bool DownloadModel::download() {
         roles.append(Qt::DecorationRole);
         timer.start();
 
-        for (int i = 0; i < selectedFileList->size(); i++) {
+        maxCachedSize = 1024*1024*500; /* 500 Mo read cache */
+        totalCachedSize = 0;
+        nbCachedFiles = 0;
+        filesToRead = selectedFileList;
+        filesToWrite = selectedFileList;
+
+        launchNewReads();
+
+/*
+        for (int i = 0; i < selectedFileList.size(); i++) {
             pd->setValue(i);
-            File *fi = selectedFileList->at(i);
+            File *fi = selectedFileList.at(i);
             QString fi_newPath = newPath(fi);
             QModelIndex ci = createIndex(i,2);
             itemBeingDownloaded = i;
@@ -699,13 +708,15 @@ bool DownloadModel::download() {
         delete geotagger;
         pd->hide();
         dc->saveKnownFiles();
+    */
     }
     return !stopped;
 }
 
 Geotagger *DownloadModel::getGeoTagger(bool *error) {
     QJsonObject obj = dc->conf[id].toObject();
-    *error = false;
+    if (error!=NULL)
+        *error = false;
     if (obj["GeoTag"].toBool() == true) {
         QString trackingFolder;
 
@@ -719,17 +730,21 @@ Geotagger *DownloadModel::getGeoTagger(bool *error) {
             trackingFolder = obj["TrackFolder"].toString();
         }
 
-        if (!QDir(trackingFolder).exists()) {
+        if (!QDir(trackingFolder).exists() && error != NULL) {
             QMessageBox mb(QMessageBox::Warning,
-                           "The provided Tracking Folder does not exist",
+                           "The provided Tracking Folder does not exist:\n"+trackingFolder,
                            "Please choose an existing folder.",
                            QMessageBox::Ok);
             int answer = mb.exec();
             *error = true;
         }
         File tf(trackingFolder);
-        Geotagger * gt = new Geotagger(&tf);
-        return gt;
+        if (geotagger == NULL) {
+            geotagger = new Geotagger();
+            connect(geotagger,SIGNAL(writeFinished(File*)),this,SLOT(handleWriteFinished(File*)));
+        }
+        geotagger->setTrackFilesFolder(tf);
+        return geotagger;
     } else {
         return NULL;
     }
@@ -737,8 +752,84 @@ Geotagger *DownloadModel::getGeoTagger(bool *error) {
 
 void DownloadModel::getStats(qint64 *totalSize, int *nbFiles) {
     *totalSize = 0;
-    for (int i = 0; i < selectedFileList->size(); i++) {
-        *totalSize += selectedFileList->at(i)->size;
+    for (int i = 0; i < selectedFileList.size(); i++) {
+        *totalSize += selectedFileList.at(i)->size;
     }
-    *nbFiles = selectedFileList->size();
+    *nbFiles = selectedFileList.size();
+}
+
+
+
+/* Download management */
+
+void DownloadModel::launchNewReads(){
+    qDebug() << "launchNewReads";
+    while (filesToRead.size()>0) {
+        File *file = filesToRead.at(0);
+        if (file->size + totalCachedSize < maxCachedSize || /* This file fits in the cache */
+            nbCachedFiles == 0) { /* there's nothing in the cache */
+            int check_size = filesToRead.size();
+            int i =  selectedFileList.indexOf(file);
+            QString fi_newPath = newPath(file);
+            QModelIndex ci = createIndex(i,2);
+            itemBeingDownloaded = i;
+            itemOfInterest(ci);
+            QVector<int> roles;
+            roles.append(Qt::DecorationRole);
+            dataChanged(ci,ci,roles);
+            QApplication::processEvents();
+            if (QFile(fi_newPath).exists()) {
+                dc->knownFiles.insert(*file);
+                qDebug() << "Will not overwrite " << fi_newPath;
+            } else {
+                connect(file,SIGNAL(readFinished(File*)),this,SLOT(handleReadFinished(File*)));
+                file->launchReadToCache();
+                nbCachedFiles++;
+                totalCachedSize+=file->size;
+            }
+            filesToRead.removeOne(file);
+            if (filesToRead.size() != check_size-1) {
+                qWarning() << "!!!!!!!!!!!! SYNCHRONIZATION IS NEEDED !!!!!!!!!!!!!!";
+            }
+            qDebug() << QString("%1 cached files (%2/%3)").arg(nbCachedFiles).arg(File::size2Str(totalCachedSize)).arg(File::size2Str(maxCachedSize));
+        } else {
+            qDebug() << QString("cannot add to cache (%1): %2").arg(File::size2Str(file->size)).arg(file->fileName());
+            break;
+        }
+    }
+    if (nbCachedFiles == 0) {
+        qDebug() << "There's nothing in the pipe...";
+        emit downloadFinished();
+    }
+}
+
+void DownloadModel::handleReadFinished(File *file) {
+    /* launch write */
+    getGeoTagger();
+    if (geotagger != NULL) {
+        geotagger->geotag(file,newPath(file));
+    }
+}
+
+void DownloadModel::handleWriteFinished(File *file) {
+    dc->knownFiles.insert(*file);
+    qDebug() << "copied " << file->absoluteFilePath << " to " << newPath(file);
+    totalCopied += file->size;
+    totalElapsed = timer.nsecsElapsed();
+    pd->setLabelText(QString("Downloading the files @%1 (av. %2)")
+                     .arg(File::size2Str(file->size*1000000000/(totalElapsed-lastElapsed))+"/s")
+                     .arg(File::size2Str(totalCopied*1000000000/(totalElapsed))+"/s"));
+    lastElapsed = totalElapsed;
+    file->deleteBuffer();
+    totalCachedSize -= file->size;
+    nbCachedFiles--;
+    filesToWrite.removeOne(file);
+    pd->setValue(selectedFileList.size()-filesToWrite.size());
+    if (filesToWrite.isEmpty()) {
+        qDebug() << "That was the last file!";
+        emit downloadFinished();
+    } else {
+        launchNewReads();
+    }
+
 }

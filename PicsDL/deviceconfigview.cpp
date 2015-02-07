@@ -55,8 +55,7 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
         //ui->tableView->setItemDelegate(dpm->getItemDelegate());
         //ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-        connect(ui->autoDLBox, SIGNAL(performAction()),this,SLOT(automation()));
-        connect(ui->autoGeotagBox, SIGNAL(performAction()),this,SLOT(automation()));
+        connect(ui->automation, SIGNAL(performAction()),this,SLOT(go()));
     }
     //setCornerWidget(new QPushButton("Go",this),Qt::BottomRightCorner);
 
@@ -67,6 +66,7 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
     showMaximized();
 
     /* automation stuff */
+    ui->automation->startCountDown();
 
 }
 
@@ -152,14 +152,10 @@ void DeviceConfigView::FillWithConfig(QString id_) {
     }
     ui->UseEXIFDateBox->setChecked(obj["UseEXIFDate"].toBool());
     /* Automation */
-    if (obj["autoDL"].isNull() || obj["autoDL"].isUndefined()) {
-        obj.insert("autoDL",QJsonValue(false));
+    if (obj["automation"].isNull() || obj["automation"].isUndefined()) {
+        obj.insert("automation",QJsonValue(false));
     }
-    ui->autoDLBox->box->setChecked(obj["autoDL"].toBool());
-    if (obj["autoGeotag"].isNull() || obj["autoGeotag"].isUndefined()) {
-        obj.insert("autoGeotag",QJsonValue(false));
-    }
-    ui->autoGeotagBox->box->setChecked(obj["autoGeotag"].toBool());
+    ui->automation->box->setChecked(obj["automation"].toBool());
 
     /* Geo Tagging */
     if (obj["GeoTag"].isNull() || obj["GeoTag"].isUndefined()) {
@@ -245,8 +241,7 @@ void DeviceConfigView::CopyToConfig() {
     obj.insert("UseEXIFDate",QJsonValue(ui->UseEXIFDateBox->isChecked()));
 
     /* Automation */
-    obj.insert("autoDL",QJsonValue(ui->autoDLBox->box->isChecked()));
-    obj.insert("autoGeotag",QJsonValue(ui->autoGeotagBox->box->isChecked()));
+    obj.insert("automation",QJsonValue(ui->automation->box->isChecked()));
 
     /* GeoTagging */
     obj.insert("GeoTag",QJsonValue(ui->GeoTagBox->isChecked()));
@@ -321,8 +316,7 @@ void DeviceConfigView::updateStatusText(){
 void DeviceConfigView::go(){
     SaveConfig();
     if (dpm != NULL) {
-        if (dpm->download()) {
-            deleteLater();
-        }
+        connect(dpm,SIGNAL(downloadFinished()),this,SLOT(deleteLater()));
+        dpm->launchDownload();
     }
 }

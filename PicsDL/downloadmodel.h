@@ -28,6 +28,7 @@
 #include <QProgressDialog>
 #include <QItemDelegate>
 #include <QElapsedTimer>
+class Geotagger;
 
 extern QString ExifToolPath;
 
@@ -42,9 +43,9 @@ public:
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     void loadPreview(QString id);
-    bool download();
+    bool launchDownload();
     void moveToFinalLocation();
-    Geotagger *getGeoTagger(bool *error);
+    Geotagger *getGeoTagger(bool *error = NULL);
     void showEXIFTags(int row);
     QString guessCameraName();
     void getStats(qint64 *totalSize, int *nbFiles);
@@ -53,9 +54,9 @@ private:
     DeviceConfig *dc;
     bool editMode;
     QString id;
-    QList<File*> *blacklistedDirectories;
-    QList<File*> *completeFileList;
-    QList<File*> *selectedFileList;
+    QList<File*> blacklistedDirectories;
+    QList<File*> completeFileList;
+    QList<File*> selectedFileList;
     bool isBlacklisted(File info);
     void treatDir(File dirInfo);
     QString newPath(File *fi, bool keepDComStr = false) const;
@@ -69,13 +70,29 @@ private:
     void emptyFileList();
     QString DLTempFolder;
     QString tempPath(File *fi) const;
+    Geotagger *geotagger;
+    quint64 totalCachedSize;
+    quint64 maxCachedSize;
+    long    nbCachedFiles;
+    QList<File *> filesToRead;
+    QList<File *> filesToWrite;
+    void launchNewReads();
+
+    QElapsedTimer timer;
+    qint64 totalCopied;
+    qint64 totalElapsed;
+    qint64 lastElapsed;
+
 signals:
     void itemOfInterest(QModelIndex);
     void reloaded();
     void EXIFLoadCanceled(bool);
+    void downloadFinished();
 public slots:
     void reloadSelection();
     bool getAllCom();
+    void handleReadFinished(File *file);
+    void handleWriteFinished(File *file);
 
 };
 

@@ -973,6 +973,14 @@ File::File(QString path) {
     init(QFileInfo(path));
 }
 
+File::File()
+{
+    absoluteFilePath = "";
+    IDPath = "";
+    isDir = true;
+    constructCommonFields();
+}
+
 File::File(QFileInfo qfi)
 {
     init(qfi);
@@ -1407,27 +1415,48 @@ QBuffer *File::getBufferredContent() {
     return buffer;
 }
 
-bool File::copyWithDirs(QString to, Geotagger *geotagger) {
-    QDir().mkpath(QFileInfo(to).absolutePath());
-    QFile toFile(to);
-    bool res;
-    if (geotagger != NULL) {
-        res = geotagger->geotag(getBufferredContent(),&toFile);
-    } else {
-        res = FillIODeviceWithContent(&toFile);
-    }
+void File::deleteBuffer() {
+    delete buffer;
+    buffer = NULL;
+}
 
+
+void File::launchReadToCache() {
+    FileReader *fr = new FileReader(this);
+    connect(fr,SIGNAL(done(File*)),this,SIGNAL(readFinished(File*)));
+    connect(fr, &FileReader::finished, fr, &QObject::deleteLater);
+    fr->start();
+}
+
+FileReader::FileReader(File *file_) {
+    file = file_;
+}
+
+void FileReader::run() {
+    file->getBufferredContent();
+    emit done(file);
+}
+
+bool File::copyWithDirs(QString to) {
+    QDir().mkpath(QFileInfo(to).absolutePath());
+    QFile *toFile = new QFile(to);
+    bool res;
+    res = FillIODeviceWithContent(toFile);
     if (res) {
-        /* windows specific code to set the date modified */
-        struct utimbuf times;
-        times.actime = lastModified;
-        times.modtime = lastModified;
-        utime(to.toStdString().c_str(),&times);
+        File::setDates(to,lastModified);
     } else {
         //TODO: Remove the destination file?
     }
 
     return res;
+}
+
+
+void File::setDates(QString fileName,uint date) {
+    struct utimbuf times;
+    times.actime = date;
+    times.modtime = date;
+    utime(fileName.toStdString().c_str(),&times);
 }
 
 

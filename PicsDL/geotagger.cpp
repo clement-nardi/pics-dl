@@ -1,44 +1,27 @@
 #include "geotagger.h"
-
-#include "exiftoolperlwrapper.h"
-#include <QList>
-#include <QDebug>
-#include <QByteArray>
+#include "geotaggerprivate.h"
 #include "file.h"
-#include <QBuffer>
-#include <QIODevice>
-#include <QApplication>
+#include <QDebug>
 
-Geotagger::Geotagger(File *trackFilesFolder)
+
+Geotagger::Geotagger()
 {
-    qDebug() << trackFilesFolder->absoluteFilePath;
-    exiftool = new ExifToolPerlWrapper(QString(QCoreApplication::applicationDirPath() + "/perl").toStdString().c_str());
-
-    bool theresMore = true;
-    while (theresMore) {
-        QList<File> contentPart = trackFilesFolder->ls(&theresMore);
-        for (int i = 0; i < contentPart.size(); ++i) {
-            if (!contentPart.at(i).isDir) {
-                qDebug() << "Loading track file: "  << contentPart.at(i).absoluteFilePath;
-                exiftool->loadTrackFile(contentPart.at(i).absoluteFilePath.toStdString().c_str());
-            }
-        }
-    }
+    p = new GeotaggerPrivate();
+    connect(p->gw,SIGNAL(writeFinished(File*)),this,SIGNAL(writeFinished(File*)));
 }
 
 Geotagger::~Geotagger()
 {
-    delete exiftool;
+    delete p;
 }
 
-bool Geotagger::geotag(QBuffer *in, QIODevice *out) {
-    char *geotaggedContent = NULL;
-    qint64 geotaggedContent_size = 0;
-    exiftool->geotag(in->buffer().data(),(long)in->size(),&geotaggedContent,(long*)&geotaggedContent_size);
-    out->open(QIODevice::WriteOnly);
-    out->seek(0);
-    out->write(geotaggedContent, geotaggedContent_size);
-    out->close();
-    //TODO
-    return true;
+
+void Geotagger::setTrackFilesFolder(File trackFilesFolder) {    
+    qDebug() << "emit setTrackFilesFolder from thread " << QThread::currentThreadId();
+    emit p->setTrackFilesFolder(trackFilesFolder);
+}
+
+void Geotagger::geotag(File *in, QString out) {
+    qDebug() << "emit geotag from thread " << QThread::currentThreadId();
+    emit p->geotag(in,out);
 }

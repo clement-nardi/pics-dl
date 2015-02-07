@@ -28,11 +28,14 @@
 #include <QStringList>
 #include <QPixmap>
 #include <QBuffer>
-#include "geotagger.h"
+#include <QObject>
+#include <QThread>
 
-class File
+class File : public QObject
 {
+    Q_OBJECT
 public:
+    File();
     File(QFileInfo qfi);
     File(QString path);
     File(const File &fi);
@@ -62,10 +65,15 @@ public:
     static QString size2Str(qint64 nbBytes);
 
     QList<File> ls(bool *theresMore);
-    bool copyWithDirs(QString to, Geotagger *geotagger = NULL);
+    bool copyWithDirs(QString to);
     bool moveWithDirs(QString to);
     bool setHidden();
     QBuffer *getBufferredContent();
+
+    void launchReadToCache();
+
+    static void setDates(QString fileName,uint date);
+    void deleteBuffer();
 
 private:
     QPixmap thumbnail;
@@ -75,8 +83,23 @@ private:
     void init(QFileInfo qfi);
     void constructCommonFields();
     bool FillIODeviceWithContent(QIODevice *out);
+
+signals:
+    readFinished(File *);
 };
 
 uint qHash(File fi);
+
+class FileReader : public QThread
+{
+    Q_OBJECT
+public:
+    FileReader(File *file_);
+    void run();
+signals:
+    void done(File *);
+private:
+    File *file;
+};
 
 #endif // FILEINFO_H

@@ -74,8 +74,9 @@ int main(int argc, char *argv[])
     }
 
     if (0) {
-        Geotagger *gt = new Geotagger(new File("./track"));
-        gt->geotag(new QBuffer(new QByteArray("toto_data")),new QFile("toto"));
+        Geotagger *gt = new Geotagger();
+        gt->setTrackFilesFolder(File("./track"));
+        //gt->geotag(new QBuffer(new QByteArray("toto_data")),new QFile("toto"));
     }
 
 

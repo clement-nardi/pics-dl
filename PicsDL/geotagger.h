@@ -2,21 +2,28 @@
 #define GEOTAG_H
 
 #include <QString>
+#include <QObject>
 
 class File;
 class ExifToolPerlWrapper;
 class QBuffer;
 class QIODevice;
+class GeotaggerPrivate;
 
-class Geotagger
+class Geotagger: public QObject
 {
+    Q_OBJECT
 public:
-    Geotagger(File *trackFilesFolder);
+    Geotagger();
     ~Geotagger();
-    bool geotag(QBuffer *in, QIODevice *out);
+    void setTrackFilesFolder(File trackFilesFolder);
+    void geotag(File *in, QString out);
 
 private:
-    ExifToolPerlWrapper * exiftool;
+    GeotaggerPrivate *p;
+
+signals:
+    void writeFinished(File *);
 };
 
 #endif // GEOTAG_H

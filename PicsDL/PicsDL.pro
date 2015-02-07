@@ -9,9 +9,11 @@
 #plus, if this variable is not set, there's no way to know the final location of the application
 DESTDIR = bin
 
+
 MAJOR=0
-MINOR=2
-PATCH=2
+MINOR=3
+PATCH=0
+
 
 !contains(BUILD_NUMBER_UPDATE,false) {
     rcfile.target = PicsDL.rc
@@ -66,7 +68,8 @@ SOURCES += main.cpp\
     instancemanager.cpp \
     geotagger.cpp \
     exiftoolperlwrapper.cpp \
-    file.cpp
+    file.cpp \
+    geotaggerprivate.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -83,7 +86,8 @@ HEADERS  += mainwindow.h \
     instancemanager.h \
     geotagger.h \
     exiftoolperlwrapper.h \
-    file.h
+    file.h \
+    geotaggerprivate.h
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \
