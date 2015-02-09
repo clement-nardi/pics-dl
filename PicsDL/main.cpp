@@ -75,8 +75,18 @@ int main(int argc, char *argv[])
 
     if (0) {
         Geotagger *gt = new Geotagger();
-        gt->setTrackFilesFolder(File("./track"));
+        gt->setTrackFilesFolder(File(QCoreApplication::applicationDirPath()+"/test/track"));
         //gt->geotag(new QBuffer(new QByteArray("toto_data")),new QFile("toto"));
+        File *file = new File(QCoreApplication::applicationDirPath()+"/test/DSCF8472.JPG");
+        file->loadExifData();
+        //file->writeHeader();
+        //file->writeContent();
+        qDebug() << file->dateTakenRaw();
+        gt->getGeotags(file);
+        gt->geotag(file,file->absoluteFilePath+".out.jpg");
+        QThread::sleep(10);
+        exit(0);
+        return 0;
     }
 
 

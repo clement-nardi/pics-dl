@@ -28,6 +28,7 @@
 #include <QProgressDialog>
 #include <QItemDelegate>
 #include <QElapsedTimer>
+#include <QMutex>
 class Geotagger;
 
 extern QString ExifToolPath;
@@ -82,6 +83,7 @@ private:
     qint64 totalCopied;
     qint64 totalElapsed;
     qint64 lastElapsed;
+    QMutex DLManagerMutex;
 
 signals:
     void itemOfInterest(QModelIndex);

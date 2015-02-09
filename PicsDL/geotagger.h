@@ -18,11 +18,13 @@ public:
     ~Geotagger();
     void setTrackFilesFolder(File trackFilesFolder);
     void geotag(File *in, QString out);
+    void getGeotags(File *);
 
 private:
     GeotaggerPrivate *p;
 
 signals:
+    void getGeotagsFinished(File *);
     void writeFinished(File *);
 };
 

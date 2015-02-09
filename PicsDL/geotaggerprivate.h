@@ -16,6 +16,7 @@ public:
 public slots:
     void setTrackFilesFolder(File trackFilesFolder);
     void geotag(File *file, QString outName);
+    void getGeotags(File *file);
 
 private:
     void init();
@@ -23,8 +24,12 @@ private:
     File trackFilesFolder;
     QList<File> loadedtrackFiles;
 
+private slots:
+    void handleWriteFinished(File* file);
+
 signals:
     void writeFinished(File*);
+    void getGeotagsFinished(File*);
 
 };
 
@@ -41,6 +46,7 @@ public:
 signals:
     void setTrackFilesFolder(File trackFilesFolder_);
     bool geotag(File *in, QString out);
+    void getGeotags(File *);
 
 };
 

@@ -30,6 +30,8 @@
 #include <QBuffer>
 #include <QObject>
 #include <QThread>
+#include <QMap>
+#include <QSemaphore>
 
 class File : public QObject
 {
@@ -46,6 +48,7 @@ public:
     ~File();
     uint lastModified;
     uint dateTaken() const;
+    QString dateTakenRaw() const;
     void loadExifData();
     QString getEXIFValue(QString key) const;
     QPixmap getThumbnail();
@@ -71,9 +74,15 @@ public:
     QBuffer *getBufferredContent();
 
     void launchReadToCache();
+    void launchWrite(QString dest, bool geotag = true);
+    void writeHeader(QString dest = "");
+    void writeContent(QString dest = "");
 
     static void setDates(QString fileName,uint date);
+    void pipe(QString to);
     void deleteBuffer();
+
+    QMap<QString,QString> geotags;
 
 private:
     QPixmap thumbnail;
@@ -83,9 +92,14 @@ private:
     void init(QFileInfo qfi);
     void constructCommonFields();
     bool FillIODeviceWithContent(QIODevice *out);
-
+    void pipe(QIODevice *in, QIODevice *out);
+    QString pipedTo;
+    QSemaphore readSemaphore;
+private slots:
+    void writeFinished();
 signals:
     readFinished(File *);
+    writeFinished(File *);
 };
 
 uint qHash(File fi);
@@ -100,6 +114,35 @@ signals:
     void done(File *);
 private:
     File *file;
+};
+
+class IOReader : public QThread
+{
+    Q_OBJECT
+public:
+    IOReader(QIODevice *device, QSemaphore *s);
+    void run();
+signals:
+    void dataChunk(QByteArray data, bool theresMore);
+private:
+    QIODevice *device;
+    QSemaphore *s;
+};
+
+class IOWriter : public QObject
+{
+    Q_OBJECT
+public:
+    IOWriter(QIODevice *device, QSemaphore *s);
+signals:
+    writeFinished();
+public slots:
+    void dataChunk(QByteArray data, bool theresMore);
+private:
+    QIODevice *device;
+    QSemaphore *s;
+    void init();
+    bool initDone;
 };
 
 #endif // FILEINFO_H

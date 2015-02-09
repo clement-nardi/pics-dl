@@ -1142,6 +1142,7 @@ void File::loadExifData() {
             free(data);
             free(deviceID_i);
             free(objectID_i);
+            free(exifLoader);
             /** when file is not completely downloaded, WPDI_CloseTransfer takes 0.4 seconds to complete
              * Since transfer speed is around 30MB/s, complete the download if the size of the file is under 10MB
              */
@@ -1170,7 +1171,27 @@ void File::loadExifData() {
                         .arg((double)closeTime*100/totalTime,0,'f',2) ;
 #endif
         } else {
-            exifData = exif_data_new_from_file (absoluteFilePath.toStdString().c_str());
+            /* Doesn't work with paths containing non-ascii characters */
+            //exifData = exif_data_new_from_file (absoluteFilePath.toStdString().c_str());
+
+            QFile file(absoluteFilePath);
+            if (!file.open(QIODevice::ReadOnly)) {
+                return ;
+            }
+            ExifLoader* exifLoader = exif_loader_new();
+            char data[4096];
+            while (true) {
+                qint64 read = file.read(data,4096);
+                if (read <= 0) {
+                    break;
+                }
+                if (!exif_loader_write(exifLoader, (uchar *) data, read)) {
+                    break;
+                }
+            }
+            file.close();
+            exifData = exif_loader_get_data(exifLoader);
+            free(exifLoader);
         }
     }
 }
@@ -1271,13 +1292,7 @@ QPixmap File::getThumbnail() {
 }
 
 uint File::dateTaken() const{
-    QString exifDate = getEXIFValue("DateTimeDigitized");
-    if (exifDate.size() == 0) {
-        exifDate = getEXIFValue("DateTimeOriginal");
-    }
-    if (exifDate.size() == 0) {
-        exifDate = getEXIFValue("DateTime");
-    }
+    QString exifDate = dateTakenRaw();
     if (exifDate.size()>0) {
         QStringList exifDateSplit = exifDate.replace(" ",":").split(":");
         if (exifDateSplit.size()>=6) {
@@ -1297,6 +1312,16 @@ uint File::dateTaken() const{
     return lastModified;
 }
 
+QString File::dateTakenRaw() const{
+    QString exifDate = getEXIFValue("DateTimeDigitized");
+    if (exifDate.size() == 0) {
+        exifDate = getEXIFValue("DateTimeOriginal");
+    }
+    if (exifDate.size() == 0) {
+        exifDate = getEXIFValue("DateTime");
+    }
+    return exifDate;
+}
 
 static bool tagLessThan(QString a, QString b) {
     int ia = tagInfoMap->value(a)->importance;
@@ -1428,6 +1453,46 @@ void File::launchReadToCache() {
     fr->start();
 }
 
+
+void File::launchWrite(QString dest, bool geotag){
+    if (geotag && geotags.size()>0) {
+        ExifData * newexif = exif_data_new_from_data(exifData->data,exifData->size);
+
+    }
+}
+
+
+void File::writeHeader(QString dest){
+    if (dest == "") {
+        dest = absoluteFilePath + ".header";
+    }
+    QFile file(dest);
+    file.open(QIODevice::WriteOnly);
+    char *data;
+    uint size;
+
+    exif_data_set_option(exifData, EXIF_DATA_OPTION_FOLLOW_SPECIFICATION  );
+    exif_data_save_data(exifData,(uchar **)&data,&size);
+    file.write((char *)data,size);
+    file.close();
+
+}
+
+void File::writeContent(QString dest){
+    if (dest == "") {
+        dest = absoluteFilePath + ".content";
+    }
+    QFile source(absoluteFilePath);
+    source.open(QIODevice::ReadOnly);
+    source.seek(exifData->size);
+    QFile file(dest);
+    file.open(QIODevice::WriteOnly);
+    file.write(source.readAll());
+    file.close();
+    source.close();
+
+}
+
 FileReader::FileReader(File *file_) {
     file = file_;
 }
@@ -1457,6 +1522,81 @@ void File::setDates(QString fileName,uint date) {
     times.actime = date;
     times.modtime = date;
     utime(fileName.toStdString().c_str(),&times);
+}
+
+
+IOReader::IOReader(QIODevice *device_, QSemaphore *s_) {
+    device = device_;
+    s = s_;
+}
+void IOReader::run() {
+    device->open(QIODevice::ReadOnly);
+    bool theEnd = false;
+    while (!theEnd) {
+        s->acquire();
+        QByteArray ba = device->read(4*1024);
+        theEnd = device->atEnd();
+        emit dataChunk(ba,!theEnd); /* send 4KB data chuncks */
+    }
+    device->close();
+}
+
+IOWriter::IOWriter(QIODevice *device_, QSemaphore *s_){
+    device = device_;
+    s = s_;
+    initDone = false;
+}
+
+void IOWriter::init(){
+    device->open(QIODevice::WriteOnly);
+}
+
+void IOWriter::dataChunk(QByteArray ba, bool theresMore){
+    if (!initDone) {
+        initDone = true;
+        init();
+    }
+    device->write(ba);
+    s->release();
+    if (!theresMore) {
+        device->close();
+        emit writeFinished();
+    }
+}
+
+void File::writeFinished() {
+    setDates(pipedTo,lastModified);
+    emit writeFinished(this);
+}
+
+void File::pipe(QString to){
+    QDir().mkpath(QFileInfo(to).absolutePath());
+    pipedTo = to;
+    QIODevice* in;
+    if (buffer != NULL) {
+        in = buffer;
+    } else {
+        in = new QFile(absoluteFilePath);
+    }
+    pipe(in, new QFile(to));
+}
+
+void File::pipe(QIODevice *in, QIODevice *out){
+    QThread *writeThread = new QThread();
+    readSemaphore.release(5-readSemaphore.available()); /* 20KB read cache */
+    IOWriter *writer = new IOWriter(out,&readSemaphore);
+    IOReader *reader = new IOReader(in,&readSemaphore);
+    writer->moveToThread(writeThread);
+    connect(writeThread,SIGNAL(finished()),writeThread,SLOT(deleteLater()));
+    connect(reader,SIGNAL(dataChunk(QByteArray,bool)),writer,SLOT(dataChunk(QByteArray,bool)),Qt::QueuedConnection);
+    connect(writer,SIGNAL(writeFinished()),this,SLOT(writeFinished()));
+    connect(writer,SIGNAL(writeFinished()),reader,SLOT(deleteLater()));
+    connect(writer,SIGNAL(writeFinished()),writeThread,SLOT(quit()));
+    connect(writer,SIGNAL(writeFinished()),writer,SLOT(deleteLater()));
+    connect(writer,SIGNAL(writeFinished()),in,SLOT(deleteLater()));
+    connect(writer,SIGNAL(writeFinished()),out,SLOT(deleteLater()));
+    writeThread->start();
+    reader->start();
 }
 
 

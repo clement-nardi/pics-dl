@@ -25,3 +25,7 @@ void Geotagger::geotag(File *in, QString out) {
     qDebug() << "emit geotag from thread " << QThread::currentThreadId();
     emit p->geotag(in,out);
 }
+
+void Geotagger::getGeotags(File *file) {
+    emit p->getGeotags(file);
+}

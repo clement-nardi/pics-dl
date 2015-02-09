@@ -656,7 +656,7 @@ bool DownloadModel::launchDownload() {
         roles.append(Qt::DecorationRole);
         timer.start();
 
-        maxCachedSize = 1024*1024*500; /* 500 Mo read cache */
+        maxCachedSize = 1024*1024*1; /* 500 Mo read cache */
         totalCachedSize = 0;
         nbCachedFiles = 0;
         filesToRead = selectedFileList;
@@ -767,8 +767,12 @@ void DownloadModel::launchNewReads(){
     while (filesToRead.size()>0) {
         File *file = filesToRead.at(0);
         if (file->size + totalCachedSize < maxCachedSize || /* This file fits in the cache */
-            nbCachedFiles == 0) { /* there's nothing in the cache */
+            nbCachedFiles <= 0) { /* there's nothing in the cache */
             int check_size = filesToRead.size();
+            filesToRead.removeOne(file);
+            if (filesToRead.size() != check_size-1) {
+                qWarning() << "!!!!!!!!!!!! SYNCHRONIZATION IS NEEDED !!!!!!!!!!!!!!";
+            }
             int i =  selectedFileList.indexOf(file);
             QString fi_newPath = newPath(file);
             QModelIndex ci = createIndex(i,2);
@@ -786,10 +790,6 @@ void DownloadModel::launchNewReads(){
                 file->launchReadToCache();
                 nbCachedFiles++;
                 totalCachedSize+=file->size;
-            }
-            filesToRead.removeOne(file);
-            if (filesToRead.size() != check_size-1) {
-                qWarning() << "!!!!!!!!!!!! SYNCHRONIZATION IS NEEDED !!!!!!!!!!!!!!";
             }
             qDebug() << QString("%1 cached files (%2/%3)").arg(nbCachedFiles).arg(File::size2Str(totalCachedSize)).arg(File::size2Str(maxCachedSize));
         } else {
