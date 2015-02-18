@@ -17,13 +17,13 @@ Geotagger::~Geotagger()
 
 
 void Geotagger::setTrackFilesFolder(File trackFilesFolder) {    
-    qDebug() << "emit setTrackFilesFolder from thread " << QThread::currentThreadId();
+    //qDebug() << "emit setTrackFilesFolder from thread " << QThread::currentThreadId();
     emit p->setTrackFilesFolder(trackFilesFolder);
 }
 
-void Geotagger::geotag(File *in, QString out) {
-    qDebug() << "emit geotag from thread " << QThread::currentThreadId();
-    emit p->geotag(in,out);
+void Geotagger::geotag(File *in) {
+    //qDebug() << "emit geotag from thread " << QThread::currentThreadId();
+    emit p->geotag(in);
 }
 
 void Geotagger::getGeotags(File *file) {

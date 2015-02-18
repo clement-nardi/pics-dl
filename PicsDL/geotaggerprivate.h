@@ -15,7 +15,7 @@ public:
 
 public slots:
     void setTrackFilesFolder(File trackFilesFolder);
-    void geotag(File *file, QString outName);
+    void geotag(File *file);
     void getGeotags(File *file);
 
 private:
@@ -45,7 +45,7 @@ public:
 
 signals:
     void setTrackFilesFolder(File trackFilesFolder_);
-    bool geotag(File *in, QString out);
+    bool geotag(File *in);
     void getGeotags(File *);
 
 };

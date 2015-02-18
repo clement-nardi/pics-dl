@@ -69,7 +69,8 @@ SOURCES += main.cpp\
     geotagger.cpp \
     exiftoolperlwrapper.cpp \
     file.cpp \
-    geotaggerprivate.cpp
+    geotaggerprivate.cpp \
+    transfermanager.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -87,7 +88,9 @@ HEADERS  += mainwindow.h \
     geotagger.h \
     exiftoolperlwrapper.h \
     file.h \
-    geotaggerprivate.h
+    geotaggerprivate.h \
+    transfermanager.h
+
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \

@@ -21,10 +21,14 @@
 #ifndef DEVICECONFIGVIEW_H
 #define DEVICECONFIGVIEW_H
 
-#include "deviceconfig.h"
-#include "downloadmodel.h"
+class DeviceConfig;
+class DownloadModel;
+class TransferManager;
 #include <QProgressDialog>
 #include <QWidget>
+#include <QModelIndex>
+#include <QTimer>
+#include <QElapsedTimer>
 
 namespace Ui {
 class DeviceConfigView;
@@ -47,8 +51,14 @@ private:
     DeviceConfig *dc;
     QProgressDialog *pd;
     DownloadModel *dpm;
+    TransferManager *tm;
     bool geoTag();
     void showEvent(QShowEvent * event);
+    QTimer progressTimer;
+    QElapsedTimer statsTimer;
+    qint64 lastElapsed;
+    qint64 lastTransfered;
+
 public slots:
     void chooseDLTo();
     void chooseTrackFolder();
@@ -59,6 +69,7 @@ public slots:
     void showEXIFTags();
     void updateStatusText();
     void go();
+    void updateProgress();
 };
 
 #endif // DEVICECONFIGVIEW_H

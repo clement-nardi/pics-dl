@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
         //file->writeContent();
         qDebug() << file->dateTakenRaw();
         gt->getGeotags(file);
-        gt->geotag(file,file->absoluteFilePath+".out.jpg");
+        gt->geotag(file);
         QThread::sleep(10);
         exit(0);
         return 0;

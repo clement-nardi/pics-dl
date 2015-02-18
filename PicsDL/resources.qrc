@@ -15,5 +15,6 @@
         <file alias="picsDL">PicsDL.ico</file>
         <file alias="edit">resources/1297534676_edit.png</file>
         <file alias="gps">resources/1420219735_internt_web_technology-08-128.png</file>
+        <file alias="warning">resources/1424141438_error.png</file>
     </qresource>
 </RCC>

@@ -26,6 +26,9 @@
 #include <QDebug>
 #include <QTimer>
 #include <QScreen>
+#include "transfermanager.h"
+#include "downloadmodel.h"
+#include "deviceconfig.h"
 
 DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_, QWidget *parent) :
     QWidget(parent),
@@ -35,13 +38,19 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
     editMode = editMode_;
     pd = new QProgressDialog(this);
     ui->setupUi(this);
+    ui->cacheLayout->setStackingMode(QStackedLayout::StackAll);
 
     connect(ui->openButton, SIGNAL(clicked()),this, SLOT(chooseDLTo()));
     connect(ui->trackOpenButton, SIGNAL(clicked()),this, SLOT(chooseTrackFolder()));
     ui->tableView->setWordWrap(false);
 
+    setAttribute(Qt::WA_DeleteOnClose, true);
+    setAttribute(Qt::WA_QuitOnClose, false);
+    FillWithConfig(id);
+
     if (editMode) {
         dpm = NULL;
+        tm = NULL;
     } else {
         dpm = new DownloadModel(dc, pd, editMode);
         connect(dpm, SIGNAL(itemOfInterest(QModelIndex)), this, SLOT(makeVisible(QModelIndex)));
@@ -52,16 +61,16 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
         connect(ui->seeAvTagsButton, SIGNAL(clicked()), this, SLOT(showEXIFTags()));
 
         ui->tableView->setModel(dpm);
+        dpm->loadPreview(id);
+        tm = new TransferManager(this,dpm);
         //ui->tableView->setItemDelegate(dpm->getItemDelegate());
         //ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
         connect(ui->automation, SIGNAL(performAction()),this,SLOT(go()));
+        connect(&progressTimer, SIGNAL(timeout()), this, SLOT(updateProgress()));
     }
     //setCornerWidget(new QPushButton("Go",this),Qt::BottomRightCorner);
 
-    setAttribute(Qt::WA_DeleteOnClose, true);
-    setAttribute(Qt::WA_QuitOnClose, false);
-    FillWithConfig(id);
     updateStatusText();
     showMaximized();
 
@@ -187,9 +196,6 @@ void DeviceConfigView::FillWithConfig(QString id_) {
     dc->conf[id] = obj;
     dc->saveConfig();
 
-    if (dpm != NULL) {
-        dpm->loadPreview(id);
-    }
     //ui->tableView->resizeRowsToContents();
 
     updateButton();
@@ -315,8 +321,67 @@ void DeviceConfigView::updateStatusText(){
 
 void DeviceConfigView::go(){
     SaveConfig();
-    if (dpm != NULL) {
-        connect(dpm,SIGNAL(downloadFinished()),this,SLOT(deleteLater()));
-        dpm->launchDownload();
+    if (tm != NULL) {        
+        if (!dpm->getAllCom()) return;
+
+        connect(tm,SIGNAL(downloadFinished()),this,SLOT(deleteLater()));
+
+        pd->reset();
+        pd->setLabelText("Downloading the files");
+        pd->setMinimum(0);
+        pd->setMaximum(0);
+        pd->setWindowModality(Qt::WindowModal);
+        pd->setValue(0);
+        pd->show();
+
+        progressTimer.setSingleShot(false);
+        progressTimer.start(100);
+
+        statsTimer.start();
+        lastElapsed = 0;
+        lastTransfered = 0;
+
+        tm->launchDownloads();
     }
+}
+
+
+void DeviceConfigView::updateProgress() {
+    qint64 totalElapsed = statsTimer.elapsed();
+    qint64 diff = totalElapsed-lastElapsed;
+    qint64 tt = tm->totalTransfered;
+    qint64 ttt = tm->totalToTransfer;
+
+    qint64 throughput = diff?((tt-lastTransfered)*1000/diff):0;
+    qint64 averageThroughput = totalElapsed?(tt*1000/totalElapsed):0;
+
+    pd->setMaximum(100000);
+    pd->setValue(ttt?(tt*100000/ttt):0);
+    pd->setLabelText(QString("Downloading the files at %1/s (%2/s)\nDownloaded Files: %3/%4 (%5/%6)")
+                     .arg(File::size2Str(throughput))
+                     .arg(File::size2Str(averageThroughput))
+                     .arg(tm->nbFilesTransfered)
+                     .arg(tm->nbFilesToTransfer)
+                     .arg(File::size2Str(tt))
+                     .arg(File::size2Str(ttt)));
+    lastElapsed = totalElapsed;
+    lastTransfered = tt;
+
+
+    qint64 ttc = tm->totalToCache;
+    qint64 tc  = tm->totalCached;
+
+    ui->cacheBar->setMaximum(100000);
+    ui->cacheBar->setValue(tt?tc*100000/ttc:0);
+    ui->cacheLabel->setText(QString("%1 / %2")
+                            .arg(File::size2Str(tc))
+                            .arg(File::size2Str(ttc)));
+
+
+    if (pd->wasCanceled()) {
+        progressTimer.stop();
+        pd->hide();
+        tm->stopDownloads();
+    }
+
 }

@@ -32,6 +32,7 @@
 #include <QThread>
 #include <QMap>
 #include <QSemaphore>
+class TransferManager;
 
 class File : public QObject
 {
@@ -71,30 +72,33 @@ public:
     bool copyWithDirs(QString to);
     bool moveWithDirs(QString to);
     bool setHidden();
-    QBuffer *getBufferredContent();
 
-    void launchReadToCache();
-    void launchWrite(QString dest, bool geotag = true);
-    void writeHeader(QString dest = "");
-    void writeContent(QString dest = "");
+    void launchTransferTo(QString to, TransferManager *tm_, bool geotag);
+    QBuffer * buffer;
+    QBuffer * geotaggedBuffer;
+    void setGeotaggedBuffer(QBuffer *geotaggedBuffer_);
 
     static void setDates(QString fileName,uint date);
-    void pipe(QString to);
-    void deleteBuffer();
 
     QMap<QString,QString> geotags;
 
 private:
     QPixmap thumbnail;
     bool exifLoadAttempted;
-    QBuffer *buffer;
     ExifData *exifData;
     void init(QFileInfo qfi);
     void constructCommonFields();
     bool FillIODeviceWithContent(QIODevice *out);
     void pipe(QIODevice *in, QIODevice *out);
     QString pipedTo;
+    QString transferTo;
     QSemaphore readSemaphore;
+    void launchWrite(QString dest, bool geotag = true);
+    void writeHeader(QString dest = "");
+    void writeContent(QString dest = "");
+    void pipe(QString to);
+    void pipeToBuffer();
+    TransferManager *tm;
 private slots:
     void writeFinished();
 signals:
@@ -104,36 +108,25 @@ signals:
 
 uint qHash(File fi);
 
-class FileReader : public QThread
-{
-    Q_OBJECT
-public:
-    FileReader(File *file_);
-    void run();
-signals:
-    void done(File *);
-private:
-    File *file;
-};
-
 class IOReader : public QThread
 {
     Q_OBJECT
 public:
-    IOReader(QIODevice *device, QSemaphore *s);
+    IOReader(QIODevice *device, QSemaphore *s, TransferManager *tm_);
     void run();
 signals:
     void dataChunk(QByteArray data, bool theresMore);
 private:
     QIODevice *device;
     QSemaphore *s;
+    TransferManager *tm;
 };
 
 class IOWriter : public QObject
 {
     Q_OBJECT
 public:
-    IOWriter(QIODevice *device, QSemaphore *s);
+    IOWriter(QIODevice *device, QSemaphore *s, TransferManager *tm_);
 signals:
     writeFinished();
 public slots:
@@ -141,8 +134,10 @@ public slots:
 private:
     QIODevice *device;
     QSemaphore *s;
+    TransferManager *tm;
     void init();
     bool initDone;
+    bool deviceIsFile;
 };
 
 #endif // FILEINFO_H

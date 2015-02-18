@@ -17,7 +17,7 @@ public:
     Geotagger();
     ~Geotagger();
     void setTrackFilesFolder(File trackFilesFolder);
-    void geotag(File *in, QString out);
+    void geotag(File *in);
     void getGeotags(File *);
 
 private:

@@ -54,28 +54,21 @@ void GeotaggerWorker::handleWriteFinished(File *file){
     emit writeFinished(file);
 }
 
-void GeotaggerWorker::geotag(File *file, QString outName){
+void GeotaggerWorker::geotag(File *file){
     init();
     qDebug() << QString("[Thread %1] geotag %2 (%3)")
                 .arg((long)(QThread::currentThreadId()))
                 .arg(file->fileName())
                 .arg(File::size2Str(file->size));
-    QDir().mkpath(QFileInfo(outName).absolutePath());
-    QFile out(outName);
-    if (file->size < 1*1024*1024) { /* Avoid out of memory errors in perl */
-        out.open(QIODevice::WriteOnly);
-        out.seek(0);
-        char *geotaggedContent = NULL;
-        qint64 geotaggedContent_size = 0;
-        exiftool->geotag(file->getBufferredContent()->buffer().data(),(long)file->getBufferredContent()->size(),&geotaggedContent,(long*)&geotaggedContent_size);
-        out.write(geotaggedContent, geotaggedContent_size);
-        out.close();
-        File::setDates(outName,file->lastModified);
-        emit writeFinished(file);
-    } else {
-        connect(file,SIGNAL(writeFinished(File*)),this,SLOT(handleWriteFinished(File*)));
-        file->pipe(outName);
-    }
+    QBuffer *out = new QBuffer();
+    out->open(QIODevice::WriteOnly);
+    out->seek(0);
+    char *geotaggedContent = NULL;
+    qint64 geotaggedContent_size = 0;
+    exiftool->geotag(file->buffer->buffer().data(),(long)file->buffer->size(),&geotaggedContent,(long*)&geotaggedContent_size);
+    out->write(geotaggedContent, geotaggedContent_size);
+    out->close();
+    file->setGeotaggedBuffer(out);
 }
 
 
@@ -95,8 +88,6 @@ void GeotaggerWorker::getGeotags(File *file) {
     }
     //qDebug() << file->geotags;
 
-
-
     emit getGeotagsFinished(file);
 }
 
@@ -106,7 +97,7 @@ GeotaggerPrivate::GeotaggerPrivate(){
     gw->moveToThread(&thread);
     qRegisterMetaType<File>("File");
     connect(this,SIGNAL(setTrackFilesFolder(File)),gw,SLOT(setTrackFilesFolder(File)),Qt::QueuedConnection);
-    connect(this,SIGNAL(geotag(File*,QString)),gw,SLOT(geotag(File*,QString)),Qt::QueuedConnection);
+    connect(this,SIGNAL(geotag(File*)),gw,SLOT(geotag(File*)),Qt::QueuedConnection);
     connect(this,SIGNAL(getGeotags(File*)),gw,SLOT(getGeotags(File*)),Qt::QueuedConnection);
     thread.start();
 }

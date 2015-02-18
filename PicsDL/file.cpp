@@ -32,6 +32,8 @@
 #include <QTimeZone>
 #include <utime.h>
 #include <QDir>
+#include "transfermanager.h"
+#include "geotagger.h"
 
 #ifdef _WIN32
 #include "WPDInterface.h"
@@ -1008,15 +1010,13 @@ void File::constructCommonFields() {
     exifData = NULL;
     exifLoadAttempted = false;
     buffer = NULL;
+    geotaggedBuffer = NULL;
 }
 
 File::~File(){
     if (exifData != NULL) {
         exif_data_free(exifData);
         exifData = NULL;
-    }
-    if (buffer != NULL) {
-        delete buffer;
     }
 }
 
@@ -1428,32 +1428,6 @@ QList<File> File::ls(bool *theresMore) {
 }
 
 
-QBuffer *File::getBufferredContent() {
-    if (buffer == NULL) {
-        QBuffer *buffer_ = new QBuffer();
-        if (FillIODeviceWithContent(buffer_)) {
-            buffer = buffer_;
-        } else {
-            delete buffer_;
-        }
-    }
-    return buffer;
-}
-
-void File::deleteBuffer() {
-    delete buffer;
-    buffer = NULL;
-}
-
-
-void File::launchReadToCache() {
-    FileReader *fr = new FileReader(this);
-    connect(fr,SIGNAL(done(File*)),this,SIGNAL(readFinished(File*)));
-    connect(fr, &FileReader::finished, fr, &QObject::deleteLater);
-    fr->start();
-}
-
-
 void File::launchWrite(QString dest, bool geotag){
     if (geotag && geotags.size()>0) {
         ExifData * newexif = exif_data_new_from_data(exifData->data,exifData->size);
@@ -1493,14 +1467,6 @@ void File::writeContent(QString dest){
 
 }
 
-FileReader::FileReader(File *file_) {
-    file = file_;
-}
-
-void FileReader::run() {
-    file->getBufferredContent();
-    emit done(file);
-}
 
 bool File::copyWithDirs(QString to) {
     QDir().mkpath(QFileInfo(to).absolutePath());
@@ -1524,31 +1490,50 @@ void File::setDates(QString fileName,uint date) {
     utime(fileName.toStdString().c_str(),&times);
 }
 
+#define CHUNK_SIZE 4*1024
+#define NB_CHUNKS 5
 
-IOReader::IOReader(QIODevice *device_, QSemaphore *s_) {
+IOReader::IOReader(QIODevice *device_, QSemaphore *s_, TransferManager *tm_) {
     device = device_;
     s = s_;
+    tm = tm_;
+    tm->totalToCache += NB_CHUNKS*CHUNK_SIZE;
 }
 void IOReader::run() {
-    device->open(QIODevice::ReadOnly);
+    bool deviceIsFile = ((dynamic_cast<QFile*> (device)) != NULL);
+    if (!device->open(QIODevice::ReadOnly)) {
+        qWarning() << QString("WARNING: unable to open %1 for reading").arg(deviceIsFile?"File":"Buffer");
+    }
+
     bool theEnd = false;
-    while (!theEnd) {
+    while (!theEnd && !tm->wasStopped) {
         s->acquire();
-        QByteArray ba = device->read(4*1024);
+        QByteArray ba = device->read(CHUNK_SIZE);
+        tm->totalCached+=ba.size();
         theEnd = device->atEnd();
         emit dataChunk(ba,!theEnd); /* send 4KB data chuncks */
     }
     device->close();
+    if (!deviceIsFile) {
+        /* read from a buffer, it will be deleted after write is finished */
+        tm->totalCached-=device->size();
+        tm->totalToCache-=device->size();
+    }
 }
 
-IOWriter::IOWriter(QIODevice *device_, QSemaphore *s_){
+IOWriter::IOWriter(QIODevice *device_, QSemaphore *s_, TransferManager *tm_){
     device = device_;
     s = s_;
     initDone = false;
+    tm = tm_;
 }
 
 void IOWriter::init(){
-    device->open(QIODevice::WriteOnly);
+    QFile * out = dynamic_cast<QFile*> (device);
+    deviceIsFile = (out != NULL);
+    if (!device->open(QIODevice::WriteOnly)) {
+        qWarning() << QString("WARNING: unable to open %1 for writing").arg(deviceIsFile?"File":"Buffer");
+    }
 }
 
 void IOWriter::dataChunk(QByteArray ba, bool theresMore){
@@ -1558,34 +1543,112 @@ void IOWriter::dataChunk(QByteArray ba, bool theresMore){
     }
     device->write(ba);
     s->release();
-    if (!theresMore) {
+    if (deviceIsFile) {
+        tm->totalTransfered+=ba.size();
+        tm->totalCached-=ba.size();
+    } else {
+        //tm->totalCached-=ba.size();
+        //tm->totalCached+=ba.size();
+    }
+    if (!theresMore || tm->wasStopped) {
+        tm->totalToCache -= NB_CHUNKS*CHUNK_SIZE;
         device->close();
         emit writeFinished();
     }
 }
 
 void File::writeFinished() {
-    setDates(pipedTo,lastModified);
-    emit writeFinished(this);
+    qDebug() << QString("%1 - writeFinished to %2").arg(fileName()).arg(pipedTo);
+    if (pipedTo == "buffer") {
+        tm->geotagger->geotag(this);
+    } else {
+        setDates(pipedTo,lastModified);
+        if (buffer != NULL || geotaggedBuffer != NULL) {
+            tm->geotagSemaphore.release();
+        } else {
+            tm->directSemaphore.release();
+        }
+        if (tm->wasStopped) {
+            QFile(pipedTo).remove();
+        }
+        emit writeFinished(this);
+        if (geotaggedBuffer != NULL) {
+            delete geotaggedBuffer;
+            geotaggedBuffer = NULL;
+        }
+        if (buffer != NULL) {
+            delete buffer;
+            buffer = NULL;
+        }
+    }
+}
+
+void File::launchTransferTo(QString to, TransferManager *tm_, bool geotag) {
+    tm = tm_;
+    transferTo = to;
+    if (geotag) {
+        pipeToBuffer();
+    } else {
+        pipe(to);
+    }
+}
+
+
+void File::setGeotaggedBuffer(QBuffer *geotaggedBuffer_) {
+    qDebug() << QString("%1 - setGeotaggedBuffer").arg(fileName());
+    geotaggedBuffer = geotaggedBuffer_;
+    pipe(transferTo);
+}
+
+void File::pipeToBuffer(){
+    pipedTo = "buffer";
+    if (buffer != NULL) {
+        buffer->deleteLater();
+        buffer = NULL;
+    }
+    QIODevice * in = new QFile(absoluteFilePath);
+    buffer = new QBuffer();
+    in->moveToThread(this->thread());
+    connect(this,SIGNAL(writeFinished(File*)),in,SLOT(deleteLater()));
+    pipe(in, buffer);
 }
 
 void File::pipe(QString to){
-    QDir().mkpath(QFileInfo(to).absolutePath());
-    pipedTo = to;
-    QIODevice* in;
-    if (buffer != NULL) {
+    QIODevice * in = NULL;
+    QIODevice * out = new QFile(to);
+    if (geotaggedBuffer != NULL && geotaggedBuffer->size() > 0) {
+        in = geotaggedBuffer;
+        geotaggedBuffer->moveToThread(this->thread());
+        qint64 diff = geotaggedBuffer->size() - buffer->size();
+        tm->totalCached += diff;
+        tm->totalToCache += diff;
+
+        if (buffer != NULL) {
+            buffer->deleteLater();
+            buffer = NULL;
+        }
+    } else if (buffer != NULL && buffer->size() > 0) {
+        qWarning() << QString("%1 - WARNING - problem with geotaggedBuffer");
         in = buffer;
+        if (geotaggedBuffer != NULL) {
+            delete geotaggedBuffer;
+            geotaggedBuffer = NULL;
+        }
     } else {
         in = new QFile(absoluteFilePath);
     }
-    pipe(in, new QFile(to));
+    out->moveToThread(this->thread());
+    connect(this,SIGNAL(writeFinished(File*)),out,SLOT(deleteLater()));
+    QDir().mkpath(QFileInfo(to).absolutePath());
+    pipedTo = to;
+    pipe(in, out);
 }
 
 void File::pipe(QIODevice *in, QIODevice *out){
     QThread *writeThread = new QThread();
-    readSemaphore.release(5-readSemaphore.available()); /* 20KB read cache */
-    IOWriter *writer = new IOWriter(out,&readSemaphore);
-    IOReader *reader = new IOReader(in,&readSemaphore);
+    readSemaphore.release(NB_CHUNKS-readSemaphore.available()); /* 20KB read cache */
+    IOWriter *writer = new IOWriter(out,&readSemaphore,tm);
+    IOReader *reader = new IOReader(in,&readSemaphore,tm);
     writer->moveToThread(writeThread);
     connect(writeThread,SIGNAL(finished()),writeThread,SLOT(deleteLater()));
     connect(reader,SIGNAL(dataChunk(QByteArray,bool)),writer,SLOT(dataChunk(QByteArray,bool)),Qt::QueuedConnection);
@@ -1593,34 +1656,29 @@ void File::pipe(QIODevice *in, QIODevice *out){
     connect(writer,SIGNAL(writeFinished()),reader,SLOT(deleteLater()));
     connect(writer,SIGNAL(writeFinished()),writeThread,SLOT(quit()));
     connect(writer,SIGNAL(writeFinished()),writer,SLOT(deleteLater()));
-    connect(writer,SIGNAL(writeFinished()),in,SLOT(deleteLater()));
-    connect(writer,SIGNAL(writeFinished()),out,SLOT(deleteLater()));
     writeThread->start();
     reader->start();
+
+    if ((dynamic_cast<QFile*> (out)) == NULL) {
+        tm->totalToCache += in->size();
+    }
 }
 
 
 bool File::FillIODeviceWithContent(QIODevice *out) {
-    if (buffer != NULL || !IDPath.startsWith("WPD:/")) {
-        /* if buffer was filled, use it */
-        QIODevice *in;
-        QFile inFile(absoluteFilePath);
-        if (buffer != NULL) {
-            in = buffer;
-        } else {
-            in = &inFile;
-        }
+    if (!IDPath.startsWith("WPD:/")) {
+        QFile in(absoluteFilePath);
 
-        if (!in->open(QIODevice::ReadOnly)) {
+        if (!in.open(QIODevice::ReadOnly)) {
             return false;
         }
         if (!out->open(QIODevice::WriteOnly)) {
-            in->close();
+            in.close();
             return false;
         }
-        qint64 written = out->write(in->readAll());
+        qint64 written = out->write(in.readAll());
         out->close();
-        in->close();
+        in.close();
         return written > 0;
 #ifdef _WIN32
     } else if (IDPath.startsWith("WPD:/")) {

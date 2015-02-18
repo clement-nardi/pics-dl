@@ -44,7 +44,6 @@ DownloadModel::DownloadModel(DeviceConfig *dc_, QProgressDialog *pd_, bool editM
     dc = dc_;
     editMode = editMode_;
     itemBeingDownloaded = -1;
-    geotagger = NULL;
     pd = pd_;
 
 }
@@ -360,9 +359,7 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             } else if (dc->knownFiles.contains(*fi)) {
                 return QIcon(":/icons/ok");
             } else if (QFile(newPath(fi)).exists()) {
-                return QIcon(":/icons/ok");
-            } else if (QFile(tempPath(fi)).exists()) {
-                return QIcon(":/icons/ok");
+                return QIcon(":/icons/warning");
             } else {
                 return QIcon(":/icons/play");
             }
@@ -420,9 +417,6 @@ void DownloadModel::loadPreview(QString id_) {
     sessionComment = "";
     QString path = obj["path"].toString();
     QString IDPath = obj["IDPath"].toString();
-
-    bool error;
-    getGeoTagger(&error);
 
     emptyFileList();
 
@@ -625,101 +619,11 @@ void DownloadModel::reloadSelection() {
     reloaded();
 }
 
-bool DownloadModel::launchDownload() {
-    qDebug() << "dpm.download";
 
-    if (!getAllCom()) {
-        return false;
-    }
-
-    bool stopped = false;
-    bool error = false;
-    if (selectedFileList.size() > 0) {
-        Geotagger * geotagger = getGeoTagger(&error);
-        totalCopied = 0;
-        totalElapsed = 0;
-        lastElapsed = 0;
-
-        if (error) {
-            delete geotagger;
-            return false;
-        }
-
-        pd->reset();
-        pd->setLabelText("Downloading the files");
-        pd->setMinimum(0);
-        pd->setMaximum(selectedFileList.size());
-        pd->setWindowModality(Qt::WindowModal);
-        pd->setValue(0);
-        pd->show();
-        QVector<int> roles;
-        roles.append(Qt::DecorationRole);
-        timer.start();
-
-        maxCachedSize = 1024*1024*1; /* 500 Mo read cache */
-        totalCachedSize = 0;
-        nbCachedFiles = 0;
-        filesToRead = selectedFileList;
-        filesToWrite = selectedFileList;
-
-        launchNewReads();
-
-/*
-        for (int i = 0; i < selectedFileList.size(); i++) {
-            pd->setValue(i);
-            File *fi = selectedFileList.at(i);
-            QString fi_newPath = newPath(fi);
-            QModelIndex ci = createIndex(i,2);
-            itemBeingDownloaded = i;
-            itemOfInterest(ci);
-            dataChanged(ci,ci,roles);
-            QApplication::processEvents();
-            if (QFile(fi_newPath).exists()) {
-                dc->knownFiles.insert(*fi);
-                qDebug() << "Will not overwrite " << fi_newPath;
-            } else {
-
-                bool copied = fi->copyWithDirs(fi_newPath, geotagger);
-                if (copied) {
-                    dc->knownFiles.insert(*fi);
-                    qDebug() << "copied " << fi->absoluteFilePath << " to " << fi_newPath;
-                    totalCopied += fi->size;
-                    totalElapsed = timer.nsecsElapsed();
-                    pd->setLabelText(QString("Downloading the files @%1 (av. %2)")
-                                     .arg(File::size2Str(fi->size*1000000000/(totalElapsed-lastElapsed))+"/s")
-                                     .arg(File::size2Str(totalCopied*1000000000/(totalElapsed))+"/s"));
-                    lastElapsed = totalElapsed;
-
-                } else {
-                    qDebug() << "Could not copy " << fi->absoluteFilePath << " to " << fi_newPath;
-                }
-            }
-            itemBeingDownloaded = -1;
-            dataChanged(ci,ci,roles);
-
-            QApplication::processEvents();
-
-            if (pd->wasCanceled()) {
-                qDebug()<<"Download canceled by User.";
-                stopped = true;
-                break;
-            }
-        }
-        delete geotagger;
-        pd->hide();
-        dc->saveKnownFiles();
-    */
-    }
-    return !stopped;
-}
-
-Geotagger *DownloadModel::getGeoTagger(bool *error) {
+QString DownloadModel::getTrackingFolder() {
     QJsonObject obj = dc->conf[id].toObject();
-    if (error!=NULL)
-        *error = false;
+    QString trackingFolder;
     if (obj["GeoTag"].toBool() == true) {
-        QString trackingFolder;
-
         if (obj["GeoTagMode"].toString() == "OpenPaths.cc") {
             /* Download location information from OpenPath.cc */
 
@@ -729,25 +633,10 @@ Geotagger *DownloadModel::getGeoTagger(bool *error) {
         } else {
             trackingFolder = obj["TrackFolder"].toString();
         }
-
-        if (!QDir(trackingFolder).exists() && error != NULL) {
-            QMessageBox mb(QMessageBox::Warning,
-                           "The provided Tracking Folder does not exist:\n"+trackingFolder,
-                           "Please choose an existing folder.",
-                           QMessageBox::Ok);
-            int answer = mb.exec();
-            *error = true;
-        }
-        File tf(trackingFolder);
-        if (geotagger == NULL) {
-            geotagger = new Geotagger();
-            connect(geotagger,SIGNAL(writeFinished(File*)),this,SLOT(handleWriteFinished(File*)));
-        }
-        geotagger->setTrackFilesFolder(tf);
-        return geotagger;
     } else {
-        return NULL;
+        trackingFolder = "";
     }
+    return trackingFolder;
 }
 
 void DownloadModel::getStats(qint64 *totalSize, int *nbFiles) {
@@ -758,78 +647,3 @@ void DownloadModel::getStats(qint64 *totalSize, int *nbFiles) {
     *nbFiles = selectedFileList.size();
 }
 
-
-
-/* Download management */
-
-void DownloadModel::launchNewReads(){
-    qDebug() << "launchNewReads";
-    while (filesToRead.size()>0) {
-        File *file = filesToRead.at(0);
-        if (file->size + totalCachedSize < maxCachedSize || /* This file fits in the cache */
-            nbCachedFiles <= 0) { /* there's nothing in the cache */
-            int check_size = filesToRead.size();
-            filesToRead.removeOne(file);
-            if (filesToRead.size() != check_size-1) {
-                qWarning() << "!!!!!!!!!!!! SYNCHRONIZATION IS NEEDED !!!!!!!!!!!!!!";
-            }
-            int i =  selectedFileList.indexOf(file);
-            QString fi_newPath = newPath(file);
-            QModelIndex ci = createIndex(i,2);
-            itemBeingDownloaded = i;
-            itemOfInterest(ci);
-            QVector<int> roles;
-            roles.append(Qt::DecorationRole);
-            dataChanged(ci,ci,roles);
-            QApplication::processEvents();
-            if (QFile(fi_newPath).exists()) {
-                dc->knownFiles.insert(*file);
-                qDebug() << "Will not overwrite " << fi_newPath;
-            } else {
-                connect(file,SIGNAL(readFinished(File*)),this,SLOT(handleReadFinished(File*)));
-                file->launchReadToCache();
-                nbCachedFiles++;
-                totalCachedSize+=file->size;
-            }
-            qDebug() << QString("%1 cached files (%2/%3)").arg(nbCachedFiles).arg(File::size2Str(totalCachedSize)).arg(File::size2Str(maxCachedSize));
-        } else {
-            qDebug() << QString("cannot add to cache (%1): %2").arg(File::size2Str(file->size)).arg(file->fileName());
-            break;
-        }
-    }
-    if (nbCachedFiles == 0) {
-        qDebug() << "There's nothing in the pipe...";
-        emit downloadFinished();
-    }
-}
-
-void DownloadModel::handleReadFinished(File *file) {
-    /* launch write */
-    getGeoTagger();
-    if (geotagger != NULL) {
-        geotagger->geotag(file,newPath(file));
-    }
-}
-
-void DownloadModel::handleWriteFinished(File *file) {
-    dc->knownFiles.insert(*file);
-    qDebug() << "copied " << file->absoluteFilePath << " to " << newPath(file);
-    totalCopied += file->size;
-    totalElapsed = timer.nsecsElapsed();
-    pd->setLabelText(QString("Downloading the files @%1 (av. %2)")
-                     .arg(File::size2Str(file->size*1000000000/(totalElapsed-lastElapsed))+"/s")
-                     .arg(File::size2Str(totalCopied*1000000000/(totalElapsed))+"/s"));
-    lastElapsed = totalElapsed;
-    file->deleteBuffer();
-    totalCachedSize -= file->size;
-    nbCachedFiles--;
-    filesToWrite.removeOne(file);
-    pd->setValue(selectedFileList.size()-filesToWrite.size());
-    if (filesToWrite.isEmpty()) {
-        qDebug() << "That was the last file!";
-        emit downloadFinished();
-    } else {
-        launchNewReads();
-    }
-
-}

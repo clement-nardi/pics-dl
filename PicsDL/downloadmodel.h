@@ -35,6 +35,8 @@ extern QString ExifToolPath;
 
 class DownloadModel : public QAbstractTableModel
 {
+    friend class TransferManager;
+    friend class TransferWorker;
     Q_OBJECT
 public:
     explicit DownloadModel(DeviceConfig *dc, QProgressDialog *pd, bool editMode = false, QObject *parent = 0);
@@ -46,7 +48,7 @@ public:
     void loadPreview(QString id);
     bool launchDownload();
     void moveToFinalLocation();
-    Geotagger *getGeoTagger(bool *error = NULL);
+    QString getTrackingFolder();
     void showEXIFTags(int row);
     QString guessCameraName();
     void getStats(qint64 *totalSize, int *nbFiles);
@@ -71,19 +73,6 @@ private:
     void emptyFileList();
     QString DLTempFolder;
     QString tempPath(File *fi) const;
-    Geotagger *geotagger;
-    quint64 totalCachedSize;
-    quint64 maxCachedSize;
-    long    nbCachedFiles;
-    QList<File *> filesToRead;
-    QList<File *> filesToWrite;
-    void launchNewReads();
-
-    QElapsedTimer timer;
-    qint64 totalCopied;
-    qint64 totalElapsed;
-    qint64 lastElapsed;
-    QMutex DLManagerMutex;
 
 signals:
     void itemOfInterest(QModelIndex);
@@ -93,8 +82,6 @@ signals:
 public slots:
     void reloadSelection();
     bool getAllCom();
-    void handleReadFinished(File *file);
-    void handleWriteFinished(File *file);
 
 };
 
