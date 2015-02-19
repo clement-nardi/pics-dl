@@ -102,8 +102,8 @@ private:
 private slots:
     void writeFinished();
 signals:
-    readFinished(File *);
-    writeFinished(File *);
+    void readFinished(File *);
+    void writeFinished(File *);
 };
 
 uint qHash(File fi);
@@ -128,7 +128,7 @@ class IOWriter : public QObject
 public:
     IOWriter(QIODevice *device, QSemaphore *s, TransferManager *tm_);
 signals:
-    writeFinished();
+    void writeFinished();
 public slots:
     void dataChunk(QByteArray data, bool theresMore);
 private:
