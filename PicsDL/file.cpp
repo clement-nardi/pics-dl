@@ -37,6 +37,7 @@
 
 #ifdef _WIN32
 #include "WPDInterface.h"
+#include "wpdiodevice.h"
 #endif
 
 static QStringList pictureExtensions = QString("jpg,jpeg,dng,raf,bmp,cr2,crw,dcr,dib,erf,fpx,gif,jfif,mos,mrf,mrw,nef,orf,pcx,pef,png,psd,srf,tif,tiff,wdp,x3f,xps").split(",");
@@ -1011,6 +1012,9 @@ void File::constructCommonFields() {
     exifLoadAttempted = false;
     buffer = NULL;
     geotaggedBuffer = NULL;
+    transferTo = "";
+    pipedTo = "";
+    transferOnGoing = false;
 }
 
 File::~File(){
@@ -1350,6 +1354,9 @@ QStringList File::getEXIFTags(){
 }
 
 QString File::size2Str(qint64 nbBytes) {
+    if (nbBytes < 0) {
+        return "-" + size2Str(-nbBytes);
+    }
     QString baseUnit = "B"; // Byte
     QStringList prefixes;
     prefixes << "" << "K" << "M" << "G" << "T" << "P" << "E" << "Z" << "Y";
@@ -1500,9 +1507,13 @@ IOReader::IOReader(QIODevice *device_, QSemaphore *s_, TransferManager *tm_) {
     tm->totalToCache += NB_CHUNKS*CHUNK_SIZE;
 }
 void IOReader::run() {
-    bool deviceIsFile = ((dynamic_cast<QFile*> (device)) != NULL);
+    bool deviceIsFile = ((dynamic_cast<QFile*>       (device)) != NULL) ||
+                        ((dynamic_cast<WPDIODevice*> (device)) != NULL)   ;
     if (!device->open(QIODevice::ReadOnly)) {
         qWarning() << QString("WARNING: unable to open %1 for reading").arg(deviceIsFile?"File":"Buffer");
+    }
+    if (deviceIsFile) {
+        emit readStarted();
     }
 
     bool theEnd = false;
@@ -1557,6 +1568,11 @@ void IOWriter::dataChunk(QByteArray ba, bool theresMore){
     }
 }
 
+void File::readStarted() {
+    transferOnGoing = true;
+    emit readStarted(this);
+}
+
 void File::writeFinished() {
     qDebug() << QString("%1 - writeFinished to %2").arg(fileName()).arg(pipedTo);
     if (pipedTo == "buffer") {
@@ -1571,6 +1587,7 @@ void File::writeFinished() {
         if (tm->wasStopped) {
             QFile(pipedTo).remove();
         }
+        transferOnGoing = false;
         emit writeFinished(this);
         if (geotaggedBuffer != NULL) {
             delete geotaggedBuffer;
@@ -1600,15 +1617,28 @@ void File::setGeotaggedBuffer(QBuffer *geotaggedBuffer_) {
     pipe(transferTo);
 }
 
+
+QIODevice *File::getReadDevice() {
+
+    if (!IDPath.startsWith("WPD:/")) {
+        return new QFile(absoluteFilePath);
+#ifdef _WIN32
+    } else if (IDPath.startsWith("WPD:/")) {
+        return new WPDIODevice(IDPath);
+#endif
+    } else {
+        return NULL;
+    }
+}
+
 void File::pipeToBuffer(){
     pipedTo = "buffer";
     if (buffer != NULL) {
         buffer->deleteLater();
         buffer = NULL;
     }
-    QIODevice * in = new QFile(absoluteFilePath);
+    QIODevice * in = getReadDevice();
     buffer = new QBuffer();
-    in->moveToThread(this->thread());
     connect(this,SIGNAL(writeFinished(File*)),in,SLOT(deleteLater()));
     pipe(in, buffer);
 }
@@ -1618,7 +1648,6 @@ void File::pipe(QString to){
     QIODevice * out = new QFile(to);
     if (geotaggedBuffer != NULL && geotaggedBuffer->size() > 0) {
         in = geotaggedBuffer;
-        geotaggedBuffer->moveToThread(this->thread());
         qint64 diff = geotaggedBuffer->size() - buffer->size();
         tm->totalCached += diff;
         tm->totalToCache += diff;
@@ -1635,9 +1664,8 @@ void File::pipe(QString to){
             geotaggedBuffer = NULL;
         }
     } else {
-        in = new QFile(absoluteFilePath);
+        in = getReadDevice();
     }
-    out->moveToThread(this->thread());
     connect(this,SIGNAL(writeFinished(File*)),out,SLOT(deleteLater()));
     QDir().mkpath(QFileInfo(to).absolutePath());
     pipedTo = to;
@@ -1652,8 +1680,9 @@ void File::pipe(QIODevice *in, QIODevice *out){
     writer->moveToThread(writeThread);
     connect(writeThread,SIGNAL(finished()),writeThread,SLOT(deleteLater()));
     connect(reader,SIGNAL(dataChunk(QByteArray,bool)),writer,SLOT(dataChunk(QByteArray,bool)),Qt::QueuedConnection);
+    connect(reader,SIGNAL(readStarted()),this,SLOT(readStarted()),Qt::QueuedConnection);
     connect(writer,SIGNAL(writeFinished()),this,SLOT(writeFinished()));
-    connect(writer,SIGNAL(writeFinished()),reader,SLOT(deleteLater()));
+    connect(writer,SIGNAL(writeFinished()),reader,SLOT(quit()));
     connect(writer,SIGNAL(writeFinished()),writeThread,SLOT(quit()));
     connect(writer,SIGNAL(writeFinished()),writer,SLOT(deleteLater()));
     writeThread->start();

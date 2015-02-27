@@ -82,6 +82,9 @@ signals:
 public slots:
     void reloadSelection();
     bool getAllCom();
+private slots:
+    void readStarted(File * file);
+    void writeFinished(File * file);
 
 };
 

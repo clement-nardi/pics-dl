@@ -35,33 +35,35 @@ This is because the dll is versionned along with its code: */pics-dl/WPDInterfac
 
 ##1. Downloads
 * [QT 5.4](http://download.qt.io/official_releases/qt/5.4/5.4.0/qt-opensource-windows-x86-mingw491_opengl-5.4.0.exe)
-* [Git](http://git-scm.com/download/win)
 * [MSVC redistributable 2013](http://www.microsoft.com/en-us/download/confirmation.aspx?id=40784)
 * [Inno Setup](http://www.jrsoftware.org/download.php/is.exe)
 * [Strawberry perl](http://strawberryperl.com/download/5.20.1.1/strawberry-perl-5.20.1.1-32bit.msi)
+* [Git](http://git-scm.com/download/win)
 
 Optional but recommended:  
 * [notepad++](http://download.tuxfamily.org/notepadplus/6.6.9/npp.6.6.9.Installer.exe)
 
-##2. Install (in whatever order)  
+##2. Install
 
 ###2.1 QT  
 On the 3rd step, make sure you select all the Tools (including MinGW).  
 Otherwise just click on Next  
 
-###2.2 Git  
-**At the 4th step, select the 3rd option**: "Use Git and optional Unix tools from the Windows Command Prompt"
-Otherwise Just click Next.  
-
-###2.4 Notepad++    
+###2.2 Notepad++    
 Just click Next.  
 
-###2.5 Microsoft Visual C++ Redistributable Packages for Visual Studio 2013  
+###2.3 Microsoft Visual C++ Redistributable Packages for Visual Studio 2013  
 Just click Next.  
 
-###2.6 Perl and Exiftool module
+###2.4 Perl and Exiftool module
+**Must be installed before Git**
 Install Strawberry Perl, leave all default settings.  
 Once installed, launch "CPAN Client", and write in the terminal:  
+
+###2.5 Git  
+**Must be installed after Strawberry Perl**
+**At the 4th step, select the 3rd option**: "Use Git and optional Unix tools from the Windows Command Prompt"
+Otherwise Just click Next.  
 
     install Image::ExifTool
 

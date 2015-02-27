@@ -353,13 +353,22 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
                 }
             }
         }
-        if (index.column() == 4) {
-            if (index.row() == itemBeingDownloaded) {
-                return QIcon(":/icons/download");
-            } else if (dc->knownFiles.contains(*fi)) {
+        if (index.column() == 1) {
+            if (dc->knownFiles.contains(*fi)) {
                 return QIcon(":/icons/ok");
+            } else {
+                return QIcon(":/icons/add");
+            }
+        }
+        if (index.column() == 4) {
+            if (fi->transferOnGoing) {
+                return QIcon(":/icons/download");
             } else if (QFile(newPath(fi)).exists()) {
-                return QIcon(":/icons/warning");
+                if (fi->transferTo.size()>0) {
+                    return QIcon(":/icons/ok");
+                } else {
+                    return QIcon(":/icons/warning");
+                }
             } else {
                 return QIcon(":/icons/play");
             }
@@ -615,8 +624,25 @@ void DownloadModel::reloadSelection() {
         pd->hide();
         qDebug() << "pd.hide()";
     }
+    for (int i = 0; i < selectedFileList.size(); i++) {
+        File *fi = selectedFileList.at(i);
+        fi->modelRow = i;
+        connect(fi,SIGNAL(readStarted(File*)),this,SLOT(readStarted(File*)));
+        connect(fi,SIGNAL(writeFinished(File*)),this,SLOT(writeFinished(File*)));
+    }
     endResetModel();
     reloaded();
+}
+
+
+void DownloadModel::readStarted(File * file){
+    dataChanged(createIndex(file->modelRow,4),
+                createIndex(file->modelRow,4));
+    emit itemOfInterest(createIndex(file->modelRow,4));
+}
+void DownloadModel::writeFinished(File * file){
+    dataChanged(createIndex(file->modelRow,4),
+                createIndex(file->modelRow,4));
 }
 
 

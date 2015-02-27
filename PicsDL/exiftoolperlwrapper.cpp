@@ -68,7 +68,7 @@ void ExifToolPerlWrapper::loadTrackContent(const char * trackFileContent, long s
     sv_setpvn(trackFilePath_SV, trackFileContent, size);
     fprintf(stderr,"loading track file content: size=%d\n",size);fflush(stderr);
     eval_pv("my @loadTrackResults = $exifTool->SetNewValue('Geotag', $trackFileContent);", TRUE);
-    eval_pv("print {STDERR} Dumper(@loadTrackResults);", TRUE);
+    eval_pv("print {STDERR} 'loadTrackContent: ' . Dumper(@loadTrackResults) . '\n';", TRUE);
 }
 
 void ExifToolPerlWrapper::geotag(char *in, long in_size, char **out, long *out_size){
@@ -83,8 +83,8 @@ void ExifToolPerlWrapper::geotag(char *in, long in_size, char **out, long *out_s
     eval_pv("open $destHandle, \">\", \\$destContent;", TRUE);
 
     eval_pv("$exifTool->ExtractInfo($sourceHandle);", TRUE);
-    eval_pv("print 'DateTimeOriginal ' . Dumper($exifTool->GetValue('DateTimeOriginal', 'PrintConv'));", TRUE);
-    eval_pv("print 'GPSLatitude ' . Dumper($exifTool->GetValue('GPSLatitude'));", TRUE);
+    eval_pv("print {STDERR} 'DateTimeOriginal ' . Dumper($exifTool->GetValue('DateTimeOriginal', 'PrintConv')) . '\n';", TRUE);
+    eval_pv("print {STDERR} 'GPSLatitude ' . Dumper($exifTool->GetValue('GPSLatitude')) . '\n';", TRUE);
 
     eval_pv("$exifTool->SetNewValue('Geotime', $exifTool->GetValue('DateTimeOriginal'));", TRUE);
 
