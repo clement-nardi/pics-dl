@@ -1589,18 +1589,11 @@ void File::writeFinished() {
         }
         transferOnGoing = false;
         emit writeFinished(this);
-        if (geotaggedBuffer != NULL) {
-            delete geotaggedBuffer;
-            geotaggedBuffer = NULL;
-        }
-        if (buffer != NULL) {
-            delete buffer;
-            buffer = NULL;
-        }
     }
 }
 
 void File::launchTransferTo(QString to, TransferManager *tm_, bool geotag) {
+    qDebug() << QString("%1 - launchTransferTo %2").arg(fileName()).arg(to);
     tm = tm_;
     transferTo = to;
     if (geotag) {
@@ -1639,11 +1632,11 @@ void File::pipeToBuffer(){
     }
     QIODevice * in = getReadDevice();
     buffer = new QBuffer();
-    connect(this,SIGNAL(writeFinished(File*)),in,SLOT(deleteLater()));
     pipe(in, buffer);
 }
 
 void File::pipe(QString to){
+    qDebug() << QString("%1 - pipe to %2").arg(fileName()).arg(to);
     QIODevice * in = NULL;
     QIODevice * out = new QFile(to);
     if (geotaggedBuffer != NULL && geotaggedBuffer->size() > 0) {
@@ -1660,7 +1653,7 @@ void File::pipe(QString to){
         qWarning() << QString("%1 - WARNING - problem with geotaggedBuffer");
         in = buffer;
         if (geotaggedBuffer != NULL) {
-            delete geotaggedBuffer;
+            geotaggedBuffer->deleteLater();
             geotaggedBuffer = NULL;
         }
     } else {
@@ -1681,8 +1674,9 @@ void File::pipe(QIODevice *in, QIODevice *out){
     connect(writeThread,SIGNAL(finished()),writeThread,SLOT(deleteLater()));
     connect(reader,SIGNAL(dataChunk(QByteArray,bool)),writer,SLOT(dataChunk(QByteArray,bool)),Qt::QueuedConnection);
     connect(reader,SIGNAL(readStarted()),this,SLOT(readStarted()),Qt::QueuedConnection);
+    connect(reader,SIGNAL(finished()),reader,SLOT(deleteLater()));
+    connect(reader,SIGNAL(finished()),in,SLOT(deleteLater()));
     connect(writer,SIGNAL(writeFinished()),this,SLOT(writeFinished()));
-    connect(writer,SIGNAL(writeFinished()),reader,SLOT(quit()));
     connect(writer,SIGNAL(writeFinished()),writeThread,SLOT(quit()));
     connect(writer,SIGNAL(writeFinished()),writer,SLOT(deleteLater()));
     writeThread->start();

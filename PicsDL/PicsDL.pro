@@ -141,6 +141,6 @@ binaries.path = /usr/bin
 binaries.files = $$DESTDIR/$$TARGET
 INSTALLS += binaries
 
-win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
+#win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 #unix: QMAKE_POST_LINK += ../package-debian/create-debian-package.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 
