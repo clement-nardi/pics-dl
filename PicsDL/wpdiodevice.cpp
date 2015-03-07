@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #include "wpdiodevice.h"
 #include "WPDInterface.h"
 #include <QDebug>
@@ -73,3 +75,5 @@ qint64 WPDIODevice::writeData(const char * data, qint64 maxSize){
     qWarning() << "WARNING: WPDIODevice does not support writing!!";
     return -1;
 }
+
+#endif

@@ -1507,8 +1507,11 @@ IOReader::IOReader(QIODevice *device_, QSemaphore *s_, TransferManager *tm_) {
     tm->totalToCache += NB_CHUNKS*CHUNK_SIZE;
 }
 void IOReader::run() {
-    bool deviceIsFile = ((dynamic_cast<QFile*>       (device)) != NULL) ||
-                        ((dynamic_cast<WPDIODevice*> (device)) != NULL)   ;
+    bool deviceIsFile =    ((dynamic_cast<QFile*>       (device)) != NULL)
+#ifdef _WIN32
+                        || ((dynamic_cast<WPDIODevice*> (device)) != NULL)
+#endif
+            ;
     if (!device->open(QIODevice::ReadOnly)) {
         qWarning() << QString("WARNING: unable to open %1 for reading").arg(deviceIsFile?"File":"Buffer");
     }
