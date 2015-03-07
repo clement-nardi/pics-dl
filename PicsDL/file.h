@@ -73,7 +73,7 @@ public:
     bool moveWithDirs(QString to);
     bool setHidden();
 
-    void launchTransferTo(QString to, TransferManager *tm_, bool geotag);
+    void launchTransferTo(QString to, TransferManager *tm_, bool geotag_);
     QBuffer * buffer;
     QBuffer * geotaggedBuffer;
     void setGeotaggedBuffer(QBuffer *geotaggedBuffer_);
@@ -81,6 +81,9 @@ public:
     static void setDates(QString fileName,uint date);
 
     QMap<QString,QString> geotags;
+    QString transferTo;
+    int modelRow;
+    bool transferOnGoing;
 
 private:
     QPixmap thumbnail;
@@ -91,7 +94,7 @@ private:
     bool FillIODeviceWithContent(QIODevice *out);
     void pipe(QIODevice *in, QIODevice *out);
     QString pipedTo;
-    QString transferTo;
+    bool geotag;
     QSemaphore readSemaphore;
     void launchWrite(QString dest, bool geotag = true);
     void writeHeader(QString dest = "");
@@ -99,10 +102,13 @@ private:
     void pipe(QString to);
     void pipeToBuffer();
     TransferManager *tm;
+    QIODevice *getReadDevice();
+
 private slots:
+    void readStarted();
     void writeFinished();
 signals:
-    void readFinished(File *);
+    void readStarted(File *);
     void writeFinished(File *);
 };
 
@@ -115,7 +121,9 @@ public:
     IOReader(QIODevice *device, QSemaphore *s, TransferManager *tm_);
     void run();
 signals:
-    void dataChunk(QByteArray data, bool theresMore);
+    void dataChunk(QByteArray data);
+    void readStarted();
+    void readFinished();
 private:
     QIODevice *device;
     QSemaphore *s;
@@ -130,7 +138,8 @@ public:
 signals:
     void writeFinished();
 public slots:
-    void dataChunk(QByteArray data, bool theresMore);
+    void dataChunk(QByteArray data);
+    void noMoreData();
 private:
     QIODevice *device;
     QSemaphore *s;

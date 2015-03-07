@@ -11,11 +11,16 @@ class DownloadModel;
 #include <QThread>
 class TransferManager;
 
-class TransferWorker: public QThread {
+class TransferWorker: public QObject {
+    Q_OBJECT
 public:
     TransferWorker(TransferManager *tm_, bool geotag_) ;
-    void run() ;
+signals:
+    void launchFile(File *file, bool geotag);
+public slots:
+    void processList();
 
+private:
     TransferManager *tm;
     QList<File *> *fileList;
     QSemaphore *semaphore;
@@ -36,8 +41,8 @@ public:
 
     QAtomicInteger<qint64> totalTransfered;
     QAtomicInteger<qint64> totalToTransfer;
-    int nbFilesTransfered;
-    int nbFilesToTransfer;
+    QAtomicInteger<int> nbFilesTransfered;
+    QAtomicInteger<int> nbFilesToTransfer;
     QAtomicInteger<qint64> totalCached;
     QAtomicInteger<qint64> totalToCache;
     bool wasStopped;
@@ -50,14 +55,19 @@ public:
 
 signals:
     void downloadFinished();
+    void startWorkers();
 
 private:
     void buildGeoTagger();
     void resetStats();
+
+    void initWorker(int idx);
     TransferWorker *tw[2]; /* 0 for direct transfers, 1 for geotag transfers */
+    QThread wt[2];
 
 private slots:
     void handleWriteFinished(File *file);
+    void launchFile(File *file, bool geotag);
 };
 
 #endif // TRANSFERMANAGER_H

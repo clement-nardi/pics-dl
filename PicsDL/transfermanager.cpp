@@ -18,19 +18,17 @@ TransferWorker::TransferWorker(TransferManager *tm_, bool geotag_) {
     }
 }
 
-void TransferWorker::run() {
+void TransferWorker::processList() {
     for (int i = 0; i< fileList->size(); i++) {
-        File * file = fileList->at(i);
-        if (tm->wasStopped) return;
-        QString fi_newPath = tm->dm->newPath(file);
         semaphore->acquire();
+        if (tm->wasStopped) return;
+        File * file = fileList->at(i);
         qDebug() << QString("worker %1: %2/%3 - %4")
                     .arg(geotag)
                     .arg(i)
                     .arg(fileList->size())
                     .arg(file->absoluteFilePath);
-        connect(file,SIGNAL(writeFinished(File*)),tm,SLOT(handleWriteFinished(File*)));
-        file->launchTransferTo(fi_newPath,tm,geotag);
+        emit launchFile(file,geotag);
     }
     qDebug() << QString("Worker %1 finished looping on %2 files").arg(geotag).arg(fileList->size());
 }
@@ -43,8 +41,23 @@ TransferManager::TransferManager(QObject *parent, DownloadModel *dm_) : QObject(
     buildGeoTagger();
     resetStats();
 
-    tw[0] = new TransferWorker(this,true);
-    tw[1] = new TransferWorker(this,false);
+    initWorker(0);
+    initWorker(1);
+}
+
+
+void TransferManager::initWorker(int idx) {
+    tw[idx] = new TransferWorker(this,idx==0);
+    tw[idx]->moveToThread(&wt[idx]);
+    connect(this, SIGNAL(startWorkers()),tw[idx],SLOT(processList()));
+    connect(tw[idx],SIGNAL(launchFile(File*,bool)),this,SLOT(launchFile(File*,bool)));
+    wt[idx].start();
+}
+
+void TransferManager::launchFile(File *file, bool geotag) {
+    QString fi_newPath = dm->newPath(file);
+    connect(file,SIGNAL(writeFinished(File*)),this,SLOT(handleWriteFinished(File*)),Qt::UniqueConnection);
+    file->launchTransferTo(fi_newPath,this,geotag);
 }
 
 void TransferManager::resetStats() {
@@ -96,9 +109,7 @@ void TransferManager::launchDownloads() {
         }
         directSemaphore.release(1-directSemaphore.available());
         geotagSemaphore.release(2-geotagSemaphore.available());
-
-        tw[0]->start();
-        tw[1]->start();
+        emit startWorkers();
     }
     if (nbFilesToTransfer == 0) {
         qDebug() << "Nothing to transfer...";
@@ -108,14 +119,16 @@ void TransferManager::launchDownloads() {
 
 void TransferManager::stopDownloads() {
     wasStopped = true;
+    dm->dc->saveKnownFiles();
 }
 
 void TransferManager::handleWriteFinished(File *file) {
     dm->dc->knownFiles.insert(*file);
-    //qDebug() << "copied " << file->absoluteFilePath << " to " << dm->newPath(file);
+    qDebug() << "copied " << file->absoluteFilePath << " to " << dm->newPath(file);
     nbFilesTransfered++;
     if (nbFilesToTransfer == nbFilesTransfered) {
         qDebug() << "That was the last file!";
+        dm->dc->saveKnownFiles();
         emit downloadFinished();
     }
 }
@@ -123,7 +136,7 @@ void TransferManager::handleWriteFinished(File *file) {
 void TransferManager::buildGeoTagger() {
     QString tf = dm->getTrackingFolder();
 
-    if (!QDir(tf).exists()) {
+    if (tf == "" || !QDir(tf).exists()) {
         delete geotagger;
         geotagger = NULL;
     } else {

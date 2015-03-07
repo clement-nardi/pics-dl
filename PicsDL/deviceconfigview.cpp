@@ -34,11 +34,12 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
     QWidget(parent),
     ui(new Ui::DeviceConfigView)
 {
+    dpm = NULL;
+    tm = NULL;
     dc = dc_;
     editMode = editMode_;
     pd = new QProgressDialog(this);
     ui->setupUi(this);
-    ui->cacheLayout->setStackingMode(QStackedLayout::StackAll);
 
     connect(ui->openButton, SIGNAL(clicked()),this, SLOT(chooseDLTo()));
     connect(ui->trackOpenButton, SIGNAL(clicked()),this, SLOT(chooseTrackFolder()));
@@ -48,10 +49,7 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
     setAttribute(Qt::WA_QuitOnClose, false);
     FillWithConfig(id);
 
-    if (editMode) {
-        dpm = NULL;
-        tm = NULL;
-    } else {
+    if (!editMode) {
         dpm = new DownloadModel(dc, pd, editMode);
         connect(dpm, SIGNAL(itemOfInterest(QModelIndex)), this, SLOT(makeVisible(QModelIndex)));
         connect(dpm, SIGNAL(reloaded()), ui->tableView, SLOT(resizeColumnsToContents()));
@@ -371,20 +369,18 @@ void DeviceConfigView::updateProgress() {
     qint64 ttc = tm->totalToCache;
     qint64 tc  = tm->totalCached;
 
-    ui->cacheBar->setMaximum(100000);
-    ui->cacheBar->setValue(tt?tc*100000/ttc:0);
-    ui->cacheLabel->setText(QString("%1 / %2")
+    ui->cacheView->setVisible(true);
+    ui->cacheView->bar->setMaximum(100000);
+    ui->cacheView->bar->setValue(ttc?tc*100000/ttc:0);
+    ui->cacheView->label->setText(QString("Buffer: %1 / %2")
                             .arg(File::size2Str(tc))
                             .arg(File::size2Str(ttc)));
-
 
     if (pd->wasCanceled()) {
         progressTimer.stop();
         pd->hide();
         tm->stopDownloads();
-
-        ui->cacheBar->setMaximum(0);
-        ui->cacheBar->setValue(0);
+        ui->cacheView->setVisible(false);
     }
 
 }

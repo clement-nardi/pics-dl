@@ -68,7 +68,7 @@ void ExifToolPerlWrapper::loadTrackContent(const char * trackFileContent, long s
     sv_setpvn(trackFilePath_SV, trackFileContent, size);
     fprintf(stderr,"loading track file content: size=%d\n",size);fflush(stderr);
     eval_pv("my @loadTrackResults = $exifTool->SetNewValue('Geotag', $trackFileContent);", TRUE);
-    eval_pv("print {STDERR} Dumper(@loadTrackResults);", TRUE);
+    eval_pv("print {STDERR} 'loadTrackContent: ' . Dumper(@loadTrackResults) . '\n';", TRUE);
 }
 
 void ExifToolPerlWrapper::geotag(char *in, long in_size, char **out, long *out_size){
@@ -83,17 +83,28 @@ void ExifToolPerlWrapper::geotag(char *in, long in_size, char **out, long *out_s
     eval_pv("open $destHandle, \">\", \\$destContent;", TRUE);
 
     eval_pv("$exifTool->ExtractInfo($sourceHandle);", TRUE);
-    eval_pv("print 'DateTimeOriginal ' . Dumper($exifTool->GetValue('DateTimeOriginal', 'PrintConv'));", TRUE);
-    eval_pv("print 'GPSLatitude ' . Dumper($exifTool->GetValue('GPSLatitude'));", TRUE);
+
+    //eval_pv("print {STDERR} 'ExtractInfo error: ' . Dumper($exifTool->GetValue('Error')) . '\n';", TRUE);
+    //eval_pv("print {STDERR} 'ExtractInfo warning: ' . Dumper($exifTool->GetValue('Warning')) . '\n';", TRUE);
+    eval_pv("print {STDERR} 'DateTimeOriginal ' . Dumper($exifTool->GetValue('DateTimeOriginal', 'PrintConv')) . '\n';", TRUE);
+    eval_pv("print {STDERR} 'GPSLatitude ' . Dumper($exifTool->GetValue('GPSLatitude')) . '\n';", TRUE);
 
     eval_pv("$exifTool->SetNewValue('Geotime', $exifTool->GetValue('DateTimeOriginal'));", TRUE);
+    //eval_pv("print {STDERR} 'SetNewValue error: ' . Dumper($exifTool->GetValue('Error')) . '\n';", TRUE);
+    //eval_pv("print {STDERR} 'SetNewValue warning: ' . Dumper($exifTool->GetValue('Warning')) . '\n';", TRUE);
 
     eval_pv("$exifTool->WriteInfo($sourceHandle, $destHandle);", TRUE);
+    //eval_pv("print {STDERR} 'WriteInfo error: ' . Dumper($exifTool->GetValue('Error')) . '\n';", TRUE);
+    //eval_pv("print {STDERR} 'WriteInfo warning: ' . Dumper($exifTool->GetValue('Warning')) . '\n';", TRUE);
+
+    //eval_pv("print {STDERR} 'sourceFileData: ' . Dumper(substr($sourceFileData,0,100)) . '\n';", TRUE);
+    //eval_pv("print {STDERR} 'destContent: ' . Dumper(substr($destContent,0,100)) . '\n';", TRUE);
 
     STRLEN len;
     char * res = SvPV(get_sv("destContent", 0), len);
+    //fprintf(stderr,"sending back a string of size %d: ",len,res);
+    //fwrite(res,1,100,stderr);fprintf(stderr,"\n");fflush(stderr);
 
-    /* TODO: check if SvPV allocates memory for res */
     *out_size = len;
     *out = res;
 }

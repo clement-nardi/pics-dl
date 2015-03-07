@@ -70,7 +70,9 @@ SOURCES += main.cpp\
     exiftoolperlwrapper.cpp \
     file.cpp \
     geotaggerprivate.cpp \
-    transfermanager.cpp
+    transfermanager.cpp \
+    progressbarlabel.cpp \
+    wpdiodevice.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -89,7 +91,9 @@ HEADERS  += mainwindow.h \
     exiftoolperlwrapper.h \
     file.h \
     geotaggerprivate.h \
-    transfermanager.h
+    transfermanager.h \
+    progressbarlabel.h \
+    wpdiodevice.h
 
 
 FORMS    += mainwindow.ui \
@@ -132,11 +136,11 @@ RESOURCES += \
 
 RC_FILE = PicsDL.rc
 
-#win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
-#unix: QMAKE_POST_LINK += ../package-debian/create-debian-package.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
-
 #This is needed for debian packaging. It only works if INSTALL_ROOT is passed as parameter of make
 binaries.path = /usr/bin
 binaries.files = $$DESTDIR/$$TARGET
 INSTALLS += binaries
+
+win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
+#unix: QMAKE_POST_LINK += ../package-debian/create-debian-package.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 

@@ -318,7 +318,15 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             }
         }
         case 1:
-            return fi->absoluteFilePath;
+        {
+            QString tooltip = fi->absoluteFilePath;
+            if (dc->knownFiles.contains(*fi)) {
+                tooltip += "\nThis file was tranfered before";
+            } else {
+                tooltip += "\nThis is a new file";
+            }
+            return tooltip;
+        }
             break;
         case 2:
         {
@@ -332,7 +340,21 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
         }
             break;
         case 4:
-            return newPath(fi);
+        {
+            QString tooltip = newPath(fi);
+            if (fi->transferOnGoing) {
+                tooltip += "\nThis file is being transfered";
+            } else if (QFile(newPath(fi)).exists()) {
+                if (fi->transferTo.size()>0) {
+                    tooltip += "\nThis file was just transfered";
+                } else {
+                    tooltip += "\nThis file already exists, it will not be overwritten";
+                }
+            } else {
+                tooltip += "\nThis file will be transfered";
+            }
+            return tooltip;
+        }
             break;
         }
         break;
@@ -353,13 +375,22 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
                 }
             }
         }
-        if (index.column() == 4) {
-            if (index.row() == itemBeingDownloaded) {
-                return QIcon(":/icons/download");
-            } else if (dc->knownFiles.contains(*fi)) {
+        if (index.column() == 1) {
+            if (dc->knownFiles.contains(*fi)) {
                 return QIcon(":/icons/ok");
+            } else {
+                return QIcon(":/icons/add");
+            }
+        }
+        if (index.column() == 4) {
+            if (fi->transferOnGoing) {
+                return QIcon(":/icons/download");
             } else if (QFile(newPath(fi)).exists()) {
-                return QIcon(":/icons/warning");
+                if (fi->transferTo.size()>0) {
+                    return QIcon(":/icons/ok");
+                } else {
+                    return QIcon(":/icons/warning");
+                }
             } else {
                 return QIcon(":/icons/play");
             }
@@ -615,8 +646,25 @@ void DownloadModel::reloadSelection() {
         pd->hide();
         qDebug() << "pd.hide()";
     }
+    for (int i = 0; i < selectedFileList.size(); i++) {
+        File *fi = selectedFileList.at(i);
+        fi->modelRow = i;
+        connect(fi,SIGNAL(readStarted(File*)),this,SLOT(readStarted(File*)));
+        connect(fi,SIGNAL(writeFinished(File*)),this,SLOT(writeFinished(File*)));
+    }
     endResetModel();
     reloaded();
+}
+
+
+void DownloadModel::readStarted(File * file){
+    dataChanged(createIndex(file->modelRow,4),
+                createIndex(file->modelRow,4));
+    emit itemOfInterest(createIndex(file->modelRow,4));
+}
+void DownloadModel::writeFinished(File * file){
+    dataChanged(createIndex(file->modelRow,4),
+                createIndex(file->modelRow,4));
 }
 
 
