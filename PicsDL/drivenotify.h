@@ -64,6 +64,7 @@ private:
     QFileSystemWatcher syswatch;
     QString fileToWatch;
     void run();
+    void watch();
 
 #endif
 };

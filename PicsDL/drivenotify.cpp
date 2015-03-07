@@ -67,11 +67,14 @@ DriveNotify::DriveNotify(DRIVENOTIFY_PARENT_TYPE *parent) :
 
 #else
 
+
 #ifdef __APPLE__
     fileToWatch = "/Volumes/";
 #else
     fileToWatch = "/etc/mtab";
 #endif
+
+    watch();
     connect(&syswatch,SIGNAL(directoryChanged(QString)),this,SLOT(handleMountFileChange()),Qt::QueuedConnection);
     connect(&syswatch,SIGNAL(fileChanged(QString))     ,this,SLOT(handleMountFileChange()),Qt::QueuedConnection);
 
@@ -188,6 +191,10 @@ void DriveNotify::run() {
 void DriveNotify::handleMountFileChange() {
     reloadMountPoints(false);
     /* sometimes the watcher stops... */
+    watch();
+}
+
+void DriveNotify::watch() {
     if (syswatch.addPath(fileToWatch)) {
         qDebug() << "Now watching " << fileToWatch;
     } else {

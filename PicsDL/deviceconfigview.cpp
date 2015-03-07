@@ -382,6 +382,9 @@ void DeviceConfigView::updateProgress() {
         progressTimer.stop();
         pd->hide();
         tm->stopDownloads();
+
+        ui->cacheBar->setMaximum(0);
+        ui->cacheBar->setValue(0);
     }
 
 }
