@@ -56,12 +56,12 @@ Just click Next.
 Just click Next.  
 
 ###2.4 Perl and Exiftool module
-**Must be installed before Git**
+**Must be installed before Git**  
 Install Strawberry Perl, leave all default settings.  
 Once installed, launch "CPAN Client", and write in the terminal:  
 
 ###2.5 Git  
-**Must be installed after Strawberry Perl**
+**Must be installed after Strawberry Perl**  
 **At the 4th step, select the 3rd option**: "Use Git and optional Unix tools from the Windows Command Prompt"
 Otherwise Just click Next.  
 

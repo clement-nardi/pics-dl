@@ -1522,8 +1522,9 @@ void IOReader::run() {
         QByteArray ba = device->read(CHUNK_SIZE);
         tm->totalCached+=ba.size();
         theEnd = device->atEnd();
-        emit dataChunk(ba,!theEnd); /* send 4KB data chuncks */
+        emit dataChunk(ba); /* send 4KB data chuncks */
     }
+    emit readFinished();
     device->close();
     if (!deviceIsFile) {
         /* read from a buffer, it will be deleted after write is finished */
@@ -1547,25 +1548,28 @@ void IOWriter::init(){
     }
 }
 
-void IOWriter::dataChunk(QByteArray ba, bool theresMore){
-    if (!initDone) {
-        initDone = true;
-        init();
+void IOWriter::dataChunk(QByteArray ba){
+    if (!tm->wasStopped) {
+        if (!initDone) {
+            initDone = true;
+            init();
+        }
+        device->write(ba);
+        if (deviceIsFile) {
+            tm->totalTransfered+=ba.size();
+            tm->totalCached-=ba.size();
+        } else {
+            //tm->totalCached-=ba.size();
+            //tm->totalCached+=ba.size();
+        }
     }
-    device->write(ba);
     s->release();
-    if (deviceIsFile) {
-        tm->totalTransfered+=ba.size();
-        tm->totalCached-=ba.size();
-    } else {
-        //tm->totalCached-=ba.size();
-        //tm->totalCached+=ba.size();
-    }
-    if (!theresMore || tm->wasStopped) {
-        tm->totalToCache -= NB_CHUNKS*CHUNK_SIZE;
-        device->close();
-        emit writeFinished();
-    }
+}
+
+void IOWriter::noMoreData(){
+    tm->totalToCache -= NB_CHUNKS*CHUNK_SIZE;
+    device->close();
+    emit writeFinished();
 }
 
 void File::readStarted() {
@@ -1576,26 +1580,37 @@ void File::readStarted() {
 void File::writeFinished() {
     qDebug() << QString("%1 - writeFinished to %2").arg(fileName()).arg(pipedTo);
     if (pipedTo == "buffer") {
-        tm->geotagger->geotag(this);
+        if (tm->wasStopped) {
+            tm->geotagSemaphore.release();
+            transferOnGoing = false;
+            if (buffer != NULL) {
+                buffer->deleteLater();
+                buffer = NULL;
+            }
+        } else {
+            tm->geotagger->geotag(this);
+        }
     } else {
         setDates(pipedTo,lastModified);
-        if (buffer != NULL || geotaggedBuffer != NULL) {
-            tm->geotagSemaphore.release();
-        } else {
+        if (!geotag) {
             tm->directSemaphore.release();
-        }
-        if (tm->wasStopped) {
-            QFile(pipedTo).remove();
+        } else {
+            tm->geotagSemaphore.release();
         }
         transferOnGoing = false;
-        emit writeFinished(this);
+        if (tm->wasStopped) {
+            QFile(pipedTo).remove();
+        } else {
+            emit writeFinished(this);
+        }
     }
 }
 
-void File::launchTransferTo(QString to, TransferManager *tm_, bool geotag) {
+void File::launchTransferTo(QString to, TransferManager *tm_, bool geotag_) {
     qDebug() << QString("%1 - launchTransferTo %2").arg(fileName()).arg(to);
     tm = tm_;
     transferTo = to;
+    geotag = geotag_;
     if (geotag) {
         pipeToBuffer();
     } else {
@@ -1612,7 +1627,6 @@ void File::setGeotaggedBuffer(QBuffer *geotaggedBuffer_) {
 
 
 QIODevice *File::getReadDevice() {
-
     if (!IDPath.startsWith("WPD:/")) {
         return new QFile(absoluteFilePath);
 #ifdef _WIN32
@@ -1642,6 +1656,7 @@ void File::pipe(QString to){
     if (geotaggedBuffer != NULL && geotaggedBuffer->size() > 0) {
         in = geotaggedBuffer;
         qint64 diff = geotaggedBuffer->size() - buffer->size();
+        geotaggedBuffer = NULL;
         tm->totalCached += diff;
         tm->totalToCache += diff;
 
@@ -1652,6 +1667,7 @@ void File::pipe(QString to){
     } else if (buffer != NULL && buffer->size() > 0) {
         qWarning() << QString("%1 - WARNING - problem with geotaggedBuffer");
         in = buffer;
+        buffer = NULL;
         if (geotaggedBuffer != NULL) {
             geotaggedBuffer->deleteLater();
             geotaggedBuffer = NULL;
@@ -1672,7 +1688,8 @@ void File::pipe(QIODevice *in, QIODevice *out){
     IOReader *reader = new IOReader(in,&readSemaphore,tm);
     writer->moveToThread(writeThread);
     connect(writeThread,SIGNAL(finished()),writeThread,SLOT(deleteLater()));
-    connect(reader,SIGNAL(dataChunk(QByteArray,bool)),writer,SLOT(dataChunk(QByteArray,bool)),Qt::QueuedConnection);
+    connect(reader,SIGNAL(dataChunk(QByteArray)),writer,SLOT(dataChunk(QByteArray)),Qt::QueuedConnection);
+    connect(reader,SIGNAL(readFinished()),writer,SLOT(noMoreData()),Qt::QueuedConnection);
     connect(reader,SIGNAL(readStarted()),this,SLOT(readStarted()),Qt::QueuedConnection);
     connect(reader,SIGNAL(finished()),reader,SLOT(deleteLater()));
     connect(reader,SIGNAL(finished()),in,SLOT(deleteLater()));

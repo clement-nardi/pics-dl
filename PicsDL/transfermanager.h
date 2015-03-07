@@ -41,8 +41,8 @@ public:
 
     QAtomicInteger<qint64> totalTransfered;
     QAtomicInteger<qint64> totalToTransfer;
-    int nbFilesTransfered;
-    int nbFilesToTransfer;
+    QAtomicInteger<int> nbFilesTransfered;
+    QAtomicInteger<int> nbFilesToTransfer;
     QAtomicInteger<qint64> totalCached;
     QAtomicInteger<qint64> totalToCache;
     bool wasStopped;

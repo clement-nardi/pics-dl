@@ -20,9 +20,9 @@ TransferWorker::TransferWorker(TransferManager *tm_, bool geotag_) {
 
 void TransferWorker::processList() {
     for (int i = 0; i< fileList->size(); i++) {
-        File * file = fileList->at(i);
-        if (tm->wasStopped) return;
         semaphore->acquire();
+        if (tm->wasStopped) return;
+        File * file = fileList->at(i);
         qDebug() << QString("worker %1: %2/%3 - %4")
                     .arg(geotag)
                     .arg(i)
@@ -56,7 +56,7 @@ void TransferManager::initWorker(int idx) {
 
 void TransferManager::launchFile(File *file, bool geotag) {
     QString fi_newPath = dm->newPath(file);
-    connect(file,SIGNAL(writeFinished(File*)),this,SLOT(handleWriteFinished(File*)));
+    connect(file,SIGNAL(writeFinished(File*)),this,SLOT(handleWriteFinished(File*)),Qt::UniqueConnection);
     file->launchTransferTo(fi_newPath,this,geotag);
 }
 
@@ -119,14 +119,16 @@ void TransferManager::launchDownloads() {
 
 void TransferManager::stopDownloads() {
     wasStopped = true;
+    dm->dc->saveKnownFiles();
 }
 
 void TransferManager::handleWriteFinished(File *file) {
     dm->dc->knownFiles.insert(*file);
-    //qDebug() << "copied " << file->absoluteFilePath << " to " << dm->newPath(file);
+    qDebug() << "copied " << file->absoluteFilePath << " to " << dm->newPath(file);
     nbFilesTransfered++;
     if (nbFilesToTransfer == nbFilesTransfered) {
         qDebug() << "That was the last file!";
+        dm->dc->saveKnownFiles();
         emit downloadFinished();
     }
 }
