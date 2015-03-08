@@ -162,3 +162,7 @@ Open a terminal and go where you wish to clone the project, then enter these com
 Let QT Creator configure the project automatically.
 Then you just need to click on the green triangle
 
+
+#How to compile on OS X
+
+
