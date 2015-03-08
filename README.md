@@ -159,6 +159,16 @@ Open a terminal and go where you wish to clone the project, then enter these com
     cd pics-dl/Qt/; sudo ./linux_dependencies.sh; cd ..;
     qtcreator PicsDL/PicsDL.pro &
 
-Let QT Creator configure the project automatically.
-Then you just need to click on the green triangle
+When QT Creator opens, **do not click on Configure Project** immediately, instead:
+- go to menu Tools/Options, tab "Build & Run", sub-tab "Qt Versions"
+- click on "Add..." and browse to /usr/local/Qt-5.4.0/bin/qmake
+- click on "Apply" and switch to the sub-tab "Kits", and click on "Add"
+- edit the name of the new kit and set it to "Qt-5.4.0 Static"
+- select Qt Version "Qt 5.4.0 (Qt-5.4.0)"
+- click on OK
+You should then be in the tab "Projects", sub-tab "Configure Project":
+- un-select "Desktop"
+- select "Qt-5.4.0 Static"
+- click on "Configure Project"
+You can now click on the green triangle to compile the project!
 
