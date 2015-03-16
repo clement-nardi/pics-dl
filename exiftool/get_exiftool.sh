@@ -30,7 +30,9 @@ if [ "$missingPerlPackage" = "1" ]; then
 	echo "wget -O - http://cpanmin.us | perl - --self-upgrade --sudo";
 	echo "cpanm Image::ExifTool --sudo";
 	echo "cpanm IO::Scalar --sudo";
-        echo "";
+	echo “”;
+	echo “if you don’t have wget, you can try with curl:”
+        echo "curl -L https://cpanmin.us | perl - --sudo App::cpanminus";
 	exit 1;
 fi
 

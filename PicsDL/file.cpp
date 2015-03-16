@@ -1376,7 +1376,8 @@ QString File::size2Str(qint64 nbBytes) {
 
 QList<File> File::ls(bool *theresMore) {
     QList<File> res;
-    *theresMore = false;
+    if (theresMore!=NULL)
+        *theresMore = false;
     if (IDPath.startsWith("WPD:/")) {
 
 #ifdef _WIN32
@@ -1417,7 +1418,8 @@ QList<File> File::ls(bool *theresMore) {
             WPDI_Free(WPDList[i].date);
         }
         if (count >= MAX_REQUESTED_ELEMENTS) {
-            *theresMore = true;
+            if (theresMore!=NULL)
+                *theresMore = true;
         } else {
             WPDI_Reset_LS();
         }
