@@ -1,13 +1,9 @@
 #!/usr/bin/make -f
 
-qmake -version
+export QT_SELECT := qt5.4.0-static
 
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/qmake.mk
 
-qmake -version
 DEB_BUILDDIR = Build_debian
 DEB_QMAKE_ARGS = $(CURDIR)/PicsDL/PicsDL.pro "BUILD_NUMBER_UPDATE=false"
-
-
-qmake -version
