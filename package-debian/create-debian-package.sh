@@ -23,6 +23,8 @@ if echo; then
 	cd $workingDir
 	tar -zxvf $upstreamTarballName
 	cd $packageName-$version
+	
+	qtchooser -print-env
 	debuild -us -uc
 
 
