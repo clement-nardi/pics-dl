@@ -7,7 +7,7 @@ Build-Depends: git, qt5-default, qtcreator, qtscript5-dev, curl, libexif-dev, li
 
 Package: pics-dl
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libimage-exiftool-perl
 Description: PicsDL - The Pictures Downloader
  Tired of spending 10 minutes each time you want to retrieve pictures from your camera? 
  With PicsDL, you just plug your device, and... done!
