@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Clément Nardi
+ * Copyright 2014-2015 Clément Nardi
  *
  * This file is part of PicsDL.
  *
