@@ -19,10 +19,16 @@ if (-d "./perl") {
 	foreach my $key ( keys %$hash_ref )
 	{
 	  make_path(dirname("./perl/$key"));
+          print "copying $$hash_ref{$key}{'file'} \tto ./perl/$key\n";
 	  copy("$$hash_ref{$key}{'file'}", "./perl/$key");
-	}
+	}       
 
 	#Those two are not detected by scan_deps
 	copy("C:/Strawberry/perl/lib/bytes.pm", "./perl/bytes.pm");
 	copy("C:/Strawberry/perl/lib/PerlIO.pm", "./perl/PerlIO.pm");
+	
+	#for Mac OS
+	copy("/System/Library/Perl/5.18/bytes.pm", "./perl/bytes.pm");
+	copy("/System/Library/Perl/5.18/PerlIO.pm", "./perl/PerlIO.pm");
+
 }

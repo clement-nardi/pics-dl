@@ -23,8 +23,16 @@ if echo; then
 	cd $workingDir
 	tar -zxvf $upstreamTarballName
 	cd $packageName-$version
+	
+	mkdir -p ~/.config/qtchooser
+	cp -f $script_dir/qt5.4.0-static.conf ~/.config/qtchooser/
+	
+	#This is just to make sure the conf file is properly set
+	#QT_SELECT should also be set in the "debian/rules" file
+	export QT_SELECT=qt5.4.0-static
+	qtchooser -print-env
+	
 	debuild -us -uc
-
 
 else
 	echo "You need to commit you latest changes before creating the debian package"

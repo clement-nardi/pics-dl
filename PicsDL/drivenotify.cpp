@@ -37,6 +37,10 @@
 DriveNotify::DriveNotify(DRIVENOTIFY_PARENT_TYPE *parent) :
     DRIVENOTIFY_PARENT_TYPE(parent) {
 
+    tryAgainTimer.setSingleShot(true);
+    tryAgainTimer.setInterval(2000);
+    connect(&tryAgainTimer,SIGNAL(timeout()),this,SLOT(reloadMountPoints()));
+
     reloadMountPoints(true);
 
 #ifdef _WIN32
@@ -67,11 +71,14 @@ DriveNotify::DriveNotify(DRIVENOTIFY_PARENT_TYPE *parent) :
 
 #else
 
+
 #ifdef __APPLE__
     fileToWatch = "/Volumes/";
 #else
     fileToWatch = "/etc/mtab";
 #endif
+
+    watch();
     connect(&syswatch,SIGNAL(directoryChanged(QString)),this,SLOT(handleMountFileChange()),Qt::QueuedConnection);
     connect(&syswatch,SIGNAL(fileChanged(QString))     ,this,SLOT(handleMountFileChange()),Qt::QueuedConnection);
 
@@ -85,11 +92,12 @@ DriveNotify::~DriveNotify() {
 void DriveNotify::reloadMountPoints(bool firstTime) {
     qDebug() << "Reloading mount points...";
 
-
+    nbTries++;
     QList<QStorageInfo> oldList = mountPoints;
     mountPoints = QStorageInfo::mountedVolumes();
     qDebug() << "Number of mount points: " << oldList.size() << " -> " << mountPoints.size();
 
+    bool newFound = false;
     for (int i = 0; i< mountPoints.size(); i++) {
         QStorageInfo si = mountPoints.at(i);
         if (!oldList.contains(si)) {
@@ -98,8 +106,13 @@ void DriveNotify::reloadMountPoints(bool firstTime) {
                 driveAdded(si.rootPath(),
                            QString("%1;%2;%3").arg(si.name()).arg(QString(si.fileSystemType())).arg(si.bytesTotal()),
                            si.displayName() );
+                newFound = true;
             }
         }
+    }
+    if (!newFound && oldList.size() == mountPoints.size() && nbTries < 10) {
+        qDebug() << QString("Tentative #%1. Will try again in 2s.").arg(nbTries);
+        tryAgainTimer.start();
     }
 }
 
@@ -186,8 +199,14 @@ void DriveNotify::run() {
 }
 
 void DriveNotify::handleMountFileChange() {
+    nbTries = 0;
+    tryAgainTimer.stop();
     reloadMountPoints(false);
     /* sometimes the watcher stops... */
+    watch();
+}
+
+void DriveNotify::watch() {
     if (syswatch.addPath(fileToWatch)) {
         qDebug() << "Now watching " << fileToWatch;
     } else {

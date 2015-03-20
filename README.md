@@ -3,8 +3,8 @@
 
 ##Main features:  
 * Retrieves pictures and videos from any type of device (camera, smartphone, memory card, USB stick, External Hard Drive).
-* All-automatic mode: simply plug the device and watch your pictures being downloaded and organized.
-* Organize and rename your files based on date/time and EXIF tags (such as camera brand/name, etc.)
+* All-automatic mode: simply plug the device and watch your pictures being downloaded and organised.
+* Organise and rename your files based on date/time and EXIF tags (such as camera brand/name, etc.)
 * Geo-tag the pictures
   
 ---
@@ -151,35 +151,44 @@ If successful, this file should be created: */pics-dl/libexif-0.6.21/libexif/.li
 
 #How to compile on Linux
 
-##Install dependencies:
+Open a terminal and cd where you wish to clone the project, then enter these commands, one by one:  
+**Note: The 3rd command may last a few hours, depending on your internet connection and processing power.**
 
-    sudo apt-get install -y git qt5-default qtcreator qtscript5-dev curl g++ libexif-dev libperl-dev libudev-dev debhelper cdbs devscripts build-essential
-    wget -O - http://cpanmin.us | perl - --self-upgrade --sudo
-    cpanm Image::ExifTool --sudo
-    cpanm IO::Scalar --sudo
-	
-	sudo apt-get install -y libfontconfig1-dev libfreetype6-dev libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libdbus-1-dev xz-utils
-	
-	curl http://ftp.fau.de/qtproject/archive/qt/5.4/5.4.0/single/qt-everywhere-opensource-src-5.4.0.tar.xz -o qt-everywhere-opensource-src-5.4.0.tar.xz
-	tar -xf qt-everywhere-opensource-src-5.4.0.tar.xz
-	cd qt-everywhere-opensource-src-5.4.0
-	curl https://codereview.qt-project.org/cat/101810%2C9%2Cconfigure%5E0 -o configure_new.zip
-    unzip configure_new.zip
-	mv qtbase/configure qtbase/configure.original
-	cp configure_new-* qtbase/configure
-	chmod 755 qtbase/configure
-	./configure -static -qt-xcb -opensource -confirm-license
-	make
-	sudo make install
-	
-	
+    sudo apt-get install -y git;
+    git clone https://github.com/clement-nardi/pics-dl.git;
+    cd pics-dl/Qt/; sudo ./linux_dependencies.sh; cd ..;
+    qtcreator PicsDL/PicsDL.pro &
+
+When QT Creator opens, **do not click on Configure Project** immediately, instead:
+- go to menu Tools/Options, tab "Build & Run", sub-tab "Qt Versions"
+- click on "Add..." and browse to /usr/local/Qt-5.4.0/bin/qmake
+- click on "Apply", switch to the sub-tab "Kits", and click on "Add"
+  - edit the name of the new kit and set it to "Qt-5.4.0 Static"
+  - select Qt Version "Qt 5.4.0 (Qt-5.4.0)"
+- click on OK
+
+You should then be in the tab "Projects", sub-tab "Configure Project":
+- un-select "Desktop"
+- select "Qt-5.4.0 Static"
+- click on "Configure Project"
+
+You can now click on the green triangle to compile the project!
+
+
+#How to compile on OS X
+
+- Install Xcode from the App Store (this will take a long time).  
+- Download [Qt Creator](http://download.qt-project.org/official_releases/qtcreator/3.3/3.3.2/qt-creator-opensource-mac-x86_64-3.3.2.dmg)
+- Install Qt Creator by dragging the Qt Creator icon to “Applications”
+
+
+Then open a terminal and cd where you wish to clone the project, then enter these commands, one by one:  
+**Note: The 2nd command may last a few hours, depending on your internet connection and processing power.**  
+*You may have to accept the Xcode license in the process*
+
+    git clone https://github.com/clement-nardi/pics-dl.git;
+    cd pics-dl/Qt/; sudo ./osx_dependencies.sh; cd ..;
     
-##Clone & Build
+Then please follow the same instructions as for Linux regarding Qt Creator setup, except that you will find qmake in ~/Qt-5.4.1/bin/qmake.
 
-    git clone https://github.com/clement-nardi/pics-dl.git
-    cd pics-dl
-    qtcreator PicsDL/PicsDL.pro
-
-Let QT Creator configure the project automatically.
-Then you just need to click on the green triangle
-
+	

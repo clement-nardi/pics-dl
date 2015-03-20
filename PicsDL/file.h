@@ -68,7 +68,7 @@ public:
     bool isJPEG() const;
     static QString size2Str(qint64 nbBytes);
 
-    QList<File> ls(bool *theresMore);
+    QList<File> ls(bool *theresMore = NULL);
     bool copyWithDirs(QString to);
     bool moveWithDirs(QString to);
     bool setHidden();

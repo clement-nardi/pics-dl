@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QStorageInfo>
 #include <QString>
+#include <QTimer>
 
 //moc doesn't recognize _WIN32
 #if defined(_WIN32) || defined(WIN32)
@@ -46,9 +47,13 @@ public:
     ~DriveNotify();
 private:
     QList<QStorageInfo> mountPoints;
-    void reloadMountPoints(bool firstTime = false);
+    QTimer tryAgainTimer;
+    int nbTries;
 signals:
     void driveAdded(QString path,QString serial,QString name);
+
+private slots:
+    void reloadMountPoints(bool firstTime = false);
 
 #if defined(_WIN32) || defined(WIN32)
 protected:
@@ -57,13 +62,14 @@ private:
     static const unsigned int msgShellChange = WM_USER + 1;
     unsigned long id;
 #else
-public slots:
+private slots:
     void handleMountFileChange();
 
 private:
     QFileSystemWatcher syswatch;
     QString fileToWatch;
     void run();
+    void watch();
 
 #endif
 };
