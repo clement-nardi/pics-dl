@@ -9,7 +9,7 @@
   
 ---
   
-The pics-dl project is composed of of two modules and has 3 dependencies:
+The pics-dl project is composed of two modules and has 3 dependencies:
 
 ##Modules:  
 * PicsDL: the main application  
