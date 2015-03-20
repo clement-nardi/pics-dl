@@ -29,6 +29,8 @@
 #include "driveview.h"
 #include <QSet>
 
+class About;
+
 namespace Ui {
 class MainWindow;
 }
@@ -50,12 +52,14 @@ private:
     QGridLayout *gl;
     QSet<DriveView *> dvl;
     void showEvent(QShowEvent * event);
+    About *about;
 
 public slots:
     void insertDrive(QString id);
     void removeDrive(QObject * dv);
     void quit_handle();
     void show_handle();
+    void about_handle();
     void sysTray_handle(QSystemTrayIcon::ActivationReason reason);
     void applicationLaunched();
 

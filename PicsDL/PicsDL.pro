@@ -91,7 +91,8 @@ SOURCES += main.cpp\
     geotaggerprivate.cpp \
     transfermanager.cpp \
     progressbarlabel.cpp \
-    wpdiodevice.cpp
+    wpdiodevice.cpp \
+    about.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -112,13 +113,15 @@ HEADERS  += mainwindow.h \
     geotaggerprivate.h \
     transfermanager.h \
     progressbarlabel.h \
-    wpdiodevice.h
+    wpdiodevice.h \
+    about.h
 
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \
             dcomdialog.ui \
-            exifdialog.ui
+            exifdialog.ui \
+    about.ui
 
 win32{
     LIBS += -L"C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86/" -lshell32

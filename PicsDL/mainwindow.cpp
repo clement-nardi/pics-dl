@@ -26,6 +26,7 @@
 #include "driveview.h"
 #include <QMessageBox>
 #include "verticalscrollarea.h"
+#include "about.h"
 
 
 MainWindow::MainWindow(DeviceConfig *dc_, QWidget *parent) :
@@ -34,6 +35,7 @@ MainWindow::MainWindow(DeviceConfig *dc_, QWidget *parent) :
 {
     dc = dc_;
     ui->setupUi(this);
+    about =  new About();
 
     QMenu *menu = new QMenu;
     menu->addAction(ui->actionShow);
@@ -46,6 +48,7 @@ MainWindow::MainWindow(DeviceConfig *dc_, QWidget *parent) :
     connect(&sysTray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(sysTray_handle(QSystemTrayIcon::ActivationReason)));
     connect(ui->actionQuit, SIGNAL(triggered()),this,SLOT(quit_handle()));
     connect(ui->actionShow, SIGNAL(triggered()),this,SLOT(show_handle()));
+    connect(ui->actionAbout, SIGNAL(triggered()),this,SLOT(about_handle()));
 
     row = 0;
     load();
@@ -62,6 +65,10 @@ void MainWindow::sysTray_handle(QSystemTrayIcon::ActivationReason reason) {
 
 void MainWindow::show_handle() {
     show();
+}
+
+void MainWindow::about_handle() {
+    about->show();
 }
 
 void MainWindow::applicationLaunched() {
@@ -134,4 +141,5 @@ void MainWindow::showEvent(QShowEvent * event){
 MainWindow::~MainWindow()
 {
     delete ui;
+    about->deleteLater();
 }

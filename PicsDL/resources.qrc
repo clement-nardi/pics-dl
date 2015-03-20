@@ -17,5 +17,8 @@
         <file alias="gps">resources/1420219735_internt_web_technology-08-128.png</file>
         <file alias="warning">resources/1424141438_error.png</file>
         <file alias="add">resources/1424905331_edit_add.png</file>
+        <file>resources/donate_en.gif</file>
+        <file>resources/donate_fr.gif</file>
+        <file>PicsDL.png</file>
     </qresource>
 </RCC>
