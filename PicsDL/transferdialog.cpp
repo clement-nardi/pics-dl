@@ -2,6 +2,7 @@
 #include "ui_transferdialog.h"
 #include "transfermanager.h"
 #include "file.h"
+#include "geotagger.h"
 
 #define GRANULARITY 100000
 
@@ -10,6 +11,9 @@ TransferDialog::TransferDialog(QWidget *parent) :
     ui(new Ui::TransferDialog)
 {
     ui->setupUi(this);
+    setWindowFlags(Qt::Drawer
+                   | Qt::WindowTitleHint
+                   | Qt::CustomizeWindowHint);
     connect(&progressTimer,SIGNAL(timeout()),this,SLOT(update()));
 }
 
@@ -53,6 +57,14 @@ void TransferDialog::showProgress(TransferManager *tm_)
     progressTimer.setSingleShot(false);
     progressTimer.start(100);
     statsTimer.start();
+
+    ui->track_bar->setVisible(false);
+    ui->track_label->setVisible(false);
+    if (tm->geotagger != NULL) {
+        connect(tm->geotagger,SIGNAL(loadingTrackFile(int,int)),this,SLOT(trackFile(int,int)));
+        connect(tm->geotagger,SIGNAL(loadingTrackFilesFinished()),this,SLOT(noMoreTrackFiles()));
+    }
+    adjustSize();
     this->show();
 }
 
@@ -105,4 +117,23 @@ void TransferDialog::cancel_handle() {
     progressTimer.stop();
     hide();
     tm->stopDownloads();
+}
+
+
+void TransferDialog::trackFile(int idx,int nb){
+    ui->track_bar->setMaximum(nb);
+    ui->track_bar->setValue(idx);
+    ui->track_label->setText(QString("Loading track file %1/%2")
+                             .arg(idx)
+                             .arg(nb));
+    ui->track_bar->setVisible(true);
+    ui->track_label->setVisible(true);
+}
+
+void TransferDialog::noMoreTrackFiles(){
+    ui->track_bar->setVisible(false);
+    ui->track_label->setVisible(false);
+    setMaximumHeight(1);
+    adjustSize();
+    setMaximumHeight(400);
 }

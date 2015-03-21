@@ -50,6 +50,8 @@ private slots:
 signals:
     void writeFinished(File*);
     void getGeotagsFinished(File*);
+    void loadingTrackFile(int,int);
+    void loadingTrackFilesFinished();
 
 };
 

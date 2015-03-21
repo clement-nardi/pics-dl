@@ -21,6 +21,8 @@ public:
 private slots:
     void update();
     void cancel_handle();
+    void trackFile(int idx,int nb);
+    void noMoreTrackFiles();
 
 private:
     Ui::TransferDialog *ui;

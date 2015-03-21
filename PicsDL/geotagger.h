@@ -46,6 +46,8 @@ private:
 signals:
     void getGeotagsFinished(File *);
     void writeFinished(File *);
+    void loadingTrackFile(int,int);
+    void loadingTrackFilesFinished();
 };
 
 #endif // GEOTAG_H

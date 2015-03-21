@@ -51,14 +51,19 @@ void GeotaggerWorker::setTrackFilesFolder(File trackFilesFolder_) {
     init();
     qDebug() << "setTrackFilesFolder from thread " << QThread::currentThreadId();
     if (trackFilesFolder_.absoluteFilePath != trackFilesFolder.absoluteFilePath) {
+        int fileIdx = 0;
+        int nbFiles = 0;
         trackFilesFolder = trackFilesFolder_;
         qDebug() << "loading track files from:" << trackFilesFolder.absoluteFilePath;
         bool theresMore = true;
         while (theresMore) {
             QList<File> contentPart = trackFilesFolder.ls(&theresMore);
+            nbFiles += contentPart.size();
             for (int i = 0; i < contentPart.size(); ++i) {
+                fileIdx++;
                 if (!contentPart.at(i).isDir) {
                     qDebug() << "Loading track file: "  << contentPart.at(i).absoluteFilePath;
+                    emit loadingTrackFile(fileIdx,nbFiles);
                     QFile file(contentPart.at(i).absoluteFilePath);
                     file.open(QIODevice::ReadOnly);
                     QByteArray ba = file.readAll();
@@ -67,6 +72,7 @@ void GeotaggerWorker::setTrackFilesFolder(File trackFilesFolder_) {
                 }
             }
         }
+        emit loadingTrackFilesFinished();
     }
 }
 

@@ -324,6 +324,7 @@ void DeviceConfigView::go(){
         if (!dpm->getAllCom()) return;
 
         connect(tm,SIGNAL(downloadFinished()),this,SLOT(deleteLater()));
+        ui->Tabs->setCurrentIndex(0);
         td->showProgress(tm);
         tm->launchDownloads();
     }
