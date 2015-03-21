@@ -30,7 +30,7 @@ DESTDIR = bin
 
 
 MAJOR=0
-MINOR=3
+MINOR=4
 PATCH=0
 
 
@@ -92,7 +92,8 @@ SOURCES += main.cpp\
     transfermanager.cpp \
     progressbarlabel.cpp \
     wpdiodevice.cpp \
-    about.cpp
+    about.cpp \
+    transferdialog.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -114,14 +115,16 @@ HEADERS  += mainwindow.h \
     transfermanager.h \
     progressbarlabel.h \
     wpdiodevice.h \
-    about.h
+    about.h \
+    transferdialog.h
 
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \
             dcomdialog.ui \
             exifdialog.ui \
-    about.ui
+    about.ui \
+    transferdialog.ui
 
 win32{
     LIBS += -L"C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86/" -lshell32

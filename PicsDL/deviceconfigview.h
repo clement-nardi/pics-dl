@@ -30,6 +30,8 @@ class TransferManager;
 #include <QTimer>
 #include <QElapsedTimer>
 
+class TransferDialog;
+
 namespace Ui {
 class DeviceConfigView;
 }
@@ -50,14 +52,12 @@ private:
 
     DeviceConfig *dc;
     QProgressDialog *pd;
+
     DownloadModel *dpm;
     TransferManager *tm;
+    TransferDialog *td;
     bool geoTag();
     void showEvent(QShowEvent * event);
-    QTimer progressTimer;
-    QElapsedTimer statsTimer;
-    qint64 lastElapsed;
-    qint64 lastTransfered;
 
 public slots:
     void chooseDLTo();
@@ -69,7 +69,6 @@ public slots:
     void showEXIFTags();
     void updateStatusText();
     void go();
-    void updateProgress();
 };
 
 #endif // DEVICECONFIGVIEW_H

@@ -29,6 +29,7 @@
 #include "transfermanager.h"
 #include "downloadmodel.h"
 #include "deviceconfig.h"
+#include "transferdialog.h"
 
 DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_, QWidget *parent) :
     QWidget(parent),
@@ -39,6 +40,7 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
     dc = dc_;
     editMode = editMode_;
     pd = new QProgressDialog(this);
+    td = new TransferDialog(this);
     ui->setupUi(this);
 
     connect(ui->openButton, SIGNAL(clicked()),this, SLOT(chooseDLTo()));
@@ -65,7 +67,6 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
         //ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
         connect(ui->automation, SIGNAL(performAction()),this,SLOT(go()));
-        connect(&progressTimer, SIGNAL(timeout()), this, SLOT(updateProgress()));
     }
     //setCornerWidget(new QPushButton("Go",this),Qt::BottomRightCorner);
 
@@ -323,64 +324,9 @@ void DeviceConfigView::go(){
         if (!dpm->getAllCom()) return;
 
         connect(tm,SIGNAL(downloadFinished()),this,SLOT(deleteLater()));
-
-        pd->reset();
-        pd->setLabelText("Downloading the files");
-        pd->setMinimum(0);
-        pd->setMaximum(0);
-        pd->setWindowModality(Qt::WindowModal);
-        pd->setValue(0);
-        pd->show();
-
-        progressTimer.setSingleShot(false);
-        progressTimer.start(100);
-
-        statsTimer.start();
-        lastElapsed = 0;
-        lastTransfered = 0;
-
+        td->showProgress(tm);
         tm->launchDownloads();
     }
 }
 
 
-void DeviceConfigView::updateProgress() {
-    qint64 totalElapsed = statsTimer.elapsed();
-    qint64 diff = totalElapsed-lastElapsed;
-    qint64 tr = tm->totalRead;
-    qint64 ttw = tm->totalToWrite;
-
-    qint64 throughput = diff?((tr-lastTransfered)*1000/diff):0;
-    qint64 averageThroughput = totalElapsed?(tr*1000/totalElapsed):0;
-
-    pd->setMaximum(100000);
-    pd->setValue(ttw?(tr*100000/ttw):0);
-    pd->setLabelText(QString("Downloading the files at %1/s (%2/s)\nDownloaded Files: %3/%4 (%5/%6)")
-                     .arg(File::size2Str(throughput))
-                     .arg(File::size2Str(averageThroughput))
-                     .arg(tm->nbFilesTransfered)
-                     .arg(tm->nbFilesToTransfer)
-                     .arg(File::size2Str(tr))
-                     .arg(File::size2Str(ttw)));
-    lastElapsed = totalElapsed;
-    lastTransfered = tr;
-
-
-    qint64 ttc = tm->totalToCache;
-    qint64 tc  = tm->totalRead - tm->totalWritten;
-
-    ui->cacheView->setVisible(true);
-    ui->cacheView->bar->setMaximum(100000);
-    ui->cacheView->bar->setValue(ttc?tc*100000/ttc:0);
-    ui->cacheView->label->setText(QString("Buffer: %1 / %2")
-                            .arg(File::size2Str(tc))
-                            .arg(File::size2Str(ttc)));
-
-    if (pd->wasCanceled()) {
-        progressTimer.stop();
-        pd->hide();
-        tm->stopDownloads();
-        ui->cacheView->setVisible(false);
-    }
-
-}
