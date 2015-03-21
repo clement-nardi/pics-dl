@@ -347,27 +347,27 @@ void DeviceConfigView::go(){
 void DeviceConfigView::updateProgress() {
     qint64 totalElapsed = statsTimer.elapsed();
     qint64 diff = totalElapsed-lastElapsed;
-    qint64 tt = tm->totalTransfered;
-    qint64 ttt = tm->totalToTransfer;
+    qint64 tr = tm->totalRead;
+    qint64 ttw = tm->totalToWrite;
 
-    qint64 throughput = diff?((tt-lastTransfered)*1000/diff):0;
-    qint64 averageThroughput = totalElapsed?(tt*1000/totalElapsed):0;
+    qint64 throughput = diff?((tr-lastTransfered)*1000/diff):0;
+    qint64 averageThroughput = totalElapsed?(tr*1000/totalElapsed):0;
 
     pd->setMaximum(100000);
-    pd->setValue(ttt?(tt*100000/ttt):0);
+    pd->setValue(ttw?(tr*100000/ttw):0);
     pd->setLabelText(QString("Downloading the files at %1/s (%2/s)\nDownloaded Files: %3/%4 (%5/%6)")
                      .arg(File::size2Str(throughput))
                      .arg(File::size2Str(averageThroughput))
                      .arg(tm->nbFilesTransfered)
                      .arg(tm->nbFilesToTransfer)
-                     .arg(File::size2Str(tt))
-                     .arg(File::size2Str(ttt)));
+                     .arg(File::size2Str(tr))
+                     .arg(File::size2Str(ttw)));
     lastElapsed = totalElapsed;
-    lastTransfered = tt;
+    lastTransfered = tr;
 
 
     qint64 ttc = tm->totalToCache;
-    qint64 tc  = tm->totalCached;
+    qint64 tc  = tm->totalRead - tm->totalWritten;
 
     ui->cacheView->setVisible(true);
     ui->cacheView->bar->setMaximum(100000);

@@ -59,11 +59,11 @@ public:
     void stopDownloads();
     Geotagger *geotagger;
 
-    QAtomicInteger<qint64> totalTransfered;
-    QAtomicInteger<qint64> totalToTransfer;
+    QAtomicInteger<qint64> totalRead;
+    QAtomicInteger<qint64> totalWritten;
+    QAtomicInteger<qint64> totalToWrite;
     QAtomicInteger<int> nbFilesTransfered;
     QAtomicInteger<int> nbFilesToTransfer;
-    QAtomicInteger<qint64> totalCached;
     QAtomicInteger<qint64> totalToCache;
     bool wasStopped;
 

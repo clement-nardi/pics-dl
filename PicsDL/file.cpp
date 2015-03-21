@@ -1525,16 +1525,17 @@ void IOReader::run() {
     while (!theEnd && !tm->wasStopped) {
         s->acquire();
         QByteArray ba = device->read(CHUNK_SIZE);
-        tm->totalCached+=ba.size();
+        if (deviceIsFile) {
+            tm->totalRead+=ba.size();
+        }
         theEnd = device->atEnd();
         emit dataChunk(ba); /* send 4KB data chuncks */
     }
     emit readFinished();
     device->close();
     if (!deviceIsFile) {
-        /* read from a buffer, it will be deleted after write is finished */
-        tm->totalCached-=device->size();
-        tm->totalToCache-=device->size();
+        /* Read from cache */
+        tm->totalToCache -= device->size();
     }
 }
 
@@ -1561,11 +1562,7 @@ void IOWriter::dataChunk(QByteArray ba){
         }
         device->write(ba);
         if (deviceIsFile) {
-            tm->totalTransfered+=ba.size();
-            tm->totalCached-=ba.size();
-        } else {
-            //tm->totalCached-=ba.size();
-            //tm->totalCached+=ba.size();
+            tm->totalWritten+=ba.size();
         }
     }
     s->release();
@@ -1662,8 +1659,9 @@ void File::pipe(QString to){
         in = geotaggedBuffer;
         qint64 diff = geotaggedBuffer->size() - buffer->size();
         geotaggedBuffer = NULL;
-        tm->totalCached += diff;
+        tm->totalRead += diff;
         tm->totalToCache += diff;
+        tm->totalToWrite += diff;
 
         if (buffer != NULL) {
             buffer->deleteLater();

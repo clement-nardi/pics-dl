@@ -81,10 +81,10 @@ void TransferManager::launchFile(File *file, bool geotag) {
 }
 
 void TransferManager::resetStats() {
-    totalCached = 0;
+    totalRead = 0;
     totalToCache = 0;
-    totalTransfered = 0;
-    totalToTransfer = 0;
+    totalWritten = 0;
+    totalToWrite = 0;
     nbFilesToTransfer = 0;
     nbFilesTransfered = 0;
 }
@@ -109,7 +109,7 @@ void TransferManager::launchDownloads() {
         buildGeoTagger();
         resetStats();
 
-        totalToTransfer = 0;
+        totalToWrite = 0;
         for (int i = 0; i < dm->selectedFileList.size(); i++) {
             if (wasStopped) return;
             File * file = dm->selectedFileList.at(i);
@@ -118,7 +118,7 @@ void TransferManager::launchDownloads() {
                 dm->dc->knownFiles.insert(*file);
                 qDebug() << "Will not overwrite " << fi_newPath;
             } else {
-                totalToTransfer += file->size;
+                totalToWrite += file->size;
                 nbFilesToTransfer++;
                 if (geotagger != NULL && file->size < 50*1024*1024) {
                     filesToGeotag.append(file);
