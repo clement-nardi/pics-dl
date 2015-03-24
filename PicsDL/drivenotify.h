@@ -50,7 +50,7 @@ private:
     QTimer tryAgainTimer;
     int nbTries;
 signals:
-    void driveAdded(QString path,QString serial,QString name);
+    void driveAdded(QString path,QString serial,QString name, qint64 device_size, qint64 bytes_available);
 
 private slots:
     void reloadMountPoints(bool firstTime = false);

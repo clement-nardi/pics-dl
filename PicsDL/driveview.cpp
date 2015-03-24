@@ -42,7 +42,7 @@ DriveView::DriveView(QString id_, DeviceConfig *dc_, QObject *parent) :
 
     loadName();
 
-    changeState(obj["isManaged"].toBool());
+    changeState(obj[CONFIG_ISMANAGED].toBool());
     connect(managedBox, SIGNAL(clicked(bool)), this, SLOT(managed(bool)));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removed()));
     connect(editButton, SIGNAL(clicked()), this, SLOT(edit()));
@@ -51,8 +51,8 @@ DriveView::DriveView(QString id_, DeviceConfig *dc_, QObject *parent) :
 void DriveView::loadName() {
     QJsonObject obj = dc->conf[id].toObject();
     QString deviceName;
-    if (obj["IDPath"].toString().startsWith("WPD:/")) {
-        deviceName = obj["path"].toString();
+    if (obj[CONFIG_IDPATH].toString().startsWith("WPD:/")) {
+        deviceName = obj[CONFIG_PATH].toString();
     } else {
         if (id.split(";").size() > 1) {
             QString name = id.split(";").at(1);
@@ -64,12 +64,12 @@ void DriveView::loadName() {
         } else {
             deviceName = id;
         }
-        if (obj["path"].toString().size()>0) {
-            deviceName.append(" (" + obj["path"].toString() + ")");
+        if (obj[CONFIG_PATH].toString().size()>0) {
+            deviceName.append(" (" + obj[CONFIG_PATH].toString() + ")");
         }
     }
-    if (obj["CameraName"].toString().size()>0) {
-        deviceName.append(" (" + obj["CameraName"].toString() + ")");
+    if (obj[CONFIG_CAMERANAME].toString().size()>0) {
+        deviceName.append(" (" + obj[CONFIG_CAMERANAME].toString() + ")");
     }
     label->setText(deviceName);
 }
@@ -103,7 +103,7 @@ void DriveView::removed(){
 
 void DriveView::managed(bool checked){
     QJsonObject obj = dc->conf[id].toObject();
-    obj.insert("isManaged",QJsonValue(checked));
+    obj.insert(CONFIG_ISMANAGED,QJsonValue(checked));
     dc->conf[id] = obj;
     dc->saveConfig();
     changeState(checked);

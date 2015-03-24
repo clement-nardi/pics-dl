@@ -35,7 +35,7 @@ DeviceManager::DeviceManager(DeviceConfig *deviceConfig, QObject *parent) :
     dc = deviceConfig;
 }
 
-void DeviceManager::treatDrive(QString drivePath, QString serial, QString displayName){
+void DeviceManager::treatDrive(QString drivePath, QString serial, QString displayName, qint64 deviceSize, qint64 bytes_available){
 
     qDebug() << "treating drive " << drivePath << serial << displayName;
 
@@ -44,7 +44,7 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
         QJsonObject driveConfig;
 
         /* avoid asking twice the same question */
-        driveConfig.insert("isManaged",QJsonValue(false));
+        driveConfig.insert(CONFIG_ISMANAGED,QJsonValue(false));
         dc->conf.insert(serial,driveConfig);
         QString deviceDescription = displayName;
         if (displayName != drivePath) {
@@ -59,7 +59,7 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
         int answer = mb.exec();
         qDebug() << "answer is " << answer;
 
-        driveConfig.insert("isManaged",QJsonValue(answer == QMessageBox::Yes));
+        driveConfig.insert(CONFIG_ISMANAGED,QJsonValue(answer == QMessageBox::Yes));
         dc->conf.insert(serial,driveConfig);
         dc->saveConfig();
         newID(serial);
@@ -67,7 +67,7 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
         qDebug() << "known drive";
     }
 
-    if (dc->conf[serial].toObject()["isManaged"].toBool() == true) {
+    if (dc->conf[serial].toObject()[CONFIG_ISMANAGED].toBool() == true) {
         bool isAlreadyOpened = false;
         QSetIterator<DeviceConfigView *> i(openedViews);
         while (i.hasNext()) {
@@ -82,12 +82,14 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
             qDebug() << "treat this drive now !";
             QJsonObject obj = dc->conf[serial].toObject();
             if (drivePath.startsWith("WPD:/")) {
-                obj["path"] = displayName;
-                obj["IDPath"] = drivePath;
+                obj[CONFIG_PATH] = displayName;
+                obj[CONFIG_IDPATH] = drivePath;
             } else {
-                obj["path"] = drivePath;
+                obj[CONFIG_PATH] = drivePath;
             }
-            obj["displayName"] = displayName;
+            obj[CONFIG_DISPLAYNAME] = displayName;
+            obj[CONFIG_DEVICESIZE] = QString("%1").arg(deviceSize);
+            obj[CONFIG_BYTESAVAILABLE] = QString("%1").arg(bytes_available);
             dc->conf[serial] = obj;
             dc->saveConfig();
 

@@ -91,9 +91,9 @@ void DeviceConfig::saveKnownFiles(){
         while (i.hasNext()) {
             QJsonObject obj;
             File fi = i.next();
-            obj["lastModified"] = QJsonValue(QString("%1").arg(fi.lastModified));
-            obj["absoluteFilePath"] = QJsonValue(fi.absoluteFilePath);
-            obj["size"] = QJsonValue(QString("%1").arg(fi.size));
+            obj[FILE_LASTMODIFIED] = QJsonValue(QString("%1").arg(fi.lastModified));
+            obj[FILE_ABSOLUTEFILEPATH] = QJsonValue(fi.absoluteFilePath);
+            obj[FILE_SIZE] = QJsonValue(QString("%1").arg(fi.size));
 
             jsa.append(obj);
             count++;
@@ -120,9 +120,9 @@ void DeviceConfig::loadKnownFiles(){
         } else {
             for (int i = 0; i < JKnownFiles.size(); i++) {
                 QJsonObject kfo = JKnownFiles.at(i).toObject();
-                knownFiles.insert(File(kfo["lastModified"].toString().toUInt(),
-                                       kfo["absoluteFilePath"].toString(),
-                                       kfo["size"].toString().toULongLong(),
+                knownFiles.insert(File(kfo[FILE_LASTMODIFIED].toString().toUInt(),
+                                       kfo[FILE_ABSOLUTEFILEPATH].toString(),
+                                       kfo[FILE_SIZE].toString().toULongLong(),
                                        false));
             }
             qDebug() << JKnownFiles.size() << " known files Loaded";

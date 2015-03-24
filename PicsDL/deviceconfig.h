@@ -25,6 +25,49 @@
 #include "file.h"
 #include <QSet>
 
+#define FILE_LASTMODIFIED           "lastModified"
+#define FILE_ABSOLUTEFILEPATH       "absoluteFilePath"
+#define FILE_SIZE                   "size"
+
+/* Drive properties */
+#define CONFIG_ISMANAGED            "isManaged"
+#define CONFIG_DISPLAYNAME          "displayName"
+#define CONFIG_PATH                 "path"
+#define CONFIG_IDPATH               "IDPath"
+#define CONFIG_CAMERANAME           "CameraName"
+#define CONFIG_DEVICESIZE           "DeviceSize"
+#define CONFIG_BYTESAVAILABLE       "BytesAvailable"
+
+/* macros for Download Tab */
+#define CONFIG_FILESTODOWNLOAD      "FilesToDownLoad"
+#define CONFIG_FILTERTYPE           "FilterType"
+#define CONFIG_FILTER               "Filter"
+#define CONFIG_DOWNLOADTO           "DownloadTo"
+#define CONFIG_NEWNAME              "newName"
+#define CONFIG_ALLOWEXIF            "AllowEXIF"
+#define CONFIG_USEEXIFDATE          "UseEXIFDate"
+
+/* macros for Geotag Tab */
+#define CONFIG_GEOTAG               "GeoTag"
+#define CONFIG_GEOTAGMODE           "GeoTagMode"
+#define CONFIG_TRACKFOLDER          "TrackFolder"
+#define CONFIG_OPACCESSKEY          "OPAccessKey"
+#define CONFIG_OPSECRETKEY          "OPSecretKey"
+
+/* macros for Free Up Space Tab */
+#define CONFIG_FREEUPSPACE          "FreeUpSpace"
+#define CONFIG_TARGETNBPICS         "TargetNbPics"
+#define CONFIG_NBPICS               "NbPics"
+#define CONFIG_TARGETPERCENTAGE     "TargetPercentage"
+#define CONFIG_TARGETPERCENTAGEVALUE "TargetPercentageValue"
+#define CONFIG_PROTECTDAYS          "ProtectDays"
+#define CONFIG_PROTECTDAYSVALUE     "ProtectDaysValue"
+#define CONFIG_PROTECTTRANSFER      "ProtectTransfer"
+
+/* Automation box */
+#define CONFIG_AUTOMATION           "automation"
+
+
 class DeviceConfig {
 public:
     explicit DeviceConfig();

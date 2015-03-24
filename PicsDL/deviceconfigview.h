@@ -29,12 +29,45 @@ class TransferManager;
 #include <QModelIndex>
 #include <QTimer>
 #include <QElapsedTimer>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QSpinBox>
 
 class TransferDialog;
 
 namespace Ui {
 class DeviceConfigView;
 }
+
+class BoxView {
+public:
+    BoxView(QCheckBox *check_box_, QString field_name_, bool default_value_);
+    void setBox(QJsonObject *obj);
+    void readBox(QJsonObject *obj);
+    QCheckBox *check_box;
+    QString field_name;
+    bool default_value;
+};
+
+class LineEditView {
+public:
+    LineEditView(QLineEdit *line_edit_, QString field_name_, QString default_value_);
+    void setLine(QJsonObject *obj);
+    void readLine(QJsonObject *obj);
+    QLineEdit *line_edit;
+    QString field_name;
+    QString default_value;
+};
+
+class SpinBoxView {
+public:
+    SpinBoxView(QSpinBox *spin_box_, QString field_name_, int default_value_);
+    void setSpinBox(QJsonObject *obj);
+    void readSpinBox(QJsonObject *obj);
+    QSpinBox *spin_box;
+    QString field_name;
+    int default_value;
+};
 
 class DeviceConfigView : public QWidget
 {
@@ -47,8 +80,11 @@ public:
 
 private:
     bool editMode;
-    void FillWithConfig(QString id);
+    void FillWithConfig();
     Ui::DeviceConfigView *ui;
+    QList<BoxView> boxes;
+    QList<LineEditView> lines;
+    QList<SpinBoxView> spinBoxes;
 
     DeviceConfig *dc;
     QProgressDialog *pd;
@@ -66,9 +102,14 @@ public slots:
     void SaveConfig();
     void makeVisible(QModelIndex);
     void updateButton();
+    void updateFreeUpSimulation();
     void showEXIFTags();
     void updateStatusText();
     void go();
+    void postDownloadActions();
+
+private slots:
+    void handleLinks(QString link);
 };
 
 #endif // DEVICECONFIGVIEW_H

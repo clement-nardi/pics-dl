@@ -64,12 +64,12 @@ int DownloadModel::columnCount(const QModelIndex & parent) const {
 
 QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
     QJsonObject obj = dc->conf[id].toObject();
-    QString newName = obj["newName"].toString();
+    QString newName = obj[CONFIG_NEWNAME].toString();
     QString newPath;
     QDateTime lm;
     int tagidx = -1;
-    if (dc->conf[id].toObject()["AllowEXIF"].toBool() &&
-        dc->conf[id].toObject()["UseEXIFDate"].toBool()    ) {
+    if (dc->conf[id].toObject()[CONFIG_ALLOWEXIF].toBool() &&
+        dc->conf[id].toObject()[CONFIG_USEEXIFDATE].toBool()    ) {
         lm = QDateTime::fromTime_t(fi->dateTaken());
     } else {
         lm = QDateTime::fromTime_t(fi->lastModified);
@@ -96,7 +96,7 @@ QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
         if (endidx<0) break;
         QString tagName = newName.mid(tagidx+1,endidx-tagidx-1);
         QString value = "";
-        if (dc->conf[id].toObject()["AllowEXIF"].toBool()) {
+        if (dc->conf[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
             value = fi->getEXIFValue(tagName);
         }
         newName.replace("<" + tagName + ">",value);        
@@ -110,7 +110,7 @@ QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
     while (newName.contains(" /")) {newName.replace(" /","/");}
     while (newName.contains("/ ")) {newName.replace("/ ","/");}
 
-    newPath = obj["DownloadTo"].toString() + newName + "." + oExt;
+    newPath = obj[CONFIG_DOWNLOADTO].toString() + newName + "." + oExt;
     while (newPath.contains("//")) {newPath.replace("//","/");}
     return newPath;
 }
@@ -124,7 +124,7 @@ QString DownloadModel::tempPath(File *fi) const {
 }
 
 QString DownloadModel::guessCameraName() {
-    if (dc->conf[id].toObject()["AllowEXIF"].toBool()) {
+    if (dc->conf[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
         for (int i = selectedFileList.size()-1; i>=0; i--) {
             File * fi = selectedFileList.at(i);
             QString makeModel = fi->getEXIFValue("Make") + " " + fi->getEXIFValue("Model");
@@ -161,7 +161,7 @@ QString DownloadModel::getDCom(File *fi, bool forceQuery) const{
 
 bool DownloadModel::getAllCom(){
     qDebug() << "dpm.getAllCom";
-    QString newName = dc->conf[id].toObject()["newName"].toString();
+    QString newName = dc->conf[id].toObject()[CONFIG_NEWNAME].toString();
     int res = QDialog::Accepted;
     if (selectedFileList.size() > 0 &&
         (newName.contains("dCom") ||
@@ -417,7 +417,7 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
             switch (section) {
             case 0: return ""; break;
             case 1: return "File"; break;
-            case 2: return "Size"; break;
+            case 2: return FILE_SIZE; break;
             case 3: return "Date"; break;
             case 4: return "Destination"; break;
             }
@@ -431,6 +431,9 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
 
 bool pathLessThan(File *a, File *b) {
     return a->absoluteFilePath < b->absoluteFilePath;
+}
+bool dateLessThan(File *a, File *b) {
+    return a->lastModified < b->lastModified;
 }
 
 void DownloadModel::emptyFileList() {
@@ -446,8 +449,8 @@ void DownloadModel::loadPreview(QString id_) {
     id = id_;
     QJsonObject obj = dc->conf[id].toObject();
     sessionComment = "";
-    QString path = obj["path"].toString();
-    QString IDPath = obj["IDPath"].toString();
+    QString path = obj[CONFIG_PATH].toString();
+    QString IDPath = obj[CONFIG_IDPATH].toString();
 
     emptyFileList();
 
@@ -457,20 +460,19 @@ void DownloadModel::loadPreview(QString id_) {
     pdTimer.start();
     treatDir(File(0,path,0,true,IDPath));
     pd->hide();
-    /* Sort by path */
-    qSort(completeFileList.begin(), completeFileList.end(), pathLessThan);
-    reloadSelection();
+
+    reloadSelection(true);
 }
 
 
 bool DownloadModel::isBlacklisted(File element) {
-    if (dc->conf[id].toObject()["FilterType"].toInt() == 0) { /* from all directories */
+    if (dc->conf[id].toObject()[CONFIG_FILTERTYPE].toInt() == 0) { /* from all directories */
         return false;
     } else {
         bool patternMatchedOnceInPath = false;
         int reverseNonMatchingIndex = 0;
 
-        QStringList patternList = dc->conf[id].toObject()["Filter"].toString().split(";");
+        QStringList patternList = dc->conf[id].toObject()[CONFIG_FILTER].toString().split(";");
         QStringList directoryList = element.absoluteFilePath.split("/");
         if (!element.isDir) {
             directoryList.removeLast();
@@ -491,7 +493,7 @@ bool DownloadModel::isBlacklisted(File element) {
                 reverseNonMatchingIndex = dirIdx;
             }
         }
-        if (dc->conf[id].toObject()["FilterType"].toInt() == 1) { /* from all directories except: */
+        if (dc->conf[id].toObject()[CONFIG_FILTERTYPE].toInt() == 1) { /* from all directories except: */
             return patternMatchedOnceInPath;
         } else { /* from these directories: */
             int minMatchIdx = 1; /* Don't need to match H: in H:/DCIM/116_FUJI */
@@ -537,8 +539,8 @@ void DownloadModel::treatDir(File dirInfo) {
             pd->setMaximum(estimatedTotalFiles);
             pd->setValue(browsedFiles);
             if (pdTimer.elapsed() > 10000 &&
-                    (dc->conf[id].toObject()["Filter"].toString().size() == 0 ||
-                     dc->conf[id].toObject()["FilterType"].toInt() == 0)) {
+                    (dc->conf[id].toObject()[CONFIG_FILTER].toString().size() == 0 ||
+                     dc->conf[id].toObject()[CONFIG_FILTERTYPE].toInt() == 0)) {
                 pd->setLabelText(QString("Your device is being browsed, and this is taking a long time...\n") +
                                  QString("Once this dialog window is finished, you will be able to setup\n") +
                                  QString("some filters on the directories that may or may not be browsed.\n") +
@@ -561,9 +563,9 @@ void DownloadModel::treatDir(File dirInfo) {
     }
 }
 
-void DownloadModel::reloadSelection() {
+void DownloadModel::reloadSelection(bool firstTime) {
     qDebug() << "dpm.reloadSelection";
-    bool selectall = (dc->conf[id].toObject()["FilesToDownLoad"].toString() == "All");    
+    bool selectall = (dc->conf[id].toObject()[CONFIG_FILESTODOWNLOAD].toString() == "All");
     beginResetModel();
     selectedFileList.clear();
 
@@ -579,8 +581,10 @@ void DownloadModel::reloadSelection() {
             sortNeeded = true;
         }
     }
-    if (sortNeeded) {
+    if (sortNeeded || firstTime) {
         qSort(completeFileList.begin(), completeFileList.end(), pathLessThan);
+        completeFileList_byDate = completeFileList;
+        qSort(completeFileList_byDate.begin(), completeFileList_byDate.end(), dateLessThan);
     }
     pd->hide();
 
@@ -613,7 +617,7 @@ void DownloadModel::reloadSelection() {
             }
         }
     }
-    if (dc->conf[id].toObject()["AllowEXIF"].toBool()) {
+    if (dc->conf[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
         pdTimer.start();
         pd->hide();
         for (int i = 0; i < selectedFileList.size(); i++) {
@@ -622,7 +626,7 @@ void DownloadModel::reloadSelection() {
                 pd->setValue(i);
                 if (pd->wasCanceled()) {
                     QJsonObject obj = dc->conf[id].toObject();
-                    obj.insert("AllowEXIF",QJsonValue(false));
+                    obj.insert(CONFIG_ALLOWEXIF,QJsonValue(false));
                     dc->conf[id] = obj;
                     dc->saveConfig();
                     EXIFLoadCanceled(false);
@@ -646,11 +650,33 @@ void DownloadModel::reloadSelection() {
         pd->hide();
         qDebug() << "pd.hide()";
     }
+    averagePicSize = 0;
+    int countPics = 0;
     for (int i = 0; i < selectedFileList.size(); i++) {
         File *fi = selectedFileList.at(i);
         fi->modelRow = i;
         connect(fi,SIGNAL(readStarted(File*)),this,SLOT(readStarted(File*)));
         connect(fi,SIGNAL(writeFinished(File*)),this,SLOT(writeFinished(File*)));
+        if (fi->isPicture()) {
+            averagePicSize += fi->size;
+            countPics++;
+        }
+    }
+    if (countPics>0) {
+        averagePicSize /= countPics;
+    } else {
+        for (int i = completeFileList.size()-1; i>=0 && countPics < 50; i--) {
+            File *fi = completeFileList.at(i);
+            if (fi->isPicture()) {
+                averagePicSize += fi->size;
+                countPics++;
+            }
+        }
+        if (countPics > 0) {
+            averagePicSize /= countPics;
+        } else {
+            averagePicSize = 5*1024*1024;
+        }
     }
     endResetModel();
     reloaded();
@@ -671,15 +697,15 @@ void DownloadModel::writeFinished(File * file){
 QString DownloadModel::getTrackingFolder() {
     QJsonObject obj = dc->conf[id].toObject();
     QString trackingFolder;
-    if (obj["GeoTag"].toBool() == true) {
-        if (obj["GeoTagMode"].toString() == "OpenPaths.cc") {
+    if (obj[CONFIG_GEOTAG].toBool() == true) {
+        if (obj[CONFIG_GEOTAGMODE].toString() == "OpenPaths.cc") {
             /* Download location information from OpenPath.cc */
 
             /* Convert downloaded JSON into GPX in temporary folder */
 
             trackingFolder = "";
         } else {
-            trackingFolder = obj["TrackFolder"].toString();
+            trackingFolder = obj[CONFIG_TRACKFOLDER].toString();
         }
     } else {
         trackingFolder = "";
@@ -694,4 +720,94 @@ void DownloadModel::getStats(qint64 *totalSize, int *nbFiles) {
     }
     *nbFiles = selectedFileList.size();
 }
+
+
+void DownloadModel::freeUpSpace(bool isFakeRun,
+                                qint64 *targetAvailable,
+                                qint64 *bytesDeleted,
+                                int *nbFilesDeleted){
+    QJsonObject obj = dc->conf[id].toObject();
+    qint64 totalSpace = obj[CONFIG_DEVICESIZE].toString().toLongLong();
+    *targetAvailable = 0;
+    *bytesDeleted = 0;
+    *nbFilesDeleted = 0;
+    deletedFiles.clear();
+
+    if (obj[CONFIG_FREEUPSPACE].toBool() && totalSpace != 0) {
+        qint64 available = obj[CONFIG_BYTESAVAILABLE].toString().toLongLong();
+        bool protect_days = obj[CONFIG_PROTECTDAYS].toBool();
+        bool protect_selection = obj[CONFIG_PROTECTTRANSFER].toBool();
+        uint lastDate = QDateTime::currentDateTime().toTime_t();
+        if (protect_days) {
+            lastDate -= obj[CONFIG_PROTECTDAYSVALUE].toInt()*24*60*60;
+            qDebug() << "Will not delete files modified after " << QDateTime::fromTime_t(lastDate).toString();
+        }
+        if (obj[CONFIG_TARGETNBPICS].toBool()) {
+            qDebug() << "make space for " << obj[CONFIG_NBPICS].toString().toInt() << "NbFiles";
+            *targetAvailable = std::max(*targetAvailable,obj[CONFIG_NBPICS].toString().toInt()*averagePicSize);
+        }
+        if (obj[CONFIG_TARGETPERCENTAGE].toBool()) {
+            qDebug() << "target " << obj[CONFIG_TARGETPERCENTAGEVALUE].toInt() << "%";
+            *targetAvailable = std::max(*targetAvailable,obj[CONFIG_TARGETPERCENTAGEVALUE].toInt()*totalSpace/100);
+        }
+        qDebug() << "completeFileList_byDate.size()=" << completeFileList_byDate.size();
+        for (int i = 0;
+             i < completeFileList_byDate.size() &&
+             available + *bytesDeleted < *targetAvailable;
+             i++) {
+            File * fi = completeFileList_byDate.at(i);
+            if (dc->knownFiles.contains(*fi)) {
+                /* This file was transfered before */
+                if (fi->lastModified < lastDate) {
+                    if (protect_selection && selectedFileList.contains(fi)){
+                        if (!isFakeRun)
+                            qDebug() << "Do not delete this file as it was just downloaded:" << fi->fileName();
+                    } else {
+                        if (!isFakeRun) {
+                            bool removed = fi->remove();
+                            qDebug() << "Removing " << fi->absoluteFilePath << " -> " << (removed?"OK":"KO") ;
+                        }
+                        *bytesDeleted += fi->size;
+                        (*nbFilesDeleted)++;
+                        deletedFiles.append(fi);
+                    }
+
+                } else {
+                    if (!isFakeRun)
+                        qDebug() << "Stop deleting because lastModified=" << QDateTime::fromTime_t(fi->lastModified).toString();
+                    break;
+                }
+            } else {
+                if (!isFakeRun)
+                    qDebug() << "Do not delete unknown file: " << fi->absoluteFilePath;
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

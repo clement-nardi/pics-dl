@@ -93,7 +93,8 @@ SOURCES += main.cpp\
     progressbarlabel.cpp \
     wpdiodevice.cpp \
     about.cpp \
-    transferdialog.cpp
+    transferdialog.cpp \
+    globals.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -116,7 +117,8 @@ HEADERS  += mainwindow.h \
     progressbarlabel.h \
     wpdiodevice.h \
     about.h \
-    transferdialog.h
+    transferdialog.h \
+    globals.h
 
 
 FORMS    += mainwindow.ui \

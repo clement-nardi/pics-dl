@@ -1810,4 +1810,14 @@ bool File::setHidden() {
 }
 
 
+bool File::remove() {
+    if (!IDPath.startsWith("WPD:/")) {
+        QFile file(absoluteFilePath);
+        return file.remove();
+#ifdef _WIN32
+    } else if (IDPath.startsWith("WPD:/")) {
+        qDebug() << "Removing a file on a Windows Portable Device is not yet supported in PicsDL";
+#endif
+    }
+}
 

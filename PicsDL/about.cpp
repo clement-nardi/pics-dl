@@ -3,6 +3,7 @@
 #include <QUrl>
 #include <QDesktopServices>
 #include <QDebug>
+#include "globals.h"
 
 About::About(QWidget *parent) :
     QWidget(parent),
@@ -11,7 +12,7 @@ About::About(QWidget *parent) :
     ui->setupUi(this);
     ui->picsdl_version->setText(QString("Version %1 - Build %2")
                                 .arg(QCoreApplication::applicationVersion())
-                                .arg(BUILD));
+                                .arg(build));
     connect(ui->main_label, SIGNAL(linkActivated(QString)),this,SLOT(handleLink(QString)));
 }
 

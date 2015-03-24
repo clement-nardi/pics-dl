@@ -52,6 +52,9 @@ public:
     void showEXIFTags(int row);
     QString guessCameraName();
     void getStats(qint64 *totalSize, int *nbFiles);
+    qint64 averagePicSize;
+    void freeUpSpace(bool isFakeRun, qint64 *targetAvailable, qint64 *bytesDeleted, int *nbFilesDeleted);
+    QList<File*> deletedFiles;
 private:
     QElapsedTimer pdTimer;
     DeviceConfig *dc;
@@ -59,6 +62,7 @@ private:
     QString id;
     QList<File*> blacklistedDirectories;
     QList<File*> completeFileList;
+    QList<File*> completeFileList_byDate;
     QList<File*> selectedFileList;
     bool isBlacklisted(File info);
     void treatDir(File dirInfo);
@@ -80,7 +84,7 @@ signals:
     void EXIFLoadCanceled(bool);
     void downloadFinished();
 public slots:
-    void reloadSelection();
+    void reloadSelection(bool firstTime = false);
     bool getAllCom();
 private slots:
     void readStarted(File * file);

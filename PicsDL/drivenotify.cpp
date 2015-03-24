@@ -105,7 +105,9 @@ void DriveNotify::reloadMountPoints(bool firstTime) {
             if (!firstTime) {
                 driveAdded(si.rootPath(),
                            QString("%1;%2;%3").arg(si.name()).arg(QString(si.fileSystemType())).arg(si.bytesTotal()),
-                           si.displayName() );
+                           si.displayName(),
+                           si.bytesTotal(),
+                           si.bytesAvailable());
                 newFound = true;
             }
         }
@@ -180,7 +182,7 @@ bool DriveNotify::nativeEvent(const QByteArray & eventType, void * message, long
                     if (content.size() == 0) {
                         qDebug() << "ignoring a WPD drive because it is empty";
                     } else {
-                        driveAdded("WPD:/" + id, id, name);
+                        driveAdded("WPD:/" + id, id, name,0,0);
                     }
                 }
             }

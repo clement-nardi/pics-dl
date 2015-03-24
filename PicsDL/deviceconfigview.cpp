@@ -30,18 +30,68 @@
 #include "downloadmodel.h"
 #include "deviceconfig.h"
 #include "transferdialog.h"
+#include <QMessageBox>
 
-DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_, QWidget *parent) :
+
+
+BoxView::BoxView(QCheckBox *check_box_, QString field_name_, bool default_value_) {
+    check_box = check_box_;
+    field_name = field_name_;
+    default_value = default_value_;
+}
+void BoxView::setBox(QJsonObject *obj) {
+    if (obj->value(field_name).isNull() || obj->value(field_name).isUndefined()) {
+        obj->insert(field_name,QJsonValue(default_value));
+    }
+    check_box->setChecked(obj->value(field_name).toBool());
+}
+void BoxView::readBox(QJsonObject *obj) {
+    obj->insert(field_name,QJsonValue(check_box->isChecked()));
+}
+
+LineEditView::LineEditView(QLineEdit *line_edit_, QString field_name_, QString default_value_){
+    line_edit = line_edit_;
+    field_name = field_name_;
+    default_value = default_value_;
+}
+void LineEditView::setLine(QJsonObject *obj){
+    if (obj->value(field_name).isNull() || obj->value(field_name).isUndefined()) {
+        obj->insert(field_name,QJsonValue(default_value));
+    }
+    line_edit->setText(obj->value(field_name).toString());
+}
+void LineEditView::readLine(QJsonObject *obj){
+    obj->insert(field_name,QJsonValue(line_edit->text()));
+}
+
+SpinBoxView::SpinBoxView(QSpinBox *spin_box_, QString field_name_, int default_value_){
+    spin_box = spin_box_;
+    field_name = field_name_;
+    default_value = default_value_;
+}
+void SpinBoxView::setSpinBox(QJsonObject *obj){
+    if (obj->value(field_name).isNull() || obj->value(field_name).isUndefined()) {
+        obj->insert(field_name,QJsonValue(default_value));
+    }
+    spin_box->setValue(obj->value(field_name).toInt());
+}
+void SpinBoxView::readSpinBox(QJsonObject *obj){
+    obj->insert(field_name,QJsonValue(spin_box->value()));
+}
+
+DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id_, bool editMode_, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DeviceConfigView)
 {
     dpm = NULL;
     tm = NULL;
     dc = dc_;
+    id = id_;
     editMode = editMode_;
     pd = new QProgressDialog(this);
     td = new TransferDialog(this);
     ui->setupUi(this);
+    ui->Tabs->setCurrentIndex(0);
 
     connect(ui->openButton, SIGNAL(clicked()),this, SLOT(chooseDLTo()));
     connect(ui->trackOpenButton, SIGNAL(clicked()),this, SLOT(chooseTrackFolder()));
@@ -49,7 +99,7 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
 
     setAttribute(Qt::WA_DeleteOnClose, true);
     setAttribute(Qt::WA_QuitOnClose, false);
-    FillWithConfig(id);
+    FillWithConfig();
 
     if (!editMode) {
         dpm = new DownloadModel(dc, pd, editMode);
@@ -67,10 +117,14 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id, bool editMode_
         //ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
         connect(ui->automation, SIGNAL(performAction()),this,SLOT(go()));
+        connect(ui->free_up_simulation,SIGNAL(linkActivated(QString)),this,SLOT(handleLinks(QString)));
+    } else {
+        ui->goButton->setText("Save");
     }
     //setCornerWidget(new QPushButton("Go",this),Qt::BottomRightCorner);
 
     updateStatusText();
+    updateFreeUpSimulation();
     showMaximized();
 
     /* automation stuff */
@@ -106,12 +160,11 @@ void DeviceConfigView::showEvent(QShowEvent * event) {
     QWidget::showEvent(event);
 }
 
-void DeviceConfigView::FillWithConfig(QString id_) {
+void DeviceConfigView::FillWithConfig() {
     qDebug() << "FillWithConfig";
-    id = id_;
     QJsonObject obj = dc->conf[id].toObject();
-    QString displayName = obj["displayName"].toString();
-    QString path = obj["path"].toString();
+    QString displayName = obj[CONFIG_DISPLAYNAME].toString();
+    QString path = obj[CONFIG_PATH].toString();
     QString title = QCoreApplication::applicationName() + " v" + QCoreApplication::applicationVersion()
                     + " - " + displayName;
     if ( displayName != path) {
@@ -119,78 +172,71 @@ void DeviceConfigView::FillWithConfig(QString id_) {
     }
     this->setWindowTitle(title);
 
+    boxes << BoxView(ui->allowEXIFBox,CONFIG_ALLOWEXIF,false);
+    boxes << BoxView(ui->UseEXIFDateBox,CONFIG_USEEXIFDATE,true);
+    boxes << BoxView(ui->automation->box,CONFIG_AUTOMATION,false);
+    boxes << BoxView(ui->GeoTagBox,CONFIG_GEOTAG,false);
+    boxes << BoxView(ui->free_up_box,CONFIG_FREEUPSPACE,false);
+    boxes << BoxView(ui->target_pct_box,CONFIG_TARGETPERCENTAGE,false);
+    boxes << BoxView(ui->nbPics_box,CONFIG_TARGETNBPICS,true);
+    boxes << BoxView(ui->protect_days_box,CONFIG_PROTECTDAYS,true);
+    boxes << BoxView(ui->protect_transfer_box,CONFIG_PROTECTTRANSFER,true);
+
+    lines << LineEditView(ui->filter,CONFIG_FILTER,obj[CONFIG_IDPATH].toString().startsWith("WPD")?"DCIM;Camera;Auto;*ANDRO;user;media;*iPhone*;*APPLE;Pictures;Screenshots;Download;WhatsApp*;Media":"");
+    lines << LineEditView(ui->DLToLine,CONFIG_DOWNLOADTO,QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0));
+    lines << LineEditView(ui->newNameEdit,CONFIG_NEWNAME,"yyyy-MM/yyyy-MM-dd/yyyy-MM-dd_HH-mm-ss_oName");
+    lines << LineEditView(ui->TrackFolderLine,CONFIG_TRACKFOLDER,"");
+    lines << LineEditView(ui->OPAccessKeyLine,CONFIG_OPACCESSKEY,"");
+    lines << LineEditView(ui->OPSecretKeyLine,CONFIG_OPSECRETKEY,"");
+    lines << LineEditView(ui->nbPics,CONFIG_NBPICS,"200");
+
+    spinBoxes << SpinBoxView(ui->target_pct,CONFIG_TARGETPERCENTAGEVALUE,25);
+    spinBoxes << SpinBoxView(ui->protect_days,CONFIG_PROTECTDAYSVALUE,30);
+
+
     /* Download part */
-    if (obj["FilesToDownLoad"].isNull() || obj["FilesToDownLoad"].isUndefined()) {
-        obj.insert("FilesToDownLoad",QJsonValue(QString("New")));
+    if (obj[CONFIG_FILESTODOWNLOAD].isNull() || obj[CONFIG_FILESTODOWNLOAD].isUndefined()) {
+        obj.insert(CONFIG_FILESTODOWNLOAD,QJsonValue(QString("New")));
     }
-    if (obj["FilesToDownLoad"].toString() == "All") {
+    if (obj[CONFIG_FILESTODOWNLOAD].toString() == "All") {
         ui->allRadio->setChecked(true);
     } else {
         ui->newRadio->setChecked(true);
     }
 
-    if (obj["FilterType"].isNull() || obj["FilterType"].isUndefined()) {
-        if (obj["IDPath"].toString().startsWith("WPD")) {
-            obj.insert("FilterType",QJsonValue(2));
-            obj.insert("Filter",QJsonValue(QString("DCIM;Camera;Auto;*ANDRO;user;media;*iPhone*;*APPLE;Pictures;Screenshots;Download;WhatsApp*;Media")));
+    if (obj[CONFIG_FILTERTYPE].isNull() || obj[CONFIG_FILTERTYPE].isUndefined()) {
+        if (obj[CONFIG_IDPATH].toString().startsWith("WPD")) {
+            obj.insert(CONFIG_FILTERTYPE,QJsonValue(2));
         } else {
-            obj.insert("FilterType",QJsonValue(0));
-            obj.insert("Filter",QJsonValue(QString("")));
+            obj.insert(CONFIG_FILTERTYPE,QJsonValue(0));
         }
     }
-    ui->filterType->setCurrentIndex(obj["FilterType"].toInt());
-    ui->filter->setText(obj["Filter"].toString());
-    ui->filter->setEnabled(ui->filterType->currentIndex() != 0);
+    ui->filterType->setCurrentIndex(obj[CONFIG_FILTERTYPE].toInt());
 
     /* Organize part */
-    if (obj["DownloadTo"].isNull() || obj["DownloadTo"].isUndefined()) {
-        obj.insert("DownloadTo",QJsonValue(QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0)));
-    }
-    ui->DLToLine->setText(obj["DownloadTo"].toString());
-    if (obj["newName"].isNull() || obj["newName"].isUndefined()) {
-        obj.insert("newName",QJsonValue(QString("yyyy-MM/yyyy-MM-dd/yyyy-MM-dd_HH-mm-ss_oName")));
-    }
-    ui->newNameEdit->setText(obj["newName"].toString());
-    if (obj["AllowEXIF"].isNull() || obj["AllowEXIF"].isUndefined()) {
-        obj.insert("AllowEXIF",QJsonValue(false));
-    }
-    ui->allowEXIFBox->setChecked(obj["AllowEXIF"].toBool());
-    if (obj["UseEXIFDate"].isNull() || obj["UseEXIFDate"].isUndefined()) {
-        obj.insert("UseEXIFDate",QJsonValue(true));
-    }
-    ui->UseEXIFDateBox->setChecked(obj["UseEXIFDate"].toBool());
-    /* Automation */
-    if (obj["automation"].isNull() || obj["automation"].isUndefined()) {
-        obj.insert("automation",QJsonValue(false));
-    }
-    ui->automation->box->setChecked(obj["automation"].toBool());
 
     /* Geo Tagging */
-    if (obj["GeoTag"].isNull() || obj["GeoTag"].isUndefined()) {
-        obj.insert("GeoTag",QJsonValue(false));
+    if (obj[CONFIG_GEOTAGMODE].isNull() || obj[CONFIG_GEOTAGMODE].isUndefined()) {
+        obj.insert(CONFIG_GEOTAGMODE,QJsonValue(QString("Track Folder")));
     }
-    ui->GeoTagBox->setChecked(obj["GeoTag"].toBool());
-    if (obj["GeoTagMode"].isNull() || obj["GeoTagMode"].isUndefined()) {
-        obj.insert("GeoTagMode",QJsonValue(QString("Track Folder")));
-    }
-    if (obj["GeoTagMode"].toString() == "OpenPaths.cc") {
+    if (obj[CONFIG_GEOTAGMODE].toString() == "OpenPaths.cc") {
         ui->OpenPathsRadio->setChecked(true);
     } else {
         ui->TrackFolderRadio->setChecked(true);
     }
-    if (obj["TrackFolder"].isNull() || obj["TrackFolder"].isUndefined()) {
-        obj.insert("TrackFolder",QJsonValue(QString("")));
-    }
-    ui->TrackFolderLine->setText(obj["TrackFolder"].toString());
-    if (obj["OPAccessKey"].isNull() || obj["OPAccessKey"].isUndefined()) {
-        obj.insert("OPAccessKey",QJsonValue(QString("")));
-    }
-    ui->OPAccessKeyLine->setText(obj["OPAccessKey"].toString());
-    if (obj["OPSecretKey"].isNull() || obj["OPSecretKey"].isUndefined()) {
-        obj.insert("OPSecretKey",QJsonValue(QString("")));
-    }
-    ui->OPSecretKeyLine->setText(obj["OPSecretKey"].toString());
 
+    for (int i = 0; i < boxes.size(); i++) {
+        boxes[i].setBox(&obj);
+        connect(boxes.at(i).check_box,SIGNAL(clicked()),this,SLOT(CopyToConfig()));
+    }
+    for (int i = 0; i < lines.size(); i++) {
+        lines[i].setLine(&obj);
+        connect(lines.at(i).line_edit,SIGNAL(textEdited(QString)),this,SLOT(CopyToConfig()));
+    }
+    for (int i = 0; i < spinBoxes.size(); i++) {
+        spinBoxes[i].setSpinBox(&obj);
+        connect(spinBoxes.at(i).spin_box,SIGNAL(valueChanged(int)),this,SLOT(CopyToConfig()));
+    }
 
     dc->conf[id] = obj;
     dc->saveConfig();
@@ -198,6 +244,11 @@ void DeviceConfigView::FillWithConfig(QString id_) {
     //ui->tableView->resizeRowsToContents();
 
     updateButton();
+
+    if (obj[CONFIG_IDPATH].toString().startsWith("WPD")) {
+        ui->free_up_box->setEnabled(false);
+    }
+    ui->OpenPathsRadio->setEnabled(false);
 }
 
 
@@ -212,6 +263,7 @@ void DeviceConfigView::updateButton(){
     bool exifAllowed = ui->allowEXIFBox->isChecked();
     ui->UseEXIFDateBox->setEnabled(exifAllowed);
     ui->seeAvTagsButton->setEnabled(exifAllowed);
+    ui->filter->setEnabled(ui->filterType->currentIndex() != 0);
 }
 
 void DeviceConfigView::CopyToConfig() {
@@ -220,44 +272,43 @@ void DeviceConfigView::CopyToConfig() {
     bool reloadNeeded = false;
 
     /* Download part */
-    if ((obj["FilesToDownLoad"].toString() == "All") != ui->allRadio->isChecked() ||
-        obj["FilterType"].toInt() != ui->filterType->currentIndex() ||
-        obj["Filter"].toString() != ui->filter->text()) {
+    if ((obj[CONFIG_FILESTODOWNLOAD].toString() == "All") != ui->allRadio->isChecked() ||
+        obj[CONFIG_FILTERTYPE].toInt() != ui->filterType->currentIndex() ||
+        obj[CONFIG_FILTER].toString() != ui->filter->text()) {
         reloadNeeded = true;
     }
-    if (ui->allRadio->isChecked()) {
-        obj.insert("FilesToDownLoad",QJsonValue(QString("All")));
-    } else {
-        obj.insert("FilesToDownLoad",QJsonValue(QString("New")));
-    }
-    obj.insert("FilterType",ui->filterType->currentIndex());
 
-    obj.insert("Filter",QJsonValue(ui->filter->text()));
-    ui->filter->setEnabled(ui->filterType->currentIndex() != 0);
+    if (ui->allRadio->isChecked()) {
+        obj.insert(CONFIG_FILESTODOWNLOAD,QJsonValue(QString("All")));
+    } else {
+        obj.insert(CONFIG_FILESTODOWNLOAD,QJsonValue(QString("New")));
+    }
+    obj.insert(CONFIG_FILTERTYPE,ui->filterType->currentIndex());
+
 
     /* Organize part */
-    obj.insert("DownloadTo",QJsonValue(ui->DLToLine->text()));
-    obj.insert("newName",QJsonValue(ui->newNameEdit->text()));
-    if (obj["AllowEXIF"].toBool() == false &&
+    if (obj[CONFIG_ALLOWEXIF].toBool() == false &&
         ui->allowEXIFBox->isChecked()) {
         reloadNeeded = true;
     }
-    obj.insert("AllowEXIF",QJsonValue(ui->allowEXIFBox->isChecked()));
-    obj.insert("UseEXIFDate",QJsonValue(ui->UseEXIFDateBox->isChecked()));
-
-    /* Automation */
-    obj.insert("automation",QJsonValue(ui->automation->box->isChecked()));
 
     /* GeoTagging */
-    obj.insert("GeoTag",QJsonValue(ui->GeoTagBox->isChecked()));
     if (ui->OpenPathsRadio->isChecked()) {
-        obj.insert("GeoTagMode",QJsonValue(QString("OpenPaths.cc")));
+        obj.insert(CONFIG_GEOTAGMODE,QJsonValue(QString("OpenPaths.cc")));
     } else {
-        obj.insert("GeoTagMode",QJsonValue(QString("Track Folder")));
+        obj.insert(CONFIG_GEOTAGMODE,QJsonValue(QString("Track Folder")));
     }
-    obj.insert("TrackFolder",QJsonValue(ui->TrackFolderLine->text()));
-    obj.insert("OPAccessKey",QJsonValue(ui->OPAccessKeyLine->text()));
-    obj.insert("OPSecretKey",QJsonValue(ui->OPSecretKeyLine->text()));
+
+
+    for (int i = 0; i < boxes.size(); i++) {
+        boxes[i].readBox(&obj);
+    }
+    for (int i = 0; i < lines.size(); i++) {
+        lines[i].readLine(&obj);
+    }
+    for (int i = 0; i < spinBoxes.size(); i++) {
+        spinBoxes[i].readSpinBox(&obj);
+    }
 
     dc->conf[id] = obj;
     //dc->saveConfig();
@@ -270,6 +321,10 @@ void DeviceConfigView::CopyToConfig() {
     }
     //ui->tableView->resizeRowsToContents();
     //ui->tableView->resizeColumnsToContents();
+    if (ui->Tabs->currentIndex() == 2 || reloadNeeded) {
+        updateFreeUpSimulation();
+    }
+
     updateButton();
     updateStatusText();
 }
@@ -280,7 +335,7 @@ void DeviceConfigView::SaveConfig() {
         QString guessedCameraName = dpm->guessCameraName();
         if (guessedCameraName > 0) {
             QJsonObject obj = dc->conf[id].toObject();
-            obj.insert("CameraName",QJsonValue(guessedCameraName));
+            obj.insert(CONFIG_CAMERANAME,QJsonValue(guessedCameraName));
             dc->conf[id] = obj;
         }
     }
@@ -318,16 +373,89 @@ void DeviceConfigView::updateStatusText(){
     ui->statusText->setText(QString("%1 files to download for a total of %2").arg(nbFilesToDownload).arg(File::size2Str(totalToDownload)));
 }
 
+void DeviceConfigView::updateFreeUpSimulation() {
+    qint64 targetAvailable = 0;
+    qint64 bytesDeleted = 0;
+    int nbFilesDeleted = 0;
+    qint64 available = dc->conf[id].toObject()[CONFIG_BYTESAVAILABLE].toString().toLongLong();
+    qint64 totalSpace = dc->conf[id].toObject()[CONFIG_DEVICESIZE].toString().toLongLong();
+    if (dpm != NULL) {
+        int nbPics = ui->nbPics->text().toInt();
+        dpm->freeUpSpace(true,&targetAvailable,&bytesDeleted,&nbFilesDeleted);
+        ui->free_up_nbpics_label->setText(QString("pictures. 1 picture = %1, so %2 pictures = %3")
+                                          .arg(File::size2Str(dpm->averagePicSize))
+                                          .arg(nbPics)
+                                          .arg(File::size2Str(dpm->averagePicSize*nbPics)));
+    }
+
+    ui->free_up_simulation->setText(QString("<html><head/><body><p>%1 (%2\%)<br/>%3 (<a href=\"files to delete\"><span style=\" text-decoration: underline; color:#0000ff;\">%4 files</span></a>)<br/>%5 (%6\%)<br/>%7 (%8\%)</p></body></html>")
+                                    .arg(File::size2Str(available))
+                                    .arg((float)available*100/(float)totalSpace,0,'f',1)
+                                    .arg(File::size2Str(bytesDeleted))
+                                    .arg(nbFilesDeleted)
+                                    .arg(File::size2Str(available+bytesDeleted))
+                                    .arg((float)(available+bytesDeleted)*100/(float)totalSpace,0,'f',1)
+                                    .arg(File::size2Str(targetAvailable))
+                                    .arg((float)targetAvailable*100/(float)totalSpace,0,'f',1));
+
+}
+
+
 void DeviceConfigView::go(){
     SaveConfig();
     if (tm != NULL) {        
         if (!dpm->getAllCom()) return;
 
-        connect(tm,SIGNAL(downloadFinished()),this,SLOT(deleteLater()));
+        connect(tm,SIGNAL(downloadFinished()),this,SLOT(postDownloadActions()));
         ui->Tabs->setCurrentIndex(0);
         td->showProgress(tm);
         tm->launchDownloads();
+    } else {
+        deleteLater();
     }
 }
 
+void DeviceConfigView::postDownloadActions(){
+    if (dpm != NULL) {
+        qint64 targetAvailable = 0;
+        qint64 bytesDeleted = 0;
+        int nbFilesDeleted = 0;
+        dpm->freeUpSpace(true,&targetAvailable,&bytesDeleted,&nbFilesDeleted);
 
+        if (nbFilesDeleted > 0) {
+            td->hide();
+            ui->Tabs->setCurrentIndex(2);
+            QMessageBox mb(QMessageBox::Question,
+                           QCoreApplication::applicationName(),
+                           QString("PicsDL is about to delete %1 files (%2) from your device.\nAre you sure?")
+                           .arg(nbFilesDeleted)
+                           .arg(File::size2Str(bytesDeleted)),
+                           QMessageBox::Yes | QMessageBox::No);
+            int answer = mb.exec();
+            if (answer == QMessageBox::Yes) {
+                dpm->freeUpSpace(false,&targetAvailable,&bytesDeleted,&nbFilesDeleted);
+            }
+        }
+    }
+    deleteLater();
+}
+
+
+void DeviceConfigView::handleLinks(QString link){
+    qDebug() << QString("handleLinks(%1)").arg(link);
+    if (dpm != NULL) {
+        QString file_list_str;
+        for (int i = 0; i < dpm->deletedFiles.size(); i++) {
+            file_list_str += dpm->deletedFiles.at(i)->absoluteFilePath + "\n";
+        }
+        if (dpm->deletedFiles.size() == 0) {
+            file_list_str += "None!";
+        }
+
+        QMessageBox mb(QMessageBox::Information,
+                       "Files to delete",
+                       file_list_str,
+                       QMessageBox::Ok);
+        mb.exec();
+    }
+}

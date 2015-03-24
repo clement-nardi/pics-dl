@@ -72,6 +72,7 @@ public:
     bool copyWithDirs(QString to);
     bool moveWithDirs(QString to);
     bool setHidden();
+    bool remove();
 
     void launchTransferTo(QString to, TransferManager *tm_, bool geotag_);
     QBuffer * buffer;
