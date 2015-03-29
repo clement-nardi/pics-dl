@@ -26,31 +26,31 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include "deviceconfig.h"
+class DriveNotify;
 
 class DriveView : public QObject
 {
     Q_OBJECT
 public:
-    explicit DriveView(QString id, DeviceConfig *dc, QObject *parent = 0);
+    explicit DriveView(QString id, DeviceConfig *dc, DriveNotify *dn_, QObject *parent = 0);
     DeviceConfig *dc;
+    DriveNotify *dn;
     QString id;
-    QLabel *label;
     QCheckBox *managedBox;
+    QWidget *managedBox_centered;
     QPushButton *removeButton;
     QPushButton *editButton;
     QPushButton *launchButton;
-    QLabel *driveIcon;
-
-private:
-    void changeState(bool enabled);
+    int row;
 
 signals:
-    void changed();
+    void changed(int);
+    void launchTransfer(QString path,QString serial,QString name, qint64 device_size, qint64 bytes_available);
 public slots:
     void removed();
     void edit();
+    void launch();
     void managed(bool);
-    void loadName();
 
 };
 

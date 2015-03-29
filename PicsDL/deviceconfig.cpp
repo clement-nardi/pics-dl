@@ -132,3 +132,8 @@ void DeviceConfig::loadKnownFiles(){
         qDebug() << "Could not load the known files from file " << knownFiles_FileName;
     }
 }
+
+
+void DeviceConfig::deviceFieldChanged(QString id){
+    emit configStructuralChange(id);
+}

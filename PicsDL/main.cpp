@@ -109,14 +109,15 @@ int main(int argc, char *argv[])
     qDebug() << QCoreApplication::applicationDirPath();
 
     DeviceConfig *dc = new DeviceConfig();
-    MainWindow w(dc);
-    DeviceManager *dm = new DeviceManager(dc);
     DriveNotify *dn = new DriveNotify();
+    DeviceManager *dm = new DeviceManager(dc);
+    MainWindow w(dc,dn,dm);
 
     im->connect(im, SIGNAL(applicationLaunched()),&w, SLOT(applicationLaunched()));
 
     dm->connect(dn,SIGNAL(driveAdded(QString,QString,QString,qint64,qint64)), dm, SLOT(treatDrive(QString,QString,QString,qint64,qint64)));
-    dm->connect(dm, SIGNAL(newID(QString)), &w, SLOT(insertDrive(QString)));
+    dm->connect(dn,SIGNAL(deviceUnplugged(QString)),dc,SLOT(deviceFieldChanged(QString)));
+
     //w.show();
 
     int res = a.exec();
@@ -124,7 +125,7 @@ int main(int argc, char *argv[])
     delete dn;
     delete dm;
     delete dc;
-    if (argc > 1 && argv[1] == "-v") {
+    if (argc > 1 && QString(argv[1]) == "-v") {
         debugFile->close();
     }
     return res;

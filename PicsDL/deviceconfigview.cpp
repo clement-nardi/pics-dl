@@ -410,6 +410,12 @@ void DeviceConfigView::go(){
         ui->Tabs->setCurrentIndex(0);
         td->showProgress(tm);
         tm->launchDownloads();
+
+        QJsonObject obj = dc->conf[id].toObject();
+        obj.insert(CONFIG_LASTTRANSFER,QJsonValue(QString("%1").arg(QDateTime::currentDateTime().toTime_t())));
+        dc->conf[id] = obj;
+        dc->deviceFieldChanged(id);
+        SaveConfig();
     } else {
         deleteLater();
     }

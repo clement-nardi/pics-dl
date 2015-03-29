@@ -89,14 +89,45 @@ DriveNotify::~DriveNotify() {
 
 }
 
+QString DriveNotify::getSerial(QStorageInfo si){
+    return QString("%1;%2;%3").arg(si.name()).arg(QString(si.fileSystemType())).arg(si.bytesTotal());
+}
+
+void DriveNotify::reBuildSerialMap(){
+    serialMap.clear();
+    for (int i = 0; i< mountPoints.size(); i++) {
+        QStorageInfo si = mountPoints.at(i);
+        serialMap.insert(getSerial(si),si);
+    }
+}
+
+bool DriveNotify::getDeviceInfo(QString serial,
+                   QString *path,
+                   QString *name,
+                   qint64 *device_size,
+                   qint64 *bytes_available){
+    QStorageInfo si = serialMap.value(serial);
+    if (si.isValid()) {
+        if (path != NULL)               *path               = si.rootPath();
+        if (name != NULL)               *name               = si.displayName();
+        if (device_size != NULL)        *device_size        = si.bytesTotal();
+        if (bytes_available != NULL)    *bytes_available    = si.bytesAvailable();
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void DriveNotify::reloadMountPoints(bool firstTime) {
     qDebug() << "Reloading mount points...";
 
     nbTries++;
     QList<QStorageInfo> oldList = mountPoints;
     mountPoints = QStorageInfo::mountedVolumes();
+    reBuildSerialMap();
     qDebug() << "Number of mount points: " << oldList.size() << " -> " << mountPoints.size();
 
+    /* Detect new devices */
     bool newFound = false;
     for (int i = 0; i< mountPoints.size(); i++) {
         QStorageInfo si = mountPoints.at(i);
@@ -104,7 +135,7 @@ void DriveNotify::reloadMountPoints(bool firstTime) {
             qDebug() << "New Mount Point: " << si.rootPath() << si.displayName();
             if (!firstTime) {
                 driveAdded(si.rootPath(),
-                           QString("%1;%2;%3").arg(si.name()).arg(QString(si.fileSystemType())).arg(si.bytesTotal()),
+                           getSerial(si),
                            si.displayName(),
                            si.bytesTotal(),
                            si.bytesAvailable());
@@ -112,6 +143,15 @@ void DriveNotify::reloadMountPoints(bool firstTime) {
             }
         }
     }
+    /* Detect unplugged devices */
+    for (int i = 0; i< oldList.size(); i++) {
+        QStorageInfo si = oldList.at(i);
+        if (!mountPoints.contains(si)) {
+            qDebug() << "Device unplugged: " << si.rootPath() << si.displayName();
+            emit deviceUnplugged(getSerial(si));
+        }
+    }
+
     if (!newFound && oldList.size() == mountPoints.size() && nbTries < 10) {
         qDebug() << QString("Tentative #%1. Will try again in 2s.").arg(nbTries);
         tryAgainTimer.start();

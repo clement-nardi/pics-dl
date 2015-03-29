@@ -37,6 +37,7 @@
 #define CONFIG_CAMERANAME           "CameraName"
 #define CONFIG_DEVICESIZE           "DeviceSize"
 #define CONFIG_BYTESAVAILABLE       "BytesAvailable"
+#define CONFIG_LASTTRANSFER         "LastTransfer"
 
 /* macros for Download Tab */
 #define CONFIG_FILESTODOWNLOAD      "FilesToDownLoad"
@@ -68,7 +69,8 @@
 #define CONFIG_AUTOMATION           "automation"
 
 
-class DeviceConfig {
+class DeviceConfig : public QObject {
+    Q_OBJECT
 public:
     explicit DeviceConfig();
 
@@ -81,9 +83,14 @@ public:
     void loadKnownFiles();
 
 private:
-
     QString configFileName;
     QString knownFiles_FileName;
+
+public slots:
+    void deviceFieldChanged(QString id);
+
+signals:
+    void configStructuralChange(QString id);
 
 };
 

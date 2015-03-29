@@ -31,7 +31,7 @@ DESTDIR = bin
 
 MAJOR=0
 MINOR=4
-PATCH=0
+PATCH=1
 
 
 !contains(BUILD_NUMBER_UPDATE,false) {
@@ -94,7 +94,8 @@ SOURCES += main.cpp\
     wpdiodevice.cpp \
     about.cpp \
     transferdialog.cpp \
-    globals.cpp
+    globals.cpp \
+    devicemodel.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -118,7 +119,8 @@ HEADERS  += mainwindow.h \
     wpdiodevice.h \
     about.h \
     transferdialog.h \
-    globals.h
+    globals.h \
+    devicemodel.h
 
 
 FORMS    += mainwindow.ui \

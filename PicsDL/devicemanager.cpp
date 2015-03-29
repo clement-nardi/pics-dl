@@ -45,7 +45,11 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
 
         /* avoid asking twice the same question */
         driveConfig.insert(CONFIG_ISMANAGED,QJsonValue(false));
+        driveConfig[CONFIG_DISPLAYNAME] = displayName;
+        driveConfig[CONFIG_DEVICESIZE] = QString("%1").arg(deviceSize);
+        driveConfig[CONFIG_BYTESAVAILABLE] = QString("%1").arg(bytes_available);
         dc->conf.insert(serial,driveConfig);
+        dc->deviceFieldChanged(serial);
         QString deviceDescription = displayName;
         if (displayName != drivePath) {
             deviceDescription += " (" + drivePath + ")";
@@ -62,10 +66,11 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
         driveConfig.insert(CONFIG_ISMANAGED,QJsonValue(answer == QMessageBox::Yes));
         dc->conf.insert(serial,driveConfig);
         dc->saveConfig();
-        newID(serial);
     } else {
         qDebug() << "known drive";
     }
+    /* Notify each time a drive is plugged, to update the "launch" button */
+    dc->deviceFieldChanged(serial);
 
     if (dc->conf[serial].toObject()[CONFIG_ISMANAGED].toBool() == true) {
         bool isAlreadyOpened = false;

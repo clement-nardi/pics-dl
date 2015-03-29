@@ -27,18 +27,22 @@
 #include <QMessageBox>
 #include "verticalscrollarea.h"
 #include "about.h"
+#include "devicemodel.h"
+#include "devicemanager.h"
 
 
-MainWindow::MainWindow(DeviceConfig *dc_, QWidget *parent) :
+MainWindow::MainWindow(DeviceConfig *dc_, DriveNotify *dn_, DeviceManager *manager_,  QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     dc = dc_;
+    manager = manager_;
     ui->setupUi(this);
     about =  new About();
 
     QMenu *menu = new QMenu;
     menu->addAction(ui->actionShow);
+    menu->addAction(ui->actionAbout);
     menu->addAction(ui->actionQuit);
     menu->setDefaultAction(ui->actionShow);
     sysTray.setContextMenu(menu);
@@ -50,8 +54,23 @@ MainWindow::MainWindow(DeviceConfig *dc_, QWidget *parent) :
     connect(ui->actionShow, SIGNAL(triggered()),this,SLOT(show_handle()));
     connect(ui->actionAbout, SIGNAL(triggered()),this,SLOT(about_handle()));
 
-    row = 0;
-    load();
+    dm = new DeviceModel(dc,dn_);
+    ui->deviceTable->setModel(dm);
+    setDeviceWidgets();
+    ui->deviceTable->resizeColumnsToContents();
+    connect(dm,SIGNAL(modelReset()),this,SLOT(setDeviceWidgets()));
+}
+
+void MainWindow::setDeviceWidgets() {
+    for (int i = 0; i < dm->deviceList.size(); i++) {
+        DriveView *dv = dm->deviceList.at(i);
+        ui->deviceTable->setIndexWidget(dm->index(i,COL_MANAGE),dv->managedBox_centered);
+        ui->deviceTable->setIndexWidget(dm->index(i,COL_EDIT),dv->editButton);
+        ui->deviceTable->setIndexWidget(dm->index(i,COL_LAUNCH),dv->launchButton);
+        ui->deviceTable->setIndexWidget(dm->index(i,COL_REMOVE),dv->removeButton);
+        connect(dv,SIGNAL(launchTransfer(QString,QString,QString,qint64,qint64)),
+                manager,SLOT(treatDrive(QString,QString,QString,qint64,qint64)));
+    }
 }
 
 void MainWindow::sysTray_handle(QSystemTrayIcon::ActivationReason reason) {
@@ -91,52 +110,6 @@ void MainWindow::quit_handle() {
     }
 }
 
-void MainWindow::load() {
-    VerticalScrollArea *sa = new VerticalScrollArea(this);
-    QWidget *driveList = new QWidget(this);
-
-    gl = new QGridLayout();
-
-    QJsonObject::iterator i;
-    for (i = dc->conf.begin(); i != dc->conf.end(); ++i) {
-        insertDrive(i.key());
-    }
-    gl->setRowStretch(10000,1);
-    gl->setColumnStretch(1,1);
-    gl->setSizeConstraint(QLayout::SetMinAndMaxSize);
-    driveList->setLayout(gl);
-
-    sa->setWidgetResizable(true);
-    sa->setWidget(driveList);
-    setCentralWidget(sa);
-}
-
-
-void MainWindow::insertDrive(QString id){
-    int col;
-    DriveView *dv = new DriveView(id,dc, this);
-    col = 0;
-    gl->setRowMinimumHeight(row,30);
-    gl->addWidget(dv->driveIcon,row,col++);
-    gl->addWidget(dv->label,row,col++);
-    gl->addWidget(dv->managedBox,row,col++);
-    gl->addWidget(dv->editButton,row,col++);
-    gl->addWidget(dv->removeButton,row,col++);
-    connect(dv,SIGNAL(destroyed(QObject*)),this,SLOT(removeDrive(QObject*)));
-    dvl.insert(dv);
-    row++;
-}
-void MainWindow::removeDrive(QObject * dv){
-    dvl.remove((DriveView *)dv);
-}
-
-void MainWindow::showEvent(QShowEvent * event){
-    QSetIterator<DriveView *> i(dvl);
-    while (i.hasNext()) {
-        DriveView * dv = i.next();
-        dv->loadName();
-    }
-}
 
 MainWindow::~MainWindow()
 {

@@ -28,6 +28,9 @@
 #include <QSystemTrayIcon>
 #include "driveview.h"
 #include <QSet>
+class DeviceModel;
+class DriveNotify;
+class DeviceManager;
 
 class About;
 
@@ -40,28 +43,24 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(DeviceConfig *dc, QWidget *parent = 0);
+    explicit MainWindow(DeviceConfig *dc, DriveNotify *dn_, DeviceManager *manager_, QWidget *parent = 0);
     ~MainWindow();
     QSystemTrayIcon sysTray;
 
 private:
     Ui::MainWindow *ui;
     DeviceConfig *dc;
-    void load();
-    int row;
-    QGridLayout *gl;
-    QSet<DriveView *> dvl;
-    void showEvent(QShowEvent * event);
     About *about;
+    DeviceModel *dm;
+    DeviceManager *manager;
 
 public slots:
-    void insertDrive(QString id);
-    void removeDrive(QObject * dv);
     void quit_handle();
     void show_handle();
     void about_handle();
     void sysTray_handle(QSystemTrayIcon::ActivationReason reason);
     void applicationLaunched();
+    void setDeviceWidgets();
 
 };
 

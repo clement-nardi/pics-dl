@@ -36,9 +36,6 @@ private:
     DeviceConfig *dc;
     QSet<DeviceConfigView *> openedViews;
 
-signals:
-    void newID(QString);
-
 public slots:
     void treatDrive(QString, QString serial, QString displayName, qint64 deviceSize, qint64 bytes_available);
     void handleDestroyed(QObject*);

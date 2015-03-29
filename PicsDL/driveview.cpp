@@ -22,68 +22,45 @@
 #include <QJsonObject>
 #include <QDebug>
 #include "deviceconfigview.h"
+#include <QHBoxLayout>
+#include "drivenotify.h"
 
-DriveView::DriveView(QString id_, DeviceConfig *dc_, QObject *parent) :
+DriveView::DriveView(QString id_, DeviceConfig *dc_, DriveNotify *dn_, QObject *parent) :
     QObject(parent)
 {
     id = id_;
     dc = dc_;
+    dn = dn_;
+    row = 0;
     QJsonObject obj = dc->conf[id].toObject();
 
-    removeButton = new QPushButton(QIcon(":/icons/remove"),"Remove");
-    editButton = new QPushButton(QIcon(":/icons/edit"),"Edit");
-    launchButton = new QPushButton(QIcon(":/icons/play"),"Launch");
-    label = new QLabel();
-    driveIcon = new QLabel();
-    managedBox = new QCheckBox("Manage this drive");
+    removeButton = new QPushButton(QIcon(":/icons/remove"),"");
+    editButton = new QPushButton(QIcon(":/icons/edit"),"");
+    launchButton = new QPushButton(QIcon(":/icons/play"),"");
+    managedBox_centered = new QWidget();
+    managedBox = new QCheckBox(managedBox_centered);
 
-    label->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
-    label->setMinimumWidth(200);
+    editButton->setEnabled(false);
+    launchButton->setEnabled(false);
 
-    loadName();
+    QHBoxLayout *managedLayout = new QHBoxLayout(managedBox_centered);
+    managedLayout->addSpacerItem(new QSpacerItem(0,0,QSizePolicy::Expanding));
+    managedLayout->addWidget(managedBox);
+    managedLayout->addSpacerItem(new QSpacerItem(0,0,QSizePolicy::Expanding));
+    managedLayout->setSpacing(0);
+    managedLayout->setMargin(0);
+    managedBox_centered->setLayout(managedLayout);
 
-    changeState(obj[CONFIG_ISMANAGED].toBool());
+    connect(managedBox,SIGNAL(toggled(bool)),editButton,SLOT(setEnabled(bool)));
+    managedBox->setChecked(obj[CONFIG_ISMANAGED].toBool());
+    launchButton->setEnabled(dn->getDeviceInfo(id));
+
     connect(managedBox, SIGNAL(clicked(bool)), this, SLOT(managed(bool)));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removed()));
     connect(editButton, SIGNAL(clicked()), this, SLOT(edit()));
+    connect(launchButton, SIGNAL(clicked()), this, SLOT(launch()));
 }
 
-void DriveView::loadName() {
-    QJsonObject obj = dc->conf[id].toObject();
-    QString deviceName;
-    if (obj[CONFIG_IDPATH].toString().startsWith("WPD:/")) {
-        deviceName = obj[CONFIG_PATH].toString();
-    } else {
-        if (id.split(";").size() > 1) {
-            QString name = id.split(";").at(1);
-            if (name.length() > 0) {
-                deviceName = name;
-            } else {
-                deviceName = id;
-            }
-        } else {
-            deviceName = id;
-        }
-        if (obj[CONFIG_PATH].toString().size()>0) {
-            deviceName.append(" (" + obj[CONFIG_PATH].toString() + ")");
-        }
-    }
-    if (obj[CONFIG_CAMERANAME].toString().size()>0) {
-        deviceName.append(" (" + obj[CONFIG_CAMERANAME].toString() + ")");
-    }
-    label->setText(deviceName);
-}
-
-void DriveView::changeState(bool enabled){
-    if (enabled) {
-        managedBox->setCheckState(Qt::Checked);
-        driveIcon->setPixmap(QIcon(":/icons/drive").pixmap(30,30, QIcon::Normal));
-    } else {
-        managedBox->setCheckState(Qt::Unchecked);
-        driveIcon->setPixmap(QIcon(":/icons/drive").pixmap(30,30, QIcon::Disabled));
-    }
-    label->setEnabled(enabled);
-}
 
 void DriveView::edit(){
     DeviceConfigView *dcv = new DeviceConfigView(dc,id,true);
@@ -92,13 +69,8 @@ void DriveView::edit(){
 
 void DriveView::removed(){
     dc->conf.remove(id);
+    dc->deviceFieldChanged(id);
     dc->saveConfig();
-    label->deleteLater();
-    driveIcon->deleteLater();
-    managedBox->deleteLater();
-    removeButton->deleteLater();
-    editButton->deleteLater();
-    deleteLater();
 }
 
 void DriveView::managed(bool checked){
@@ -106,5 +78,15 @@ void DriveView::managed(bool checked){
     obj.insert(CONFIG_ISMANAGED,QJsonValue(checked));
     dc->conf[id] = obj;
     dc->saveConfig();
-    changeState(checked);
+    changed(row);
+}
+
+void DriveView::launch(){
+    QString path;
+    QString name;
+    qint64 total;
+    qint64 available;
+    if (dn->getDeviceInfo(id,&path,&name,&total,&available)) {
+        emit launchTransfer(path,id,name,total,available);
+    }
 }

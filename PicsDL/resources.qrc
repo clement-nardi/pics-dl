@@ -21,5 +21,6 @@
         <file>resources/donate_fr.gif</file>
         <file>PicsDL.png</file>
         <file alias="delete">resources/1427039229_delete.png</file>
+        <file alias="info">resources/1427570115_info.png</file>
     </qresource>
 </RCC>

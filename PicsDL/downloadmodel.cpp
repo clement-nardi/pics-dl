@@ -417,7 +417,7 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
             switch (section) {
             case 0: return ""; break;
             case 1: return "File"; break;
-            case 2: return FILE_SIZE; break;
+            case 2: return "Size"; break;
             case 3: return "Date"; break;
             case 4: return "Destination"; break;
             }
