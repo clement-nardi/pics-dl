@@ -9,13 +9,19 @@ static bool sortIsAscending[12] = {true};
 DeviceModel::DeviceModel(DeviceConfig *dc_, DriveNotify *dn_){
     dc = dc_;
     dn = dn_;
-    sortColumnOrder.append(COL_MANAGE); /* sort first by managed */
+    sortColumnOrder.append(COL_LAUNCH); /* show first connected devices */
+    sortColumnOrder.append(COL_MANAGE); /* then sort by managed */
     sortColumnOrder.append(COL_LASTTRANSFER); /* then by last transfer date*/
     sortColumnOrder.append(COL_NAME); /* then by name */
+    sortColumnOrder.append(COL_TOTAL); /* then by total space */
     for (int i = 0; i<NB_COLUMNS; i++) {
         sortIsAscending[i] = true;
     }
+    sortIsAscending[COL_MANAGE] = false;
     sortIsAscending[COL_LASTTRANSFER] = false;
+    sortIsAscending[COL_LAUNCH] = false;
+    sortIsAscending[COL_EDIT] = false;
+    sortIsAscending[COL_REMOVE] = false;
     reload();
     connect(dc,SIGNAL(configStructuralChange(QString)),this,SLOT(reload()));
 }
@@ -32,8 +38,11 @@ bool driveLessThan(DriveView *a, DriveView *b) {
         case COL_AVAILABLE: IF_DIFFERENT_RETURN(objA[CONFIG_BYTESAVAILABLE].toString().toLongLong(),objB[CONFIG_BYTESAVAILABLE].toString().toLongLong(),sortIsAscending[column]) break;
         case COL_TOTAL: IF_DIFFERENT_RETURN(objA[CONFIG_DEVICESIZE].toString().toLongLong(),objB[CONFIG_DEVICESIZE].toString().toLongLong(),sortIsAscending[column]) break;
         case COL_CAMERA: IF_DIFFERENT_RETURN(objA[CONFIG_CAMERANAME].toString(),objB[CONFIG_CAMERANAME].toString(),sortIsAscending[column]) break;
-        case COL_MANAGE: IF_DIFFERENT_RETURN(objB[CONFIG_ISMANAGED].toBool(),objA[CONFIG_ISMANAGED].toBool(),sortIsAscending[column]) break;
+        case COL_MANAGE: IF_DIFFERENT_RETURN(objA[CONFIG_ISMANAGED].toBool(),objB[CONFIG_ISMANAGED].toBool(),sortIsAscending[column]) break;
         case COL_LASTTRANSFER: IF_DIFFERENT_RETURN(objA[CONFIG_LASTTRANSFER].toString().toUInt(),objB[CONFIG_LASTTRANSFER].toString().toUInt(),sortIsAscending[column]) break;
+        case COL_LAUNCH: IF_DIFFERENT_RETURN(a->launchButton->isEnabled(),b->launchButton->isEnabled(),sortIsAscending[column]) break;
+        case COL_EDIT: IF_DIFFERENT_RETURN(a->editButton->isEnabled(),b->editButton->isEnabled(),sortIsAscending[column]) break;
+        case COL_REMOVE: IF_DIFFERENT_RETURN(a->removeButton->isEnabled(),b->removeButton->isEnabled(),sortIsAscending[column]) break;
         }
     }
     return 0;
