@@ -37,12 +37,14 @@ public slots:
     void setTrackFilesFolder(File trackFilesFolder);
     void geotag(File *file);
     void getGeotags(File *file);
+    void stop();
 
 private:
     void init();
     ExifToolPerlWrapper * exiftool;
     File trackFilesFolder;
     QList<File> loadedtrackFiles;
+    bool wasStopped;
 
 private slots:
     void handleWriteFinished(File* file);
@@ -62,8 +64,8 @@ class GeotaggerPrivate: public QObject {
 public:
     GeotaggerPrivate();
     ~GeotaggerPrivate();
-    GeotaggerWorker * gw;
-    QThread thread;
+    GeotaggerWorker *gw;
+    QThread *thread;
 
 signals:
     void setTrackFilesFolder(File trackFilesFolder_);

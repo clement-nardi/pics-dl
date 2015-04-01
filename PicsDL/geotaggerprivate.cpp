@@ -34,6 +34,7 @@
 #include <QDateTime>
 
 GeotaggerWorker::GeotaggerWorker() {
+    wasStopped = false;
     exiftool = NULL;
 }
 GeotaggerWorker::~GeotaggerWorker() {
@@ -45,6 +46,10 @@ void GeotaggerWorker::init() {
         qDebug() << "initializing the worker";
         exiftool = new ExifToolPerlWrapper(QString(QCoreApplication::applicationDirPath() + "/perl").toStdString().c_str());
     }
+}
+
+void GeotaggerWorker::stop() {
+    wasStopped = true;
 }
 
 void GeotaggerWorker::setTrackFilesFolder(File trackFilesFolder_) {
@@ -60,6 +65,10 @@ void GeotaggerWorker::setTrackFilesFolder(File trackFilesFolder_) {
             QList<File> contentPart = trackFilesFolder.ls(&theresMore);
             nbFiles += contentPart.size();
             for (int i = 0; i < contentPart.size(); ++i) {
+                if (wasStopped) {
+                    qDebug() << "Stop loading track files";
+                    return;
+                }
                 fileIdx++;
                 if (!contentPart.at(i).isDir) {
                     qDebug() << "Loading track file: "  << contentPart.at(i).absoluteFilePath;
@@ -120,16 +129,18 @@ void GeotaggerWorker::getGeotags(File *file) {
 
 GeotaggerPrivate::GeotaggerPrivate(){
     gw = new GeotaggerWorker();
-    gw->moveToThread(&thread);
+    thread = new QThread();
+    gw->moveToThread(thread);
     qRegisterMetaType<File>("File");
     connect(this,SIGNAL(setTrackFilesFolder(File)),gw,SLOT(setTrackFilesFolder(File)),Qt::QueuedConnection);
     connect(this,SIGNAL(geotag(File*)),gw,SLOT(geotag(File*)),Qt::QueuedConnection);
     connect(this,SIGNAL(getGeotags(File*)),gw,SLOT(getGeotags(File*)),Qt::QueuedConnection);
-    thread.start();
+    thread->start();
 }
 
 GeotaggerPrivate::~GeotaggerPrivate(){
-    delete gw;
-    thread.quit();
-    thread.wait(10000);
+    gw->stop();
+    thread->quit();
+    thread->connect(thread,SIGNAL(finished()),gw,SLOT(deleteLater()));
+    thread->connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
 }
