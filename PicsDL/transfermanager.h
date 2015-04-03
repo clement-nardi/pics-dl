@@ -72,13 +72,14 @@ public:
     QSemaphore directSemaphore;
     QSemaphore geotagSemaphore;
     DownloadModel *dm;
+public slots:
+    void udpateGeoTagger();
 
 signals:
     void downloadFinished();
     void startWorkers();
 
 private:
-    void buildGeoTagger();
     void resetStats();
 
     void initWorker(int idx);

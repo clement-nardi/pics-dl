@@ -58,7 +58,7 @@ TransferManager::TransferManager(QObject *parent, DownloadModel *dm_) : QObject(
 {
     dm = dm_;
     geotagger = NULL;
-    buildGeoTagger();
+    udpateGeoTagger();
     resetStats();
 
     initWorker(0);
@@ -106,7 +106,7 @@ void TransferManager::launchDownloads() {
 
     if (dm->selectedFileList.size() > 0) {
 
-        buildGeoTagger();
+        udpateGeoTagger();
         resetStats();
 
         totalToWrite = 0;
@@ -153,7 +153,7 @@ void TransferManager::handleWriteFinished(File *file) {
     }
 }
 
-void TransferManager::buildGeoTagger() {
+void TransferManager::udpateGeoTagger() {
     QString tf = dm->getTrackingFolder();
 
     if (tf == "" || !QDir(tf).exists()) {

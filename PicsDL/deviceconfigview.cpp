@@ -270,14 +270,24 @@ void DeviceConfigView::CopyToConfig() {
     qDebug() << "CopyToConfig";
     QJsonObject obj = dc->conf[id].toObject();
     bool reloadNeeded = false;
+    bool geotaggerUpdateNeeded = false;
 
-    /* Download part */
+    /* Detect config modification that trigger actions */
     if ((obj[CONFIG_FILESTODOWNLOAD].toString() == "All") != ui->allRadio->isChecked() ||
         obj[CONFIG_FILTERTYPE].toInt() != ui->filterType->currentIndex() ||
         obj[CONFIG_FILTER].toString() != ui->filter->text()) {
         reloadNeeded = true;
     }
+    if (obj[CONFIG_ALLOWEXIF].toBool() == false &&
+        ui->allowEXIFBox->isChecked()) {
+        reloadNeeded = true;
+    }
+    if (obj[CONFIG_GEOTAG].toBool() != ui->GeoTagBox->isChecked() ||
+        obj[CONFIG_TRACKFOLDER].toString() != ui->TrackFolderLine->text()) {
+        geotaggerUpdateNeeded = true;
+    }
 
+    /* update non-standard fields */
     if (ui->allRadio->isChecked()) {
         obj.insert(CONFIG_FILESTODOWNLOAD,QJsonValue(QString("All")));
     } else {
@@ -285,21 +295,13 @@ void DeviceConfigView::CopyToConfig() {
     }
     obj.insert(CONFIG_FILTERTYPE,ui->filterType->currentIndex());
 
-
-    /* Organize part */
-    if (obj[CONFIG_ALLOWEXIF].toBool() == false &&
-        ui->allowEXIFBox->isChecked()) {
-        reloadNeeded = true;
-    }
-
-    /* GeoTagging */
     if (ui->OpenPathsRadio->isChecked()) {
         obj.insert(CONFIG_GEOTAGMODE,QJsonValue(QString("OpenPaths.cc")));
     } else {
         obj.insert(CONFIG_GEOTAGMODE,QJsonValue(QString("Track Folder")));
     }
 
-
+    /* update standard fields */
     for (int i = 0; i < boxes.size(); i++) {
         boxes[i].readBox(&obj);
     }
@@ -327,6 +329,12 @@ void DeviceConfigView::CopyToConfig() {
 
     updateButton();
     updateStatusText();
+
+    if (tm != NULL) {
+        if (geotaggerUpdateNeeded) {
+            tm->udpateGeoTagger();
+        }
+    }
 }
 
 void DeviceConfigView::SaveConfig() {
@@ -370,7 +378,7 @@ void DeviceConfigView::updateStatusText(){
     if (dpm != NULL) {
         dpm->getStats(&totalToDownload, &nbFilesToDownload);
     }
-    ui->statusText->setText(QString("%1 files to download for a total of %2").arg(nbFilesToDownload).arg(File::size2Str(totalToDownload)));
+    ui->statusText->setText(QString("%1 files are selected for download (%2)").arg(nbFilesToDownload).arg(File::size2Str(totalToDownload)));
 }
 
 void DeviceConfigView::updateFreeUpSimulation() {
