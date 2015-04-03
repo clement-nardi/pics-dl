@@ -31,6 +31,9 @@ class DownloadModel;
 #include <QThread>
 class TransferManager;
 
+#define NB_WORKERS 2
+
+
 class TransferWorker: public QObject {
     Q_OBJECT
 public:
@@ -83,8 +86,8 @@ private:
     void resetStats();
 
     void initWorker(int idx);
-    TransferWorker *tw[2]; /* 0 for direct transfers, 1 for geotag transfers */
-    QThread wt[2];
+    TransferWorker *tw[NB_WORKERS]; /* 0 for direct transfers, 1 for geotag transfers */
+    QThread *wt[NB_WORKERS];
 
 private slots:
     void handleWriteFinished(File *file);

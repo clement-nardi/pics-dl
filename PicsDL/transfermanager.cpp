@@ -61,17 +61,19 @@ TransferManager::TransferManager(QObject *parent, DownloadModel *dm_) : QObject(
     udpateGeoTagger();
     resetStats();
 
-    initWorker(0);
-    initWorker(1);
+    for (int i = 0; i<NB_WORKERS; i++) {
+        initWorker(i);
+    }
 }
 
 
 void TransferManager::initWorker(int idx) {
     tw[idx] = new TransferWorker(this,idx==0);
-    tw[idx]->moveToThread(&wt[idx]);
+    wt[idx] = new QThread();
+    tw[idx]->moveToThread(wt[idx]);
     connect(this, SIGNAL(startWorkers()),tw[idx],SLOT(processList()));
     connect(tw[idx],SIGNAL(launchFile(File*,bool)),this,SLOT(launchFile(File*,bool)));
-    wt[idx].start();
+    wt[idx]->start();
 }
 
 void TransferManager::launchFile(File *file, bool geotag) {
@@ -89,11 +91,12 @@ void TransferManager::resetStats() {
     nbFilesTransfered = 0;
 }
 
-TransferManager::~TransferManager()
-{
-    delete geotagger;
-    delete tw[0];
-    delete tw[1];
+TransferManager::~TransferManager(){
+    connect(wt[0],SIGNAL(finished()),geotagger,SLOT(deleteLater()));
+    for (int i = 0; i<NB_WORKERS; i++) {
+        connect(wt[i],SIGNAL(finished()),tw[i],SLOT(deleteLater()));
+        connect(wt[i],SIGNAL(finished()),wt[i],SLOT(deleteLater()));
+    }
 }
 
 
