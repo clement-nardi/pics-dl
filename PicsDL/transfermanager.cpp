@@ -96,6 +96,7 @@ TransferManager::~TransferManager(){
     for (int i = 0; i<NB_WORKERS; i++) {
         connect(wt[i],SIGNAL(finished()),tw[i],SLOT(deleteLater()));
         connect(wt[i],SIGNAL(finished()),wt[i],SLOT(deleteLater()));
+        wt[i]->quit();
     }
 }
 

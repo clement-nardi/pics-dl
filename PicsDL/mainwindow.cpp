@@ -29,6 +29,7 @@
 #include "about.h"
 #include "devicemodel.h"
 #include "devicemanager.h"
+#include <QDebug>
 
 
 MainWindow::MainWindow(DeviceConfig *dc_, DriveNotify *dn_, DeviceManager *manager_,  QWidget *parent) :
@@ -84,6 +85,14 @@ void MainWindow::sysTray_handle(QSystemTrayIcon::ActivationReason reason) {
 
 void MainWindow::show_handle() {
     show();
+    if (dm->deviceList.size() == 0) {
+        QMessageBox msgBox;
+        msgBox.setText(QString(tr("No known device.")));
+        msgBox.setInformativeText(tr("PicsDL does not know any of your devices! Please plug a device (smartphone, memory card, camera, USB key) in order to start downloading the pictures it contains."));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        int ret = msgBox.exec();
+    }
 }
 
 void MainWindow::about_handle() {
@@ -91,6 +100,7 @@ void MainWindow::about_handle() {
 }
 
 void MainWindow::applicationLaunched() {
+    qDebug() << "applicationLaunched()";
     sysTray.showMessage("PicsDL is running in the background",
                         "Please plug your device (smartphone, memory card, camera, USB key)",
                         QSystemTrayIcon::Information);
