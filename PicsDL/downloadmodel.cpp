@@ -38,7 +38,7 @@
 
 static QStringList dateKeywords = QString("yyyy;yy;MMMM;MMM;MM;dddd;ddd;dd;HH;mm;ss").split(";");
 
-DownloadModel::DownloadModel(DeviceConfig *dc_, QProgressDialog *pd_, bool editMode_, QObject *parent) :
+DownloadModel::DownloadModel(Config *dc_, QProgressDialog *pd_, bool editMode_, QObject *parent) :
     QAbstractTableModel(parent)
 {
     dc = dc_;
@@ -63,13 +63,13 @@ int DownloadModel::columnCount(const QModelIndex & parent) const {
 }
 
 QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
-    QJsonObject obj = dc->conf[id].toObject();
+    QJsonObject obj = dc->devices[id].toObject();
     QString newName = obj[CONFIG_NEWNAME].toString();
     QString newPath;
     QDateTime lm;
     int tagidx = -1;
-    if (dc->conf[id].toObject()[CONFIG_ALLOWEXIF].toBool() &&
-        dc->conf[id].toObject()[CONFIG_USEEXIFDATE].toBool()    ) {
+    if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool() &&
+        dc->devices[id].toObject()[CONFIG_USEEXIFDATE].toBool()    ) {
         lm = QDateTime::fromTime_t(fi->dateTaken());
     } else {
         lm = QDateTime::fromTime_t(fi->lastModified);
@@ -96,7 +96,7 @@ QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
         if (endidx<0) break;
         QString tagName = newName.mid(tagidx+1,endidx-tagidx-1);
         QString value = "";
-        if (dc->conf[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
+        if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
             value = fi->getEXIFValue(tagName);
         }
         newName.replace("<" + tagName + ">",value);        
@@ -124,7 +124,7 @@ QString DownloadModel::tempPath(File *fi) const {
 }
 
 QString DownloadModel::guessCameraName() {
-    if (dc->conf[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
+    if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
         for (int i = selectedFileList.size()-1; i>=0; i--) {
             File * fi = selectedFileList.at(i);
             QString makeModel = fi->getEXIFValue("Make") + " " + fi->getEXIFValue("Model");
@@ -139,7 +139,7 @@ QString DownloadModel::guessCameraName() {
 QString DownloadModel::getDCom(File *fi, bool forceQuery) const{
     QDateTime fileDate = QDateTime::fromTime_t(fi->lastModified);
     QString dayKey = fileDate.toString("yyyy-MM-dd");
-    QJsonObject obj = dc->conf["dCom"].toObject();
+    QJsonObject obj = dc->daily_comments;
     QJsonValue com = obj[dayKey];
     QString comment = com.toString();
     /*
@@ -161,12 +161,12 @@ QString DownloadModel::getDCom(File *fi, bool forceQuery) const{
 
 bool DownloadModel::getAllCom(){
     qDebug() << "dpm.getAllCom";
-    QString newName = dc->conf[id].toObject()[CONFIG_NEWNAME].toString();
+    QString newName = dc->devices[id].toObject()[CONFIG_NEWNAME].toString();
     int res = QDialog::Accepted;
     if (selectedFileList.size() > 0 &&
         (newName.contains("dCom") ||
          newName.contains("sCom")   )  ) {
-        QJsonObject obj = dc->conf["dCom"].toObject();
+        QJsonObject obj = dc->daily_comments;
         DComDialog *allComQuery = new DComDialog();
         allComQuery->setWindowModality(Qt::WindowModal);
         QTableWidget *queryTable = allComQuery->ui->tableWidget;
@@ -186,25 +186,41 @@ bool DownloadModel::getAllCom(){
                         QString dirToSearch = "";
                         QString patternToSearch = "";
                         QStringList np = newPath(fi, true).split("/");
-                        for (int j = 0; j< np.size(); j++) {
+                        bool matchOnDirs = true;
+                        int matchCount = 0;
+                        int j;
+                        for (j = 0; j< np.size(); j++) {
                             if (np.at(j).contains("dCom")) {
                                 patternToSearch = np.at(j);
-                                j = np.size();
+                                break;
                             } else {
                                 if (dirToSearch.size()>0)
                                     dirToSearch.append("/");
                                 dirToSearch.append(np.at(j));
                             }
                         }
-                        QStringList entries = QDir(dirToSearch).entryList();
+
+                        if (j == np.size()-1) {
+                            /* the dayly comment is in the file name -> match on files */
+                            matchOnDirs = false;
+                        }
+                        qDebug() << "matchOnDirs=" << matchOnDirs;
+
+                        QStringList entries = QDir(dirToSearch).entryList((matchOnDirs?(QDir::Dirs):(QDir::Files))|QDir::NoDotAndDotDot);
                         patternToSearch.replace("dCom","(.*)");
                         QRegExp pattern = QRegExp(patternToSearch);
-                        qDebug() << "dir=" << dirToSearch << "  and  pattern=" << patternToSearch;
+                        qDebug() << "search " << dirToSearch << "(" << entries.size() << " entries) for" << patternToSearch;
                         for (int j = 0; j < entries.size(); j++) {
                             qDebug() << "   entry=" << entries.at(j);
                             int pos = pattern.indexIn(entries.at(j));
                             if (pos >= 0) {
                                 qDebug() << "      match at " << pos;
+                                matchCount++;
+                                if (matchCount >= 4) {
+                                    qDebug() << "         -> too many matches, abandon this meaningless search.";
+                                    comment = "";
+                                    break;
+                                }
                                 QString cap1 = pattern.cap(1);
                                 if (cap1.size()>comment.size()) {
                                     comment = cap1;
@@ -250,8 +266,8 @@ bool DownloadModel::getAllCom(){
             sessionComment = queryTable->item(queryTable->rowCount()-1,1)->text();
         }
         allComQuery->deleteLater();
-        dc->conf["dCom"] = obj;
-        dc->saveConfig();
+        dc->daily_comments = obj;
+        dc->saveDailyComments();
 
         dataChanged(createIndex(0,2),
                     createIndex(selectedFileList.size(),2));
@@ -447,7 +463,7 @@ void DownloadModel::emptyFileList() {
 void DownloadModel::loadPreview(QString id_) {
     qDebug() << "dpm.loadPreview";
     id = id_;
-    QJsonObject obj = dc->conf[id].toObject();
+    QJsonObject obj = dc->devices[id].toObject();
     sessionComment = "";
     QString path = obj[CONFIG_PATH].toString();
     QString IDPath = obj[CONFIG_IDPATH].toString();
@@ -466,13 +482,13 @@ void DownloadModel::loadPreview(QString id_) {
 
 
 bool DownloadModel::isBlacklisted(File element) {
-    if (dc->conf[id].toObject()[CONFIG_FILTERTYPE].toInt() == 0) { /* from all directories */
+    if (dc->devices[id].toObject()[CONFIG_FILTERTYPE].toInt() == 0) { /* from all directories */
         return false;
     } else {
         bool patternMatchedOnceInPath = false;
         int reverseNonMatchingIndex = 0;
 
-        QStringList patternList = dc->conf[id].toObject()[CONFIG_FILTER].toString().split(";");
+        QStringList patternList = dc->devices[id].toObject()[CONFIG_FILTER].toString().split(";");
         QStringList directoryList = element.absoluteFilePath.split("/");
         if (!element.isDir) {
             directoryList.removeLast();
@@ -493,7 +509,7 @@ bool DownloadModel::isBlacklisted(File element) {
                 reverseNonMatchingIndex = dirIdx;
             }
         }
-        if (dc->conf[id].toObject()[CONFIG_FILTERTYPE].toInt() == 1) { /* from all directories except: */
+        if (dc->devices[id].toObject()[CONFIG_FILTERTYPE].toInt() == 1) { /* from all directories except: */
             return patternMatchedOnceInPath;
         } else { /* from these directories: */
             int minMatchIdx = 1; /* Don't need to match H: in H:/DCIM/116_FUJI */
@@ -539,8 +555,8 @@ void DownloadModel::treatDir(File dirInfo) {
             pd->setMaximum(estimatedTotalFiles);
             pd->setValue(browsedFiles);
             if (pdTimer.elapsed() > 10000 &&
-                    (dc->conf[id].toObject()[CONFIG_FILTER].toString().size() == 0 ||
-                     dc->conf[id].toObject()[CONFIG_FILTERTYPE].toInt() == 0)) {
+                    (dc->devices[id].toObject()[CONFIG_FILTER].toString().size() == 0 ||
+                     dc->devices[id].toObject()[CONFIG_FILTERTYPE].toInt() == 0)) {
                 pd->setLabelText(QString("Your device is being browsed, and this is taking a long time...\n") +
                                  QString("Once this dialog window is finished, you will be able to setup\n") +
                                  QString("some filters on the directories that may or may not be browsed.\n") +
@@ -565,7 +581,7 @@ void DownloadModel::treatDir(File dirInfo) {
 
 void DownloadModel::reloadSelection(bool firstTime) {
     qDebug() << "dpm.reloadSelection";
-    bool selectall = (dc->conf[id].toObject()[CONFIG_FILESTODOWNLOAD].toString() == "All");
+    bool selectall = (dc->devices[id].toObject()[CONFIG_FILESTODOWNLOAD].toString() == "All");
     beginResetModel();
     selectedFileList.clear();
 
@@ -617,7 +633,7 @@ void DownloadModel::reloadSelection(bool firstTime) {
             }
         }
     }
-    if (dc->conf[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
+    if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
         pdTimer.start();
         pd->hide();
         for (int i = 0; i < selectedFileList.size(); i++) {
@@ -625,10 +641,10 @@ void DownloadModel::reloadSelection(bool firstTime) {
             if (pd->isVisible()) {
                 pd->setValue(i);
                 if (pd->wasCanceled()) {
-                    QJsonObject obj = dc->conf[id].toObject();
+                    QJsonObject obj = dc->devices[id].toObject();
                     obj.insert(CONFIG_ALLOWEXIF,QJsonValue(false));
-                    dc->conf[id] = obj;
-                    dc->saveConfig();
+                    dc->devices[id] = obj;
+                    dc->saveDevices();
                     EXIFLoadCanceled(false);
                     break;
                 }
@@ -695,7 +711,7 @@ void DownloadModel::writeFinished(File * file){
 
 
 QString DownloadModel::getTrackingFolder() {
-    QJsonObject obj = dc->conf[id].toObject();
+    QJsonObject obj = dc->devices[id].toObject();
     QString trackingFolder;
     if (obj[CONFIG_GEOTAG].toBool() == true) {
         if (obj[CONFIG_GEOTAGMODE].toString() == "OpenPaths.cc") {
@@ -726,7 +742,7 @@ void DownloadModel::freeUpSpace(bool isFakeRun,
                                 qint64 *targetAvailable,
                                 qint64 *bytesDeleted,
                                 int *nbFilesDeleted){
-    QJsonObject obj = dc->conf[id].toObject();
+    QJsonObject obj = dc->devices[id].toObject();
     qint64 totalSpace = obj[CONFIG_DEVICESIZE].toString().toLongLong();
     *targetAvailable = 0;
     *bytesDeleted = 0;

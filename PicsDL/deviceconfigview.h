@@ -21,7 +21,7 @@
 #ifndef DEVICECONFIGVIEW_H
 #define DEVICECONFIGVIEW_H
 
-class DeviceConfig;
+class Config;
 class DownloadModel;
 class TransferManager;
 #include <QProgressDialog>
@@ -74,7 +74,7 @@ class DeviceConfigView : public QWidget
     Q_OBJECT
 
 public:
-    explicit DeviceConfigView(DeviceConfig *dc, QString id, bool editMode = false, QWidget *parent = 0);
+    explicit DeviceConfigView(Config *dc, QString id, bool editMode = false, QWidget *parent = 0);
     ~DeviceConfigView();
     QString id;
 
@@ -86,7 +86,7 @@ private:
     QList<LineEditView> lines;
     QList<SpinBoxView> spinBoxes;
 
-    DeviceConfig *dc;
+    Config *dc;
     QProgressDialog *pd;
 
     DownloadModel *dpm;

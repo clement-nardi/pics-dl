@@ -22,7 +22,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "deviceconfig.h"
+#include "config.h"
 #include <QGridLayout>
 #include "deviceconfigview.h"
 #include <QSystemTrayIcon>
@@ -43,13 +43,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(DeviceConfig *dc, DriveNotify *dn_, DeviceManager *manager_, QWidget *parent = 0);
+    explicit MainWindow(Config *dc, DriveNotify *dn_, DeviceManager *manager_, QWidget *parent = 0);
     ~MainWindow();
     QSystemTrayIcon sysTray;
 
 private:
     Ui::MainWindow *ui;
-    DeviceConfig *dc;
+    Config *dc;
     About *about;
     DeviceModel *dm;
     DeviceManager *manager;

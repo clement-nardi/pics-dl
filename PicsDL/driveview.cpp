@@ -25,14 +25,14 @@
 #include <QHBoxLayout>
 #include "drivenotify.h"
 
-DriveView::DriveView(QString id_, DeviceConfig *dc_, DriveNotify *dn_, QObject *parent) :
+DriveView::DriveView(QString id_, Config *dc_, DriveNotify *dn_, QObject *parent) :
     QObject(parent)
 {
     id = id_;
     dc = dc_;
     dn = dn_;
     row = 0;
-    QJsonObject obj = dc->conf[id].toObject();
+    QJsonObject obj = dc->devices[id].toObject();
 
     removeButton = new QPushButton(QIcon(":/icons/remove"),"");
     editButton = new QPushButton(QIcon(":/icons/edit"),"");
@@ -68,16 +68,16 @@ void DriveView::edit(){
 }
 
 void DriveView::removed(){
-    dc->conf.remove(id);
+    dc->devices.remove(id);
     dc->deviceFieldChanged(id);
-    dc->saveConfig();
+    dc->saveDevices();
 }
 
 void DriveView::managed(bool checked){
-    QJsonObject obj = dc->conf[id].toObject();
+    QJsonObject obj = dc->devices[id].toObject();
     obj.insert(CONFIG_ISMANAGED,QJsonValue(checked));
-    dc->conf[id] = obj;
-    dc->saveConfig();
+    dc->devices[id] = obj;
+    dc->saveDevices();
     changed(row);
 }
 

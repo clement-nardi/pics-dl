@@ -30,8 +30,8 @@ DESTDIR = bin
 
 
 MAJOR=0
-MINOR=4
-PATCH=1
+MINOR=5
+PATCH=0
 
 
 !contains(BUILD_NUMBER_UPDATE,false) {
@@ -75,7 +75,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     drivenotify.cpp \
     devicemanager.cpp \
-    deviceconfig.cpp \
     driveview.cpp \
     deviceconfigview.cpp \
     dcomdialog.cpp \
@@ -95,12 +94,12 @@ SOURCES += main.cpp\
     about.cpp \
     transferdialog.cpp \
     globals.cpp \
-    devicemodel.cpp
+    devicemodel.cpp \
+    config.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
     devicemanager.h \
-    deviceconfig.h \
     driveview.h \
     deviceconfigview.h \
     dcomdialog.h \
@@ -120,15 +119,16 @@ HEADERS  += mainwindow.h \
     about.h \
     transferdialog.h \
     globals.h \
-    devicemodel.h
+    devicemodel.h \
+    config.h
 
 
 FORMS    += mainwindow.ui \
             deviceconfigview.ui \
             dcomdialog.ui \
             exifdialog.ui \
-    about.ui \
-    transferdialog.ui
+            about.ui \
+            transferdialog.ui
 
 win32{
     LIBS += -L"C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86/" -lshell32

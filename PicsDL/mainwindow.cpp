@@ -32,7 +32,7 @@
 #include <QDebug>
 
 
-MainWindow::MainWindow(DeviceConfig *dc_, DriveNotify *dn_, DeviceManager *manager_,  QWidget *parent) :
+MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -60,6 +60,7 @@ MainWindow::MainWindow(DeviceConfig *dc_, DriveNotify *dn_, DeviceManager *manag
     setDeviceWidgets();
     ui->deviceTable->resizeColumnsToContents();
     connect(dm,SIGNAL(modelReset()),this,SLOT(setDeviceWidgets()));
+    dc->LoadWindowGeometry("MainWindow",this);
 }
 
 void MainWindow::setDeviceWidgets() {
@@ -123,6 +124,8 @@ void MainWindow::quit_handle() {
 
 MainWindow::~MainWindow()
 {
+    qDebug() << "delete MainWindow";
+    dc->SaveWindowGeometry(this,"MainWindow");
     delete ui;
     about->deleteLater();
 }

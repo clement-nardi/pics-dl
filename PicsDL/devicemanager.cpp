@@ -27,9 +27,10 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include <QMessageBox>
+#include "config.h"
 
 
-DeviceManager::DeviceManager(DeviceConfig *deviceConfig, QObject *parent) :
+DeviceManager::DeviceManager(Config *deviceConfig, QObject *parent) :
     QObject(parent)
 {
     dc = deviceConfig;
@@ -39,7 +40,7 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
 
     qDebug() << "treating drive " << drivePath << serial << displayName;
 
-    if (dc->conf[serial].isUndefined() || dc->conf[serial].isNull() ) {
+    if (dc->devices[serial].isUndefined() || dc->devices[serial].isNull() ) {
         qDebug() << "first time";
         QJsonObject driveConfig;
 
@@ -48,7 +49,7 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
         driveConfig[CONFIG_DISPLAYNAME] = displayName;
         driveConfig[CONFIG_DEVICESIZE] = QString("%1").arg(deviceSize);
         driveConfig[CONFIG_BYTESAVAILABLE] = QString("%1").arg(bytes_available);
-        dc->conf.insert(serial,driveConfig);
+        dc->devices.insert(serial,driveConfig);
         dc->deviceFieldChanged(serial);
         QString deviceDescription = displayName;
         if (displayName != drivePath) {
@@ -64,15 +65,15 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
         qDebug() << "answer is " << answer;
 
         driveConfig.insert(CONFIG_ISMANAGED,QJsonValue(answer == QMessageBox::Yes));
-        dc->conf.insert(serial,driveConfig);
-        dc->saveConfig();
+        dc->devices.insert(serial,driveConfig);
+        dc->saveDevices();
     } else {
         qDebug() << "known drive";
     }
     /* Notify each time a drive is plugged, to update the "launch" button */
     dc->deviceFieldChanged(serial);
 
-    if (dc->conf[serial].toObject()[CONFIG_ISMANAGED].toBool() == true) {
+    if (dc->devices[serial].toObject()[CONFIG_ISMANAGED].toBool() == true) {
         bool isAlreadyOpened = false;
         QSetIterator<DeviceConfigView *> i(openedViews);
         while (i.hasNext()) {
@@ -85,7 +86,7 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
 
         if (!isAlreadyOpened) {
             qDebug() << "treat this drive now !";
-            QJsonObject obj = dc->conf[serial].toObject();
+            QJsonObject obj = dc->devices[serial].toObject();
             if (drivePath.startsWith("WPD:/")) {
                 obj[CONFIG_PATH] = displayName;
                 obj[CONFIG_IDPATH] = drivePath;
@@ -95,8 +96,8 @@ void DeviceManager::treatDrive(QString drivePath, QString serial, QString displa
             obj[CONFIG_DISPLAYNAME] = displayName;
             obj[CONFIG_DEVICESIZE] = QString("%1").arg(deviceSize);
             obj[CONFIG_BYTESAVAILABLE] = QString("%1").arg(bytes_available);
-            dc->conf[serial] = obj;
-            dc->saveConfig();
+            dc->devices[serial] = obj;
+            dc->saveDevices();
 
 
             DeviceConfigView *dcv = new DeviceConfigView(dc,serial);

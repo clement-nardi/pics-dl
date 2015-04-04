@@ -6,7 +6,7 @@
 #include <QObject>
 #include "drivenotify.h"
 
-class DeviceConfig;
+class Config;
 class DriveView;
 
 #define NB_COLUMNS 9
@@ -25,7 +25,7 @@ class DeviceModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    DeviceModel(DeviceConfig *dc_, DriveNotify *dn_);
+    DeviceModel(Config *dc_, DriveNotify *dn_);
     ~DeviceModel();
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -36,7 +36,7 @@ public:
     QList<DriveView*> deviceList;
 
 private:
-    DeviceConfig *dc;
+    Config *dc;
     DriveNotify *dn;
     void emptyList();
     void setIndexes();

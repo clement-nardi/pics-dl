@@ -25,6 +25,14 @@
 #include "file.h"
 #include <QSet>
 
+/* Window geometry */
+#define WINDOW_X                    "windowX"
+#define WINDOW_Y                    "windowY"
+#define WINDOW_WIDTH                "windowWidth"
+#define WINDOW_HEIGHT               "windowHeight"
+#define WINDOW_IS_MAXIMIZED         "windowIsMaximized"
+
+/* Known files properties */
 #define FILE_LASTMODIFIED           "lastModified"
 #define FILE_ABSOLUTEFILEPATH       "absoluteFilePath"
 #define FILE_SIZE                   "size"
@@ -69,23 +77,35 @@
 #define CONFIG_AUTOMATION           "automation"
 
 
-class DeviceConfig : public QObject {
+class Config : public QObject {
     Q_OBJECT
 public:
-    explicit DeviceConfig();
+    explicit Config();
 
-    QJsonObject conf;
+    QJsonObject devices;
+    QJsonObject daily_comments;
+    QJsonObject gui_params;
     QSet<File> knownFiles;
 
-    void saveConfig();
-    void loadConfig();
+    void saveDevices();
+    void saveDailyComments();
+    void saveGUIParams();
     void saveKnownFiles();
-    void loadKnownFiles();
+
+    void SaveWindowGeometry(QWidget *w, QString key);
+    bool LoadWindowGeometry(QString key, QWidget *w);
 
 private:
-    QString configFileName;
-    QString knownFiles_FileName;
-
+    QString devices_file_name;
+    QString known_files_file_name;
+    QString daily_comments_file_name;
+    QString gui_params_file_name;
+    void loadDevices();
+    void loadDailyComments();
+    void loadGUIParams();
+    void loadKnownFiles();
+    void saveJSONToFile(QJsonObject *obj, QString file_name);
+    void loadJSONFromFile(QJsonObject *obj, QString file_name);
 public slots:
     void deviceFieldChanged(QString id);
 

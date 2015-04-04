@@ -1,12 +1,12 @@
 #include "devicemodel.h"
-#include "deviceconfig.h"
+#include "config.h"
 #include "driveview.h"
 #include <QDebug>
 
 static QList<int> sortColumnOrder;
 static bool sortIsAscending[12] = {true};
 
-DeviceModel::DeviceModel(DeviceConfig *dc_, DriveNotify *dn_){
+DeviceModel::DeviceModel(Config *dc_, DriveNotify *dn_){
     dc = dc_;
     dn = dn_;
     sortColumnOrder.append(COL_LAUNCH); /* show first connected devices */
@@ -29,8 +29,8 @@ DeviceModel::DeviceModel(DeviceConfig *dc_, DriveNotify *dn_){
 #define IF_DIFFERENT_RETURN(a,b,asc) {if ((a) != (b)) {return (asc)?((a)<(b)):((b)<(a));}}
 
 bool driveLessThan(DriveView *a, DriveView *b) {
-    QJsonObject objA = a->dc->conf[a->id].toObject();
-    QJsonObject objB = b->dc->conf[b->id].toObject();
+    QJsonObject objA = a->dc->devices[a->id].toObject();
+    QJsonObject objB = b->dc->devices[b->id].toObject();
     for (int i = 0; i < sortColumnOrder.size(); i++) {
         int column = sortColumnOrder.at(i);
         switch (column) {
@@ -53,7 +53,7 @@ void DeviceModel::reload() {
     emptyList();
 
     QJsonObject::iterator i;
-    for (i = dc->conf.begin(); i != dc->conf.end(); ++i) {
+    for (i = dc->devices.begin(); i != dc->devices.end(); ++i) {
         DriveView *dv = new DriveView(i.key(),dc,dn);
         deviceList.append(dv);
         connect(dv,SIGNAL(changed(int)),this,SLOT(driveChanged(int)));
@@ -117,7 +117,7 @@ QVariant DeviceModel::headerData(int section, Qt::Orientation orientation, int r
 
 
 int DeviceModel::rowCount(const QModelIndex & parent) const{
-    return dc->conf.count();
+    return dc->devices.count();
 }
 
 int DeviceModel::columnCount(const QModelIndex & parent) const{
@@ -126,7 +126,7 @@ int DeviceModel::columnCount(const QModelIndex & parent) const{
 
 QVariant DeviceModel::data(const QModelIndex & index, int role) const{
     DriveView *dv = deviceList.at(index.row());
-    QJsonObject obj = dc->conf[dv->id].toObject();
+    QJsonObject obj = dc->devices[dv->id].toObject();
 
     switch (role) {
     case Qt::DisplayRole:
@@ -175,7 +175,7 @@ QVariant DeviceModel::data(const QModelIndex & index, int role) const{
 
 Qt::ItemFlags DeviceModel::flags(const QModelIndex & index) const{
     DriveView *dv = deviceList.at(index.row());
-    QJsonObject obj = dc->conf[dv->id].toObject();
+    QJsonObject obj = dc->devices[dv->id].toObject();
     return obj[CONFIG_ISMANAGED].toBool()?Qt::ItemIsEnabled:Qt::NoItemFlags;
 }
 

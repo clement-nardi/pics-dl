@@ -25,15 +25,15 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QPushButton>
-#include "deviceconfig.h"
+#include "config.h"
 class DriveNotify;
 
 class DriveView : public QObject
 {
     Q_OBJECT
 public:
-    explicit DriveView(QString id, DeviceConfig *dc, DriveNotify *dn_, QObject *parent = 0);
-    DeviceConfig *dc;
+    explicit DriveView(QString id, Config *dc, DriveNotify *dn_, QObject *parent = 0);
+    Config *dc;
     DriveNotify *dn;
     QString id;
     QCheckBox *managedBox;

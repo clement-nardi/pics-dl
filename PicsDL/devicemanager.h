@@ -23,17 +23,19 @@
 
 #include <QObject>
 #include <QJsonObject>
-#include <deviceconfig.h>
 #include "deviceconfigview.h"
+#include <QSet>
+
+class Config;
 
 class DeviceManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit DeviceManager(DeviceConfig *deviceConfig, QObject *parent = 0);
+    explicit DeviceManager(Config *deviceConfig, QObject *parent = 0);
 
 private:
-    DeviceConfig *dc;
+    Config *dc;
     QSet<DeviceConfigView *> openedViews;
 
 public slots:

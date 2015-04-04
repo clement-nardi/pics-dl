@@ -23,7 +23,7 @@
 #include <QDebug>
 #include "drivenotify.h"
 #include "devicemanager.h"
-#include "deviceconfig.h"
+#include "config.h"
 #include <QDir>
 #include "instancemanager.h"
 #include <iostream>
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     qDebug() << QDir::current().absolutePath();
     qDebug() << QCoreApplication::applicationDirPath();
 
-    DeviceConfig *dc = new DeviceConfig();
+    Config *dc = new Config();
     DriveNotify *dn = new DriveNotify();
     DeviceManager *dm = new DeviceManager(dc);
     MainWindow w(dc,dn,dm);

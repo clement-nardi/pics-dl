@@ -22,7 +22,7 @@
 #define DOWNLOADMODEL_H
 
 #include <QAbstractTableModel>
-#include "deviceconfig.h"
+#include "config.h"
 #include "file.h"
 #include <QList>
 #include <QProgressDialog>
@@ -39,7 +39,7 @@ class DownloadModel : public QAbstractTableModel
     friend class TransferWorker;
     Q_OBJECT
 public:
-    explicit DownloadModel(DeviceConfig *dc, QProgressDialog *pd, bool editMode = false, QObject *parent = 0);
+    explicit DownloadModel(Config *dc, QProgressDialog *pd, bool editMode = false, QObject *parent = 0);
     ~DownloadModel();
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -57,7 +57,7 @@ public:
     QList<File*> deletedFiles;
 private:
     QElapsedTimer pdTimer;
-    DeviceConfig *dc;
+    Config *dc;
     bool editMode;
     QString id;
     QList<File*> blacklistedDirectories;

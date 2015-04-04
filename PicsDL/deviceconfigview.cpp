@@ -28,7 +28,7 @@
 #include <QScreen>
 #include "transfermanager.h"
 #include "downloadmodel.h"
-#include "deviceconfig.h"
+#include "config.h"
 #include "transferdialog.h"
 #include <QMessageBox>
 
@@ -79,7 +79,7 @@ void SpinBoxView::readSpinBox(QJsonObject *obj){
     obj->insert(field_name,QJsonValue(spin_box->value()));
 }
 
-DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id_, bool editMode_, QWidget *parent) :
+DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DeviceConfigView)
 {
@@ -125,16 +125,23 @@ DeviceConfigView::DeviceConfigView(DeviceConfig *dc_, QString id_, bool editMode
 
     updateStatusText();
     updateFreeUpSimulation();
-    showMaximized();
+
+    if (!dc->LoadWindowGeometry(id,this)) {
+        setWindowState(Qt::WindowMaximized);
+    }
+    qDebug() << "before show " << geometry();
+    show();
+    qDebug() << "after  show " << geometry();
 
     /* automation stuff */
     ui->automation->startCountDown();
 
 }
 
-DeviceConfigView::~DeviceConfigView()
-{
+DeviceConfigView::~DeviceConfigView() {
     qDebug() << "delete DeviceConfigView";
+    qDebug() << "during destructor " << geometry();
+    dc->SaveWindowGeometry(this,id);
     delete ui;
     delete dpm;
     delete pd;
@@ -162,7 +169,7 @@ void DeviceConfigView::showEvent(QShowEvent * event) {
 
 void DeviceConfigView::FillWithConfig() {
     qDebug() << "FillWithConfig";
-    QJsonObject obj = dc->conf[id].toObject();
+    QJsonObject obj = dc->devices[id].toObject();
     QString displayName = obj[CONFIG_DISPLAYNAME].toString();
     QString path = obj[CONFIG_PATH].toString();
     QString title = QCoreApplication::applicationName() + " v" + QCoreApplication::applicationVersion()
@@ -238,8 +245,8 @@ void DeviceConfigView::FillWithConfig() {
         connect(spinBoxes.at(i).spin_box,SIGNAL(valueChanged(int)),this,SLOT(CopyToConfig()));
     }
 
-    dc->conf[id] = obj;
-    dc->saveConfig();
+    dc->devices[id] = obj;
+    dc->saveDevices();
 
     //ui->tableView->resizeRowsToContents();
 
@@ -268,7 +275,7 @@ void DeviceConfigView::updateButton(){
 
 void DeviceConfigView::CopyToConfig() {
     qDebug() << "CopyToConfig";
-    QJsonObject obj = dc->conf[id].toObject();
+    QJsonObject obj = dc->devices[id].toObject();
     bool reloadNeeded = false;
     bool geotaggerUpdateNeeded = false;
 
@@ -312,7 +319,7 @@ void DeviceConfigView::CopyToConfig() {
         spinBoxes[i].readSpinBox(&obj);
     }
 
-    dc->conf[id] = obj;
+    dc->devices[id] = obj;
     //dc->saveConfig();
     if (dpm != NULL) {
         if (reloadNeeded) {
@@ -342,13 +349,13 @@ void DeviceConfigView::SaveConfig() {
     if (dpm != NULL) {
         QString guessedCameraName = dpm->guessCameraName();
         if (guessedCameraName > 0) {
-            QJsonObject obj = dc->conf[id].toObject();
+            QJsonObject obj = dc->devices[id].toObject();
             obj.insert(CONFIG_CAMERANAME,QJsonValue(guessedCameraName));
-            dc->conf[id] = obj;
+            dc->devices[id] = obj;
         }
     }
 
-    dc->saveConfig();
+    dc->saveDevices();
 }
 
 void DeviceConfigView::chooseDLTo() {
@@ -385,8 +392,8 @@ void DeviceConfigView::updateFreeUpSimulation() {
     qint64 targetAvailable = 0;
     qint64 bytesDeleted = 0;
     int nbFilesDeleted = 0;
-    qint64 available = dc->conf[id].toObject()[CONFIG_BYTESAVAILABLE].toString().toLongLong();
-    qint64 totalSpace = dc->conf[id].toObject()[CONFIG_DEVICESIZE].toString().toLongLong();
+    qint64 available = dc->devices[id].toObject()[CONFIG_BYTESAVAILABLE].toString().toLongLong();
+    qint64 totalSpace = dc->devices[id].toObject()[CONFIG_DEVICESIZE].toString().toLongLong();
     if (dpm != NULL) {
         int nbPics = ui->nbPics->text().toInt();
         dpm->freeUpSpace(true,&targetAvailable,&bytesDeleted,&nbFilesDeleted);
@@ -419,9 +426,9 @@ void DeviceConfigView::go(){
         td->showProgress(tm);
         tm->launchDownloads();
 
-        QJsonObject obj = dc->conf[id].toObject();
+        QJsonObject obj = dc->devices[id].toObject();
         obj.insert(CONFIG_LASTTRANSFER,QJsonValue(QString("%1").arg(QDateTime::currentDateTime().toTime_t())));
-        dc->conf[id] = obj;
+        dc->devices[id] = obj;
         dc->deviceFieldChanged(id);
         SaveConfig();
     } else {
