@@ -42,6 +42,7 @@ public slots:
 private:
     QSystemSemaphore *sem;
     QSharedMemory *sm;
+    bool isExiting;
 };
 
 #endif // INSTANCEMANAGER_H

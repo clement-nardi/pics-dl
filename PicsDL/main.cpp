@@ -111,9 +111,9 @@ int main(int argc, char *argv[])
     Config *dc = new Config();
     DriveNotify *dn = new DriveNotify();
     DeviceManager *dm = new DeviceManager(dc);
-    MainWindow w(dc,dn,dm);
+    MainWindow *w = new MainWindow(dc,dn,dm);
 
-    im->connect(im, SIGNAL(applicationLaunched()),&w, SLOT(applicationLaunched()));
+    im->connect(im, SIGNAL(applicationLaunched()),w, SLOT(applicationLaunched()));
 
     dm->connect(dn,SIGNAL(driveAdded(QString,QString,QString,qint64,qint64)), dm, SLOT(treatDrive(QString,QString,QString,qint64,qint64)));
     dm->connect(dn,SIGNAL(deviceUnplugged(QString)),dc,SLOT(deviceFieldChanged(QString)));
@@ -121,10 +121,11 @@ int main(int argc, char *argv[])
     //w.show();
 
     int res = a.exec();
-    delete im;
-    delete dn;
+    delete w;
     delete dm;
+    delete dn;
     delete dc;
+    delete im;
     if (argc > 1 && QString(argv[1]) == "-v") {
         debugFile->close();
     }

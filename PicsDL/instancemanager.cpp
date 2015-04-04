@@ -20,9 +20,11 @@
 
 #include "instancemanager.h"
 #include <QCoreApplication>
+#include <QDebug>
 
 InstanceManager::InstanceManager(QObject *parent) :
     QThread(parent) {
+    isExiting = false;
     sm = new QSharedMemory(QCoreApplication::applicationName() + "_MultiInstance_SharedMemory");
     sem = new QSystemSemaphore(QCoreApplication::applicationName() + "_MultiInstance_Semaphore", 0, QSystemSemaphore::Open);
     if (!sm->create(1)) {
@@ -36,12 +38,22 @@ InstanceManager::InstanceManager(QObject *parent) :
 }
 
 InstanceManager::~InstanceManager() {
+    connect(this,SIGNAL(finished()),this,SLOT(deleteLater()));
+    isExiting = true;
+    sem->release(10);
+    quit();
+    wait(10000);
     delete sm;
+    delete sem;
 }
 
 void InstanceManager::run() {
     while (true) {
         sem->acquire();
+        if (isExiting) {
+            qDebug() << "deleting instance manager thread";
+            return;
+        }
         emit applicationLaunched();
     }
 }
