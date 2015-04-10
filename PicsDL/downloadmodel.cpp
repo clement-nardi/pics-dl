@@ -63,6 +63,12 @@ int DownloadModel::columnCount(const QModelIndex & parent) const {
 }
 
 QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
+
+    if (fi->parentFile != NULL) {
+        QString parentNewPath = newPath(fi->parentFile,keepDComStr);
+        return parentNewPath.left(parentNewPath.lastIndexOf('.')) + "." + fi->fileName().split('.').last();
+    }
+
     QJsonObject obj = dc->devices[id].toObject();
     QString newName = obj[CONFIG_NEWNAME].toString();
     QString newPath;
@@ -328,9 +334,9 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
         switch (index.column()) {
         case 0:
         {
-            QPixmap tn = fi->getThumbnail();
-            if (!tn.isNull()) {
-                return QString("%1x%2").arg(tn.size().width()).arg(tn.size().height());
+            QPixmap *tn = fi->getThumbnail();
+            if (!tn->isNull()) {
+                return QString("%1x%2").arg(tn->size().width()).arg(tn->size().height());
             }
         }
         case 1:
@@ -376,9 +382,9 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
         break;
     case Qt::DecorationRole:
         if (index.column() == 0) {
-            QPixmap tn = fi->getThumbnail();
-            if (!tn.isNull()) {
-                return tn;
+            QPixmap *tn = fi->getThumbnail();
+            if (!tn->isNull()) {
+                return *tn;
             } else {
                 if (fi->isJPEG()) {
                     return QIcon(":/icons/picture");
@@ -414,9 +420,9 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
         break;
     case Qt::SizeHintRole:
         if (index.column() == 0) {
-            QPixmap tn = fi->getThumbnail();
-            if (!tn.isNull()) {
-                return tn.size();
+            QPixmap *tn = fi->getThumbnail();
+            if (!tn->isNull()) {
+                return tn->size();
             }
         }
         break;
@@ -443,6 +449,17 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
         }
     }
     return QVariant();
+}
+
+QSize DownloadModel::thumbnailSize(int row) {
+    File *fi =selectedFileList.at(row);
+
+    QPixmap *tn = fi->getThumbnail();
+    if (!tn->isNull()) {
+        return tn->size();
+    } else {
+        return QSize(30,30);
+    }
 }
 
 bool pathLessThan(File *a, File *b) {
@@ -564,6 +581,7 @@ void DownloadModel::treatDir(File dirInfo) {
             }
         }
     }
+    QList<File *> files;
     for (int i = 0; i < content.size(); ++i) {
         File element = content.at(i);
         if (element.isDir) {            
@@ -574,9 +592,40 @@ void DownloadModel::treatDir(File dirInfo) {
                 treatDir(element);
             }
         } else {
-            completeFileList.append(new File(element));
+            files.append(new File(element));
         }
     }
+
+    /* find attached files in the same directory */
+    qSort(files.begin(),files.end(),pathLessThan);
+    for (int i = 0; i < files.size(); ++i) {
+        File *fi = files.at(i);
+        if (fi->isPicture() || fi->isVideo()) {
+            int j = i-1;
+            while (j>=0) {
+                File *af = files.at(j);
+                if (af->parentFile != NULL && !af->isPicture() && !af->isVideo() && af->isAttachmentOf(fi)) {
+                    af->parentFile = fi;
+                    fi->attachedFiles.append(af);
+                } else {
+                    break;
+                }
+                j--;
+            }
+            j = i+1;
+            while (j<files.size()) {
+                File *af = files.at(j);
+                if (af->parentFile != NULL && !af->isPicture() && !af->isVideo() && af->isAttachmentOf(fi)) {
+                    af->parentFile = fi;
+                    fi->attachedFiles.append(af);
+                } else {
+                    break;
+                }
+                j++;
+            }
+        }
+    }
+    completeFileList.append(files);
 }
 
 void DownloadModel::reloadSelection(bool firstTime) {
@@ -598,44 +647,32 @@ void DownloadModel::reloadSelection(bool firstTime) {
         }
     }
     if (sortNeeded || firstTime) {
+        qDebug() << "sort completeFileList by path";
         qSort(completeFileList.begin(), completeFileList.end(), pathLessThan);
+        qDebug() << "copy completeFileList";
         completeFileList_byDate = completeFileList;
+        qDebug() << "sort completeFileList by date";
         qSort(completeFileList_byDate.begin(), completeFileList_byDate.end(), dateLessThan);
     }
-    pd->hide();
 
-    int count = 0;
+
+    qDebug() << "building selected file list by looping over " << completeFileList.size() << " files";
+
     for (int i = 0; i < completeFileList.size(); i++) {
         File *fi = completeFileList.at(i);
         if (fi->isPicture() || fi->isVideo()) {
             if ((selectall || !dc->knownFiles.contains(*fi)) &&
                 !isBlacklisted(*fi)) {
                 selectedFileList.append(fi);
-                //if (count++ > 8) break;
-                /* Search for attached files */
-                for (int j = i-2; j < i+2; j++) {
-                    if (j>=0 && j!=i && j<completeFileList.size()) {
-                        File *attachedFile = completeFileList.at(j);
-                        if (i>0 && attachedFile->isAttachmentOf(*fi)) {
-                            if (! (attachedFile->isPicture() || attachedFile->isVideo())) {
-                                QString afp = attachedFile->absoluteFilePath;
-                                *attachedFile = *fi;
-                                /* Attached files must share the same information as the picture or video they are attached to.
-                                   This way they will continue to share the same name once downloaded */
-                                attachedFile->absoluteFilePath = afp;
-                                selectedFileList.append(attachedFile);
-                                qDebug() << "           this file " << fi->absoluteFilePath;
-                                qDebug() << "has an attached file " << attachedFile->absoluteFilePath;
-                            }
-                        }
-                    }
-                }
+                selectedFileList.append(fi->attachedFiles);
             }
         }
     }
+    pd->hide();
+
     if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
+        qDebug() << "load exif tags";
         pdTimer.start();
-        pd->hide();
         for (int i = 0; i < selectedFileList.size(); i++) {
             File *fi = selectedFileList.at(i);
             if (pd->isVisible()) {
@@ -658,14 +695,17 @@ void DownloadModel::reloadSelection(bool firstTime) {
                 pd->setMaximum(selectedFileList.size());
                 pd->setWindowModality(Qt::WindowModal);
                 pd->setValue(0);
-                pd->show();
                 qDebug() << "pd.show()";
+                pd->show();
+                qDebug() << "processEvents()";
                 QApplication::processEvents();
+                qDebug() << "processEvents() done";
             }
         }
         pd->hide();
         qDebug() << "pd.hide()";
     }
+    qDebug() << "looping on selected files list";
     averagePicSize = 0;
     int countPics = 0;
     for (int i = 0; i < selectedFileList.size(); i++) {
@@ -694,8 +734,11 @@ void DownloadModel::reloadSelection(bool firstTime) {
             averagePicSize = 5*1024*1024;
         }
     }
+    qDebug() << "endResetModel";
     endResetModel();
+    qDebug() << "reloaded";
     reloaded();
+    qDebug() << "dpm.reloadSelection done";
 }
 
 

@@ -32,6 +32,7 @@
 #include <QThread>
 #include <QMap>
 #include <QSemaphore>
+#include <QList>
 class TransferManager;
 
 class File : public QObject
@@ -52,7 +53,7 @@ public:
     QString dateTakenRaw() const;
     void loadExifData();
     QString getEXIFValue(QString key) const;
-    QPixmap getThumbnail();
+    QPixmap *getThumbnail();
     QStringList getEXIFTags();
     QString absoluteFilePath;
     QString IDPath;
@@ -62,7 +63,7 @@ public:
     quint64 size;
     int operator<(File);
     int operator==(const File &other) const;
-    bool isAttachmentOf(File other);
+    bool isAttachmentOf(File *other);
     bool isPicture() const;
     bool isVideo() const;
     bool isJPEG() const;
@@ -85,6 +86,9 @@ public:
     QString transferTo;
     int modelRow;
     bool transferOnGoing;
+
+    QList<File*> attachedFiles;
+    File *parentFile;
 
 private:
     QPixmap thumbnail;

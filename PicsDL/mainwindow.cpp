@@ -70,8 +70,8 @@ void MainWindow::setDeviceWidgets() {
         ui->deviceTable->setIndexWidget(dm->index(i,COL_EDIT),dv->editButton);
         ui->deviceTable->setIndexWidget(dm->index(i,COL_LAUNCH),dv->launchButton);
         ui->deviceTable->setIndexWidget(dm->index(i,COL_REMOVE),dv->removeButton);
-        connect(dv,SIGNAL(launchTransfer(QString,QString,QString,qint64,qint64)),
-                manager,SLOT(treatDrive(QString,QString,QString,qint64,qint64)));
+        connect(dv,SIGNAL(launchTransfer(QString,QString,QString,qint64,qint64,bool)),
+                manager,SLOT(treatDrive(QString,QString,QString,qint64,qint64,bool)));
     }
 }
 

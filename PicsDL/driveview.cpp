@@ -87,6 +87,6 @@ void DriveView::launch(){
     qint64 total;
     qint64 available;
     if (dn->getDeviceInfo(id,&path,&name,&total,&available)) {
-        emit launchTransfer(path,id,name,total,available);
+        emit launchTransfer(path,id,name,total,available,true);
     }
 }

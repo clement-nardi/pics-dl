@@ -31,6 +31,8 @@
 #include "config.h"
 #include "transferdialog.h"
 #include <QMessageBox>
+#include <QStyledItemDelegate>
+#include <QHeaderView>
 
 
 
@@ -79,6 +81,29 @@ void SpinBoxView::readSpinBox(QJsonObject *obj){
     obj->insert(field_name,QJsonValue(spin_box->value()));
 }
 
+
+class CustomItemDelegate: public QStyledItemDelegate {
+    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
+        int row = index.row();
+        qDebug() << "sizeHint " << row << index.column();
+        return QSize(30,100+10*(row%11));
+    }
+};
+
+class CustomHeaderView: public QHeaderView {
+public:
+    CustomHeaderView(Qt::Orientation orientation, QWidget * parent = 0)
+        :QHeaderView(orientation,parent){
+    }
+
+    int sectionSize(int logicalIndex) const {
+        qDebug() << "sectionSize " << logicalIndex;
+        return 50 + 10*(logicalIndex%5);
+    }
+};
+
+
+
 DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DeviceConfigView)
@@ -105,7 +130,14 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
         dpm = new DownloadModel(dc, pd, editMode);
         connect(dpm, SIGNAL(itemOfInterest(QModelIndex)), this, SLOT(makeVisible(QModelIndex)));
         connect(dpm, SIGNAL(reloaded()), ui->tableView, SLOT(resizeColumnsToContents()));
-        connect(dpm, SIGNAL(reloaded()), ui->tableView, SLOT(resizeRowsToContents()));
+        //        connect(dpm, SIGNAL(reloaded()), ui->tableView, SLOT(resizeRowsToContents()));
+        connect(dpm, SIGNAL(reloaded()), this, SLOT(resizeRows()));
+        ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+        //ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+        ui->tableView->verticalHeader()->setResizeContentsPrecision(100);
+        ui->tableView->horizontalHeader()->setResizeContentsPrecision(100);
+        //ui->tableView->setItemDelegate(new CustomItemDelegate());
+        //ui->tableView->setVerticalHeader(new CustomHeaderView(Qt::Vertical,ui->tableView));
         connect(ui->FillCommentsButton,SIGNAL(clicked()), dpm, SLOT(getAllCom()));
         connect(dpm, SIGNAL(EXIFLoadCanceled(bool)), ui->allowEXIFBox, SLOT(setChecked(bool)));
         connect(ui->seeAvTagsButton, SIGNAL(clicked()), this, SLOT(showEXIFTags()));
@@ -147,6 +179,16 @@ DeviceConfigView::~DeviceConfigView() {
     delete pd;
 }
 
+void DeviceConfigView::resizeRows() {
+    qDebug() << "resizeRows" << dpm->rowCount();
+    int maxwidth = 30;
+    for (int row = 0; row<dpm->rowCount(); row++) {
+        QSize s = dpm->thumbnailSize(row);
+        ui->tableView->setRowHeight(row,s.height());
+        maxwidth = std::max(maxwidth,s.width());
+    }
+    ui->tableView->setColumnWidth(0,maxwidth);
+}
 
 void DeviceConfigView::showEXIFTags(){
     if (ui->tableView->selectionModel()->currentIndex().isValid()) {

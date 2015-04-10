@@ -92,7 +92,9 @@ void TransferManager::resetStats() {
 }
 
 TransferManager::~TransferManager(){
-    connect(wt[0],SIGNAL(finished()),geotagger,SLOT(deleteLater()));
+    if (geotagger != NULL) {
+        connect(wt[0],SIGNAL(finished()),geotagger,SLOT(deleteLater()));
+    }
     for (int i = 0; i<NB_WORKERS; i++) {
         connect(wt[i],SIGNAL(finished()),tw[i],SLOT(deleteLater()));
         connect(wt[i],SIGNAL(finished()),wt[i],SLOT(deleteLater()));

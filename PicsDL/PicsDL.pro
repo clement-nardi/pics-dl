@@ -31,7 +31,7 @@ DESTDIR = bin
 
 MAJOR=0
 MINOR=5
-PATCH=0
+PATCH=1
 
 
 !contains(BUILD_NUMBER_UPDATE,false) {

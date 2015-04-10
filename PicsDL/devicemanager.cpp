@@ -36,44 +36,46 @@ DeviceManager::DeviceManager(Config *deviceConfig, QObject *parent) :
     dc = deviceConfig;
 }
 
-void DeviceManager::treatDrive(QString drivePath, QString serial, QString displayName, qint64 deviceSize, qint64 bytes_available){
+void DeviceManager::treatDrive(QString drivePath, QString serial, QString displayName, qint64 deviceSize, qint64 bytes_available, bool force){
 
     qDebug() << "treating drive " << drivePath << serial << displayName;
 
-    if (dc->devices[serial].isUndefined() || dc->devices[serial].isNull() ) {
-        qDebug() << "first time";
-        QJsonObject driveConfig;
+    if (!force) {
+        if (dc->devices[serial].isUndefined() || dc->devices[serial].isNull() ) {
+            qDebug() << "first time";
+            QJsonObject driveConfig;
 
-        /* avoid asking twice the same question */
-        driveConfig.insert(CONFIG_ISMANAGED,QJsonValue(false));
-        driveConfig[CONFIG_DISPLAYNAME] = displayName;
-        driveConfig[CONFIG_DEVICESIZE] = QString("%1").arg(deviceSize);
-        driveConfig[CONFIG_BYTESAVAILABLE] = QString("%1").arg(bytes_available);
-        dc->devices.insert(serial,driveConfig);
-        dc->deviceFieldChanged(serial);
-        QString deviceDescription = displayName;
-        if (displayName != drivePath) {
-            deviceDescription += " (" + drivePath + ")";
+            /* avoid asking twice the same question */
+            driveConfig.insert(CONFIG_ISMANAGED,QJsonValue(false));
+            driveConfig[CONFIG_DISPLAYNAME] = displayName;
+            driveConfig[CONFIG_DEVICESIZE] = QString("%1").arg(deviceSize);
+            driveConfig[CONFIG_BYTESAVAILABLE] = QString("%1").arg(bytes_available);
+            dc->devices.insert(serial,driveConfig);
+            dc->deviceFieldChanged(serial);
+            QString deviceDescription = displayName;
+            if (displayName != drivePath) {
+                deviceDescription += " (" + drivePath + ")";
+            }
+
+            QMessageBox mb(QMessageBox::Question,
+                           QCoreApplication::applicationName(),
+                           "New device detected: " + deviceDescription +  "\n" +
+                           "Would you like to manage this device with " + QCoreApplication::applicationName() + "?",
+                           QMessageBox::Yes | QMessageBox::No);
+            int answer = mb.exec();
+            qDebug() << "answer is " << answer;
+
+            driveConfig.insert(CONFIG_ISMANAGED,QJsonValue(answer == QMessageBox::Yes));
+            dc->devices.insert(serial,driveConfig);
+            dc->saveDevices();
+        } else {
+            qDebug() << "known drive";
         }
-
-        QMessageBox mb(QMessageBox::Question,
-                       QCoreApplication::applicationName(),
-                       "New device detected: " + deviceDescription +  "\n" +
-                       "Would you like to manage this device with " + QCoreApplication::applicationName() + "?",
-                       QMessageBox::Yes | QMessageBox::No);
-        int answer = mb.exec();
-        qDebug() << "answer is " << answer;
-
-        driveConfig.insert(CONFIG_ISMANAGED,QJsonValue(answer == QMessageBox::Yes));
-        dc->devices.insert(serial,driveConfig);
-        dc->saveDevices();
-    } else {
-        qDebug() << "known drive";
+        /* Notify each time a drive is plugged, to update the "launch" button */
+        dc->deviceFieldChanged(serial);
     }
-    /* Notify each time a drive is plugged, to update the "launch" button */
-    dc->deviceFieldChanged(serial);
 
-    if (dc->devices[serial].toObject()[CONFIG_ISMANAGED].toBool() == true) {
+    if (dc->devices[serial].toObject()[CONFIG_ISMANAGED].toBool() == true || force) {
         bool isAlreadyOpened = false;
         QSetIterator<DeviceConfigView *> i(openedViews);
         while (i.hasNext()) {

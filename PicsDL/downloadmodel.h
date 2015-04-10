@@ -55,6 +55,7 @@ public:
     qint64 averagePicSize;
     void freeUpSpace(bool isFakeRun, qint64 *targetAvailable, qint64 *bytesDeleted, int *nbFilesDeleted);
     QList<File*> deletedFiles;
+    QSize thumbnailSize(int row);
 private:
     QElapsedTimer pdTimer;
     Config *dc;

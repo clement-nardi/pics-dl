@@ -110,6 +110,7 @@ public slots:
 
 private slots:
     void handleLinks(QString link);
+    void resizeRows();
 };
 
 #endif // DEVICECONFIGVIEW_H

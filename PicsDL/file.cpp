@@ -1015,6 +1015,7 @@ void File::constructCommonFields() {
     transferTo = "";
     pipedTo = "";
     transferOnGoing = false;
+    parentFile = NULL;
 }
 
 File::~File(){
@@ -1062,9 +1063,9 @@ uint qHash(File fi) {
     return fi.size;
 }
 
-bool File::isAttachmentOf(File other) {
-    return        absoluteFilePath.left(      absoluteFilePath.lastIndexOf(".")) ==
-            other.absoluteFilePath.left(other.absoluteFilePath.lastIndexOf("."));
+bool File::isAttachmentOf(File *other) {
+    return         absoluteFilePath.left(       absoluteFilePath.lastIndexOf(".")) ==
+            other->absoluteFilePath.left(other->absoluteFilePath.lastIndexOf("."));
 }
 
 bool File::isPicture() const {
@@ -1235,7 +1236,7 @@ QString File::getEXIFValue(QString key) const {
 }
 
 
-QPixmap File::getThumbnail() {
+QPixmap *File::getThumbnail() {
     if (thumbnail.isNull()) {
         if (exifData != NULL) {
             if (exifData->data && exifData->size) {
@@ -1292,7 +1293,7 @@ QPixmap File::getThumbnail() {
             }
         }
     }
-    return thumbnail;
+    return &thumbnail;
 }
 
 uint File::dateTaken() const{
