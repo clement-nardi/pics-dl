@@ -40,9 +40,9 @@
 #include "wpdiodevice.h"
 #endif
 
-static QStringList pictureExtensions = QString("jpg,jpeg,dng,raf,bmp,cr2,crw,dcr,dib,erf,fpx,gif,jfif,mos,mrf,mrw,nef,orf,pcx,pef,png,psd,srf,tif,tiff,wdp,x3f,xps").split(",");
+static QStringList pictureExtensions = QString("jpg,jpeg,png,bmp,gif,dng,raf,tif,tiff,cr2,crw,dcr,dib,erf,fpx,jfif,mos,mrf,mrw,nef,orf,pcx,pef,psd,srf,wdp,x3f,xps").split(",");
 static QStringList JPEGExtensions = QString("jpg,jpeg").split(",");
-static QStringList videoExtensions = QString("mov,avi,mts,m2ts,3g2,3gp,asf,m1v,m2t,m2v,m4p,mod,mp2,mp2v,mp4,mpe,mpeg,mpg,mpv,mpv2,qt,ts,tts,vob,wm,wmv").split(",");
+static QStringList videoExtensions = QString("mov,avi,mp4,mts,m2ts,3g2,3gp,mpeg,mpg,wmv,ts,tts,vob,asf,m1v,m2t,m2v,m4p,mod,mp2,mp2v,mpe,mpv,mpv2,qt,wm").split(",");
 
 
 /* copied from exif-entry.c */
@@ -965,7 +965,7 @@ File &File::operator=(const File &fi) {
 
 void File::shallowCopy(const File *fi) {
     lastModified = fi->lastModified;
-    absoluteFilePath = fi->absoluteFilePath;
+    setAbsoluteFilePath(fi->absoluteFilePath());
     size = fi->size;
     isDir = fi->isDir;
     IDPath = fi->IDPath;
@@ -978,7 +978,7 @@ File::File(QString path) {
 
 File::File()
 {
-    absoluteFilePath = "";
+    setAbsoluteFilePath("");
     IDPath = "";
     isDir = true;
     constructCommonFields();
@@ -991,7 +991,7 @@ File::File(QFileInfo qfi)
 
 void File::init(QFileInfo qfi) {
     lastModified = qfi.lastModified().toTime_t();
-    absoluteFilePath = qfi.absoluteFilePath();
+    setAbsoluteFilePath(qfi.absoluteFilePath());
     size = qfi.size();
     isDir = qfi.isDir();
     IDPath = "";
@@ -1000,7 +1000,7 @@ void File::init(QFileInfo qfi) {
 
 File::File(uint lastModified_, QString absoluteFilePath_, quint64 size_, bool isDir_, QString IDPath_){
     lastModified = lastModified_;
-    absoluteFilePath = absoluteFilePath_;
+    setAbsoluteFilePath(absoluteFilePath_);
     size = size_;
     isDir = isDir_;
     IDPath = IDPath_;
@@ -1025,8 +1025,16 @@ File::~File(){
     }
 }
 
-QString File::fileName() const{
-    return absoluteFilePath.split("/").last();
+const QString &File::absoluteFilePath() const{
+    return absoluteFilePath_p;
+}
+void File::setAbsoluteFilePath(QString s){
+    absoluteFilePath_p = s;
+    fileName_p = absoluteFilePath().split('/').last();
+}
+
+const QString &File::fileName() const{
+    return fileName_p;
 }
 
 QString File::extension() const {
@@ -1039,7 +1047,7 @@ QString File::extension() const {
 }
 
 int File::operator<(File other) {
-    return absoluteFilePath < other.absoluteFilePath;
+    return absoluteFilePath() < other.absoluteFilePath();
 }
 
 int File::operator==(const File &other) const {
@@ -1064,8 +1072,8 @@ uint qHash(File fi) {
 }
 
 bool File::isAttachmentOf(File *other) {
-    return         absoluteFilePath.left(       absoluteFilePath.lastIndexOf(".")) ==
-            other->absoluteFilePath.left(other->absoluteFilePath.lastIndexOf("."));
+    return         absoluteFilePath().left(       absoluteFilePath().lastIndexOf(".")) ==
+            other->absoluteFilePath().left(other->absoluteFilePath().lastIndexOf("."));
 }
 
 bool File::isPicture() const {
@@ -1087,7 +1095,7 @@ void File::loadExifData() {
 
 #ifdef _WIN32
             static QMap<QString,DWORD> lastSuccessfulTransferSize;
-            qDebug() << "loadExifData for" << absoluteFilePath;
+            qDebug() << "loadExifData for" << absoluteFilePath();
             QElapsedTimer timer;
             qint64 initTime;
             qint64 transferTime = 0;
@@ -1179,7 +1187,7 @@ void File::loadExifData() {
             /* Doesn't work with paths containing non-ascii characters */
             //exifData = exif_data_new_from_file (absoluteFilePath.toStdString().c_str());
 
-            QFile file(absoluteFilePath);
+            QFile file(absoluteFilePath());
             if (!file.open(QIODevice::ReadOnly)) {
                 return ;
             }
@@ -1382,7 +1390,7 @@ QList<File> File::ls(bool *theresMore) {
     if (IDPath.startsWith("WPD:/")) {
 
 #ifdef _WIN32
-        if (absoluteFilePath.count("/") > 5) return res;
+        if (absoluteFilePath().count("/") > 5) return res;
         QString deviceID = IDPath.split("/")[1];
         WCHAR * deviceID_i = (WCHAR*) malloc(sizeof(WCHAR)*(deviceID.size()+1));
         QString objectID;
@@ -1401,7 +1409,7 @@ QList<File> File::ls(bool *theresMore) {
         WPDFileInfo WPDList[MAX_REQUESTED_ELEMENTS];
         /*qDebug() << "Calling WPDI_LS(" << QString::fromWCharArray(deviceID_i)
                  << "," << QString::fromWCharArray(objectID_i);*/
-        qDebug() << "listing content of" << absoluteFilePath;
+        qDebug() << "listing content of" << absoluteFilePath();
         //qDebug() << "             path=" << IDPath;
         WPDI_LS(deviceID_i,objectID_i,WPDList,&count);
         qDebug() << "returned" << count << "elements";
@@ -1410,7 +1418,7 @@ QList<File> File::ls(bool *theresMore) {
             //qDebug() << QString::fromWCharArray(WPDList[i].date);
             res.append(File(QDateTime::fromString(QString::fromWCharArray(WPDList[i].date),
                                                       "yyyy/MM/dd:HH:mm:ss.zzz").toTime_t(),
-                                absoluteFilePath + "/" + QString::fromWCharArray(WPDList[i].name),
+                                absoluteFilePath() + "/" + QString::fromWCharArray(WPDList[i].name),
                                 WPDList[i].size,
                                 WPDList[i].isDir,
                                 IDPath + "/" + QString::fromWCharArray(WPDList[i].id)));
@@ -1428,7 +1436,7 @@ QList<File> File::ls(bool *theresMore) {
         free(objectID_i);
 #endif
     } else {
-        QDir dir = QDir(absoluteFilePath);
+        QDir dir = QDir(absoluteFilePath());
         dir.setFilter(dir.filter()|QDir::NoDotAndDotDot|QDir::System);
         for (int i = 0; i<dir.entryInfoList().size(); i++) {
             res.append(File(dir.entryInfoList().at(i)));
@@ -1445,10 +1453,10 @@ void File::launchWrite(QString dest, bool geotag){
     }
 }
 
-
+/* Not used - alpha version */
 void File::writeHeader(QString dest){
     if (dest == "") {
-        dest = absoluteFilePath + ".header";
+        dest = absoluteFilePath() + ".header";
     }
     QFile file(dest);
     file.open(QIODevice::WriteOnly);
@@ -1462,11 +1470,12 @@ void File::writeHeader(QString dest){
 
 }
 
+/* Not used - alpha version */
 void File::writeContent(QString dest){
     if (dest == "") {
-        dest = absoluteFilePath + ".content";
+        dest = absoluteFilePath() + ".content";
     }
-    QFile source(absoluteFilePath);
+    QFile source(absoluteFilePath());
     source.open(QIODevice::ReadOnly);
     source.seek(exifData->size);
     QFile file(dest);
@@ -1631,7 +1640,7 @@ void File::setGeotaggedBuffer(QBuffer *geotaggedBuffer_) {
 
 QIODevice *File::getReadDevice() {
     if (!IDPath.startsWith("WPD:/")) {
-        return new QFile(absoluteFilePath);
+        return new QFile(absoluteFilePath());
 #ifdef _WIN32
     } else if (IDPath.startsWith("WPD:/")) {
         return new WPDIODevice(IDPath);
@@ -1711,7 +1720,7 @@ void File::pipe(QIODevice *in, QIODevice *out){
 
 bool File::FillIODeviceWithContent(QIODevice *out) {
     if (!IDPath.startsWith("WPD:/")) {
-        QFile in(absoluteFilePath);
+        QFile in(absoluteFilePath());
 
         if (!in.open(QIODevice::ReadOnly)) {
             return false;
@@ -1792,7 +1801,7 @@ bool File::FillIODeviceWithContent(QIODevice *out) {
 
 bool File::moveWithDirs(QString to) {
     QDir().mkpath(QFileInfo(to).absolutePath());
-    return QFile(absoluteFilePath).rename(to);
+    return QFile(absoluteFilePath()).rename(to);
 }
 
 #ifdef _WIN32
@@ -1801,8 +1810,8 @@ bool File::moveWithDirs(QString to) {
 
 bool File::setHidden() {
 #ifdef _WIN32
-    WCHAR * wPath = (WCHAR*) malloc(sizeof(WCHAR)*(absoluteFilePath.size()+1));
-    QString windowsStylePath = absoluteFilePath;
+    WCHAR * wPath = (WCHAR*) malloc(sizeof(WCHAR)*(absoluteFilePath().size()+1));
+    QString windowsStylePath = absoluteFilePath();
     windowsStylePath.replace("/","\\").toWCharArray(wPath);
     DWORD dwAttrs = GetFileAttributes(wPath);
     SetFileAttributes(wPath, dwAttrs | FILE_ATTRIBUTE_HIDDEN);
@@ -1813,7 +1822,7 @@ bool File::setHidden() {
 
 bool File::remove() {
     if (!IDPath.startsWith("WPD:/")) {
-        QFile file(absoluteFilePath);
+        QFile file(absoluteFilePath());
         return file.remove();
 #ifdef _WIN32
     } else if (IDPath.startsWith("WPD:/")) {

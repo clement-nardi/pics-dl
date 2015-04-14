@@ -49,6 +49,9 @@ MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  
     sysTray.setContextMenu(menu);
     sysTray.setIcon(QIcon(":/icons/picsDL"));
     sysTray.show();
+#ifdef __APPLE__
+    menu->setAsDockMenu();
+#endif
 
     connect(&sysTray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(sysTray_handle(QSystemTrayIcon::ActivationReason)));
     connect(ui->actionQuit, SIGNAL(triggered()),this,SLOT(quit_handle()));
@@ -56,6 +59,7 @@ MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  
     connect(ui->actionAbout, SIGNAL(triggered()),this,SLOT(about_handle()));
 
     dm = new DeviceModel(dc,dn_);
+    ui->deviceTable->horizontalHeader()->setSortIndicator(COL_LAUNCH,Qt::DescendingOrder);
     ui->deviceTable->setModel(dm);
     setDeviceWidgets();
     ui->deviceTable->resizeColumnsToContents();

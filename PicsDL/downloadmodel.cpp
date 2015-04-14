@@ -36,6 +36,37 @@
 #include <QCryptographicHash>
 #include "geotagger.h"
 
+
+static int thumbnailSurface(File *fi) {
+    QPixmap *tn = fi->getThumbnail();
+    if (!tn->isNull()) {
+        return tn->size().width()*tn->size().height();
+    } else {
+        return 30*30;
+    }
+}
+
+static DownloadModel *dpm_s;
+
+#define IF_DIFFERENT_RETURN(a,b,asc) {if ((a) != (b)) {return (asc)?((a)<(b)):((b)<(a));}}
+
+static bool fileLessThan(File *a, File *b) {
+    for (int i = 0; i < dpm_s->sortColumnOrder.size(); i++) {
+        int column = dpm_s->sortColumnOrder.at(i);
+        bool isAscending = dpm_s->sortIsAscending[column];
+        switch (column) {
+        case COL_THUMBNAIL: IF_DIFFERENT_RETURN(thumbnailSurface(a) ,thumbnailSurface(b),isAscending) break;
+        case COL_FILEPATH:  IF_DIFFERENT_RETURN(a->absoluteFilePath(),b->absoluteFilePath(),isAscending) break;
+        case COL_FILENAME:  IF_DIFFERENT_RETURN(a->fileName()       ,b->fileName()      ,isAscending) break;
+        case COL_SIZE:      IF_DIFFERENT_RETURN(a->size             ,b->size            ,isAscending) break;
+        case COL_DATE:      IF_DIFFERENT_RETURN(a->lastModified     ,b->lastModified    ,isAscending) break;
+        case COL_NEWPATH:   IF_DIFFERENT_RETURN(dpm_s->newPath(a)   ,dpm_s->newPath(b)  ,isAscending) break;
+        }
+    }
+    return 0;
+}
+
+
 static QStringList dateKeywords = QString("yyyy;yy;MMMM;MMM;MM;dddd;ddd;dd;HH;mm;ss").split(";");
 
 DownloadModel::DownloadModel(Config *dc_, QProgressDialog *pd_, bool editMode_, QObject *parent) :
@@ -46,6 +77,10 @@ DownloadModel::DownloadModel(Config *dc_, QProgressDialog *pd_, bool editMode_, 
     itemBeingDownloaded = -1;
     pd = pd_;
 
+    sortColumnOrder.append(COL_DATE); /* show first oldest files */
+    for (int i = 0; i<NB_COLUMNS; i++) {
+        sortIsAscending[i] = true;
+    }
 }
 
 DownloadModel::~DownloadModel() {
@@ -55,77 +90,112 @@ DownloadModel::~DownloadModel() {
     }
 }
 
+void DownloadModel::sort(int column, Qt::SortOrder order){
+    qDebug() << QString("sort(%1,%2)").arg(column).arg(order);
+    sortColumnOrder.removeAll(column);
+    sortColumnOrder.prepend(column);
+    sortIsAscending[column] = (order == Qt::AscendingOrder);
+    beginResetModel();
+    dpm_s = this;
+    qSort(selectedFileList.begin(),selectedFileList.end(),fileLessThan);
+    endResetModel();
+    reloaded();
+}
+
 int DownloadModel::rowCount(const QModelIndex & parent) const{
     return selectedFileList.size();
 }
 int DownloadModel::columnCount(const QModelIndex & parent) const {
-    return 5;
+    return NB_COLUMNS;
 }
 
 QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
-
     if (fi->parentFile != NULL) {
         QString parentNewPath = newPath(fi->parentFile,keepDComStr);
         return parentNewPath.left(parentNewPath.lastIndexOf('.')) + "." + fi->fileName().split('.').last();
-    }
-
-    QJsonObject obj = dc->devices[id].toObject();
-    QString newName = obj[CONFIG_NEWNAME].toString();
-    QString newPath;
-    QDateTime lm;
-    int tagidx = -1;
-    if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool() &&
-        dc->devices[id].toObject()[CONFIG_USEEXIFDATE].toBool()    ) {
-        lm = QDateTime::fromTime_t(fi->dateTaken());
     } else {
-        lm = QDateTime::fromTime_t(fi->lastModified);
-    }
-    QStringList oNameList = fi->fileName().split(".");
-    QString oExt = oNameList.last();
-    oNameList.removeLast();
-    QString oName = oNameList.join(".");
-
-    for (int i = 0; i < dateKeywords.size(); i++) {
-        newName.replace(dateKeywords.at(i),lm.toString(dateKeywords.at(i)));
-    }
-    newName.replace("oName",oName);
-    if (!keepDComStr && newName.contains("dCom")) {
-        newName.replace("dCom",getDCom(fi));
-    }
-    newName.replace("sCom",sessionComment);
-
-    /* replace EXIF tags with their values */
-    while (true) {
-        tagidx = newName.indexOf("<",tagidx+1);
-        if (tagidx<0) break;
-        int endidx = newName.indexOf(">",tagidx);
-        if (endidx<0) break;
-        QString tagName = newName.mid(tagidx+1,endidx-tagidx-1);
-        QString value = "";
-        if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
-            value = fi->getEXIFValue(tagName);
+        QJsonObject obj = dc->devices[id].toObject();
+        QString newName = obj[CONFIG_NEWNAME].toString();
+        QString newPath;
+        QDateTime lm;
+        int tagidx = -1;
+        if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool() &&
+                dc->devices[id].toObject()[CONFIG_USEEXIFDATE].toBool()    ) {
+            lm = QDateTime::fromTime_t(fi->dateTaken());
+        } else {
+            lm = QDateTime::fromTime_t(fi->lastModified);
         }
-        newName.replace("<" + tagName + ">",value);        
+        QStringList oNameList = fi->fileName().split(".");
+        QString oExt = oNameList.last();
+        oNameList.removeLast();
+        QString oName = oNameList.join(".");
+
+        for (int i = 0; i < dateKeywords.size(); i++) {
+            newName.replace(dateKeywords.at(i),lm.toString(dateKeywords.at(i)));
+        }
+        newName.replace("oName",oName);
+        if (!keepDComStr && newName.contains("dCom")) {
+            newName.replace("dCom",getDCom(fi));
+        }
+        newName.replace("sCom",sessionComment);
+
+        /* replace EXIF tags with their values */
+        while (true) {
+            tagidx = newName.indexOf("<",tagidx+1);
+            if (tagidx<0) break;
+            int endidx = newName.indexOf(">",tagidx);
+            if (endidx<0) break;
+            QString tagName = newName.mid(tagidx+1,endidx-tagidx-1);
+            QString value = "";
+            if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
+                value = fi->getEXIFValue(tagName);
+            }
+            newName.replace("<" + tagName + ">",value);
+        }
+
+        /* These are forbidden characters under windows: \ : * ? " < > | */
+        newName.remove(QRegExp("[\\\\:*?\"<>|]"));
+
+        /* prevent folder and file names to start or end with a space character */
+        newName.prepend("/");
+        while (newName.contains(" /")) {newName.replace(" /","/");}
+        while (newName.contains("/ ")) {newName.replace("/ ","/");}
+
+        newPath = obj[CONFIG_DOWNLOADTO].toString() + newName + "." + oExt;
+        while (newPath.contains("//")) {newPath.replace("//","/");}
+
+        { /* collisions management */
+            int occurence_number = (newPathCollisions[newPath]++);
+            if (occurence_number >= 1) {
+                int insertPos = newPath.lastIndexOf('.');
+                if (insertPos<0) insertPos = 0;
+                newPath.insert(insertPos,QString("%1%2").arg((insertPos>0&&newPath[insertPos-1]!='/')?"-":"").arg(occurence_number));
+            }
+        }
+
+        return newPath;
     }
-
-    /* These are forbidden characters under windows: \ : * ? " < > | */
-    newName.remove(QRegExp("[\\\\:*?\"<>|]"));
-
-    /* prevent folder and file names to start or end with a space character */
-    newName.prepend("/");
-    while (newName.contains(" /")) {newName.replace(" /","/");}
-    while (newName.contains("/ ")) {newName.replace("/ ","/");}
-
-    newPath = obj[CONFIG_DOWNLOADTO].toString() + newName + "." + oExt;
-    while (newPath.contains("//")) {newPath.replace("//","/");}
-    return newPath;
 }
 
+QString &DownloadModel::newPath(File *fi) const{
+    if (!newPathCache.contains(fi)) {
+        newPathCache.insert(fi,newPath(fi,false));
+    }
+    return newPathCache[fi];
+}
 
+void DownloadModel::updateNewPaths() {
+    newPathCache.clear();
+    newPathCollisions.clear();
+    dataChanged(createIndex(0,COL_NEWPATH),
+                createIndex(selectedFileList.size()-1,COL_NEWPATH));
+}
+
+/* Not used anymore */
 QString DownloadModel::tempPath(File *fi) const {
     QStringList oNameList = fi->fileName().split(".");
     QString oExt = oNameList.last();
-    QString tempName = QString(QCryptographicHash::hash(fi->absoluteFilePath.toUtf8(), QCryptographicHash::Sha3_224).toHex());
+    QString tempName = QString(QCryptographicHash::hash(fi->absoluteFilePath().toUtf8(), QCryptographicHash::Sha3_224).toHex());
     return DLTempFolder + "/" + tempName + "." + oExt;
 }
 
@@ -275,8 +345,7 @@ bool DownloadModel::getAllCom(){
         dc->daily_comments = obj;
         dc->saveDailyComments();
 
-        dataChanged(createIndex(0,2),
-                    createIndex(selectedFileList.size(),2));
+        updateNewPaths();
         delete daylycomments;
     }
     return (res == QDialog::Accepted);
@@ -309,79 +378,97 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
     switch (role) {
     case Qt::DisplayRole:
         switch (index.column()) {
-        case 0:
+        case COL_THUMBNAIL:
             break;
-        case 1:
+        case COL_FILEPATH:
+            return fi->absoluteFilePath();
+            break;
+        case COL_FILENAME:
             return fi->fileName();
             break;
-        case 2:
+        case COL_SIZE:
         {
             return File::size2Str(fi->size);
         }
             break;
-        case 3:
+        case COL_DATE:
         {
             QDateTime lm = QDateTime::fromTime_t(fi->lastModified);
             return lm.toString("yyyy/MM/dd HH:mm:ss");
         }
             break;
-        case 4:
-            return newPath(fi);
+        case COL_NEWPATH:
+            if (excludedFiles.contains(fi)) {
+                return "This file will not be downloaded.";
+            } else {
+                return newPath(fi);
+            }
             break;
         }
         break;
     case Qt::ToolTipRole:
         switch (index.column()) {
-        case 0:
+        case COL_THUMBNAIL:
         {
             QPixmap *tn = fi->getThumbnail();
             if (!tn->isNull()) {
                 return QString("%1x%2").arg(tn->size().width()).arg(tn->size().height());
             }
         }
-        case 1:
+        case COL_FILEPATH:
+        case COL_FILENAME:
         {
-            QString tooltip = fi->absoluteFilePath;
+            QString tooltip = fi->absoluteFilePath();
+            if (fi->parentFile != NULL) {
+                tooltip += "\n" + QString("This file is an attachment of %1").arg(fi->parentFile->fileName());
+            }
+            if (fi->attachedFiles.size() != 0) {
+                tooltip += "\n" + QString("This file has %1 %2.")
+                                    .arg(fi->attachedFiles.size())
+                                    .arg(fi->attachedFiles.size()==1?"attachment":"attachments");
+            }
             if (dc->knownFiles.contains(*fi)) {
-                tooltip += "\nThis file was tranfered before";
+                tooltip += "\n" + QString("This file was tranfered before");
             } else {
-                tooltip += "\nThis is a new file";
+                tooltip += "\n" + QString("This is a new file");
             }
             return tooltip;
         }
             break;
-        case 2:
+        case COL_SIZE:
         {
             return QString("%1 Bytes").arg(fi->size);
         }
             break;
-        case 3:
+        case COL_DATE:
         {
             QDateTime lm = QDateTime::fromTime_t(fi->lastModified);
             return lm.toString(Qt::SystemLocaleLongDate);
         }
             break;
-        case 4:
+        case COL_NEWPATH:
         {
-            QString tooltip = newPath(fi);
-            if (fi->transferOnGoing) {
-                tooltip += "\nThis file is being transfered";
-            } else if (QFile(newPath(fi)).exists()) {
-                if (fi->transferTo.size()>0) {
-                    tooltip += "\nThis file was just transfered";
+            if (!excludedFiles.contains(fi)) {
+                QString tooltip = newPath(fi);
+                if (fi->transferOnGoing) {
+                    tooltip += "\nThis file is being transfered";
+                } else if (QFile(newPath(fi)).exists()) {
+                    if (fi->transferTo.size()>0) {
+                        tooltip += "\nThis file was just transfered";
+                    } else {
+                        tooltip += "\nThis file already exists, it will not be overwritten";
+                    }
                 } else {
-                    tooltip += "\nThis file already exists, it will not be overwritten";
+                    tooltip += "\nThis file will be transfered";
                 }
-            } else {
-                tooltip += "\nThis file will be transfered";
+                return tooltip;
             }
-            return tooltip;
         }
             break;
         }
         break;
     case Qt::DecorationRole:
-        if (index.column() == 0) {
+        if (index.column() == COL_THUMBNAIL) {
             QPixmap *tn = fi->getThumbnail();
             if (!tn->isNull()) {
                 return *tn;
@@ -397,15 +484,18 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
                 }
             }
         }
-        if (index.column() == 1) {
+        if (index.column() == COL_FILENAME ||
+            index.column() == COL_FILEPATH) {
             if (dc->knownFiles.contains(*fi)) {
                 return QIcon(":/icons/ok");
             } else {
                 return QIcon(":/icons/add");
             }
         }
-        if (index.column() == 4) {
-            if (fi->transferOnGoing) {
+        if (index.column() == COL_NEWPATH) {
+            if (excludedFiles.contains(fi)) {
+                return QIcon(":/icons/remove");
+            } else if (fi->transferOnGoing) {
                 return QIcon(":/icons/download");
             } else if (QFile(newPath(fi)).exists()) {
                 if (fi->transferTo.size()>0) {
@@ -419,7 +509,7 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
         }
         break;
     case Qt::SizeHintRole:
-        if (index.column() == 0) {
+        if (index.column() == COL_THUMBNAIL) {
             QPixmap *tn = fi->getThumbnail();
             if (!tn->isNull()) {
                 return tn->size();
@@ -430,6 +520,11 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
     return QVariant();
 }
 
+Qt::ItemFlags DownloadModel::flags(const QModelIndex & index) const{
+    return Qt::ItemIsSelectable|
+           Qt::ItemIsEnabled;
+}
+
 QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int role) const{
     switch (role) {
     case Qt::DisplayRole:
@@ -437,11 +532,12 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
         switch (orientation) {
         case Qt::Horizontal:
             switch (section) {
-            case 0: return ""; break;
-            case 1: return "File"; break;
-            case 2: return "Size"; break;
-            case 3: return "Date"; break;
-            case 4: return "Destination"; break;
+            case COL_THUMBNAIL: return ""; break;
+            case COL_FILEPATH: return "File Path"; break;
+            case COL_FILENAME: return "File Name"; break;
+            case COL_SIZE: return "Size"; break;
+            case COL_DATE: return "Date"; break;
+            case COL_NEWPATH: return "Destination"; break;
             }
             break;
         case Qt::Vertical:
@@ -451,23 +547,29 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
+#define MIN_ROW_HEIGHT 30
 QSize DownloadModel::thumbnailSize(int row) {
     File *fi =selectedFileList.at(row);
 
     QPixmap *tn = fi->getThumbnail();
     if (!tn->isNull()) {
-        return tn->size();
+        QSize size = tn->size();
+        if (size.height() < MIN_ROW_HEIGHT) {
+            size.setHeight(MIN_ROW_HEIGHT);
+        }
+        return size;
     } else {
-        return QSize(30,30);
+        return QSize(MIN_ROW_HEIGHT,MIN_ROW_HEIGHT);
     }
 }
 
 bool pathLessThan(File *a, File *b) {
-    return a->absoluteFilePath < b->absoluteFilePath;
+    return a->absoluteFilePath() < b->absoluteFilePath();
 }
 bool dateLessThan(File *a, File *b) {
     return a->lastModified < b->lastModified;
 }
+
 
 void DownloadModel::emptyFileList() {
     for (int i = 0; i < completeFileList.size(); i++) {
@@ -506,7 +608,7 @@ bool DownloadModel::isBlacklisted(File element) {
         int reverseNonMatchingIndex = 0;
 
         QStringList patternList = dc->devices[id].toObject()[CONFIG_FILTER].toString().split(";");
-        QStringList directoryList = element.absoluteFilePath.split("/");
+        QStringList directoryList = element.absoluteFilePath().split("/");
         if (!element.isDir) {
             directoryList.removeLast();
         }
@@ -517,7 +619,7 @@ bool DownloadModel::isBlacklisted(File element) {
                 QRegExp pattern = QRegExp("^" + temp.replace(".","\\.").replace("*",".*") + "$");
                 if (pattern.indexIn(directoryList.at(dirIdx)) >= 0) {
                     patternMatchedOnce = true;
-                    qDebug() << element.absoluteFilePath << "matched on" << patternList.at(j) << pattern;
+                    //qDebug() << element.absoluteFilePath() << "matched on" << patternList.at(j) << pattern;
                 }
             }
             if (patternMatchedOnce) {
@@ -537,6 +639,22 @@ bool DownloadModel::isBlacklisted(File element) {
             }
             return reverseNonMatchingIndex >= minMatchIdx;
         }
+    }
+}
+
+static bool bondFiles(File *file, File *attachment) {
+    if (attachment->parentFile == NULL &&
+            !attachment->isPicture() &&
+            !attachment->isVideo() &&
+            attachment->isAttachmentOf(file)) {
+        attachment->parentFile = file;
+        file->attachedFiles.append(attachment);
+        /*qDebug() << QString("This file:            %1\nHas an attached file: %2")
+                    .arg(file->absoluteFilePath())
+                    .arg(attachment->absoluteFilePath());*/
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -604,24 +722,20 @@ void DownloadModel::treatDir(File dirInfo) {
             int j = i-1;
             while (j>=0) {
                 File *af = files.at(j);
-                if (af->parentFile != NULL && !af->isPicture() && !af->isVideo() && af->isAttachmentOf(fi)) {
-                    af->parentFile = fi;
-                    fi->attachedFiles.append(af);
+                if (bondFiles(fi,af)) {
+                    j--;
                 } else {
                     break;
                 }
-                j--;
             }
             j = i+1;
             while (j<files.size()) {
                 File *af = files.at(j);
-                if (af->parentFile != NULL && !af->isPicture() && !af->isVideo() && af->isAttachmentOf(fi)) {
-                    af->parentFile = fi;
-                    fi->attachedFiles.append(af);
+                if (bondFiles(fi,af)) {
+                    j++;
                 } else {
                     break;
                 }
-                j++;
             }
         }
     }
@@ -734,6 +848,8 @@ void DownloadModel::reloadSelection(bool firstTime) {
             averagePicSize = 5*1024*1024;
         }
     }
+    dpm_s = this;
+    qSort(selectedFileList.begin(),selectedFileList.end(),fileLessThan);
     qDebug() << "endResetModel";
     endResetModel();
     qDebug() << "reloaded";
@@ -743,13 +859,13 @@ void DownloadModel::reloadSelection(bool firstTime) {
 
 
 void DownloadModel::readStarted(File * file){
-    dataChanged(createIndex(file->modelRow,4),
-                createIndex(file->modelRow,4));
-    emit itemOfInterest(createIndex(file->modelRow,4));
+    dataChanged(createIndex(file->modelRow,COL_NEWPATH),
+                createIndex(file->modelRow,COL_NEWPATH));
+    emit itemOfInterest(createIndex(file->modelRow,COL_NEWPATH));
 }
 void DownloadModel::writeFinished(File * file){
-    dataChanged(createIndex(file->modelRow,4),
-                createIndex(file->modelRow,4));
+    dataChanged(createIndex(file->modelRow,COL_NEWPATH),
+                createIndex(file->modelRow,COL_NEWPATH));
 }
 
 
@@ -775,9 +891,12 @@ QString DownloadModel::getTrackingFolder() {
 void DownloadModel::getStats(qint64 *totalSize, int *nbFiles) {
     *totalSize = 0;
     for (int i = 0; i < selectedFileList.size(); i++) {
-        *totalSize += selectedFileList.at(i)->size;
+        File *fi = selectedFileList.at(i);
+        if (!excludedFiles.contains(fi)) {
+            *totalSize += fi->size;
+            (*nbFiles)++;
+        }
     }
-    *nbFiles = selectedFileList.size();
 }
 
 
@@ -824,7 +943,7 @@ void DownloadModel::freeUpSpace(bool isFakeRun,
                     } else {
                         if (!isFakeRun) {
                             bool removed = fi->remove();
-                            qDebug() << "Removing " << fi->absoluteFilePath << " -> " << (removed?"OK":"KO") ;
+                            qDebug() << "Removing " << fi->absoluteFilePath() << " -> " << (removed?"OK":"KO") ;
                         }
                         *bytesDeleted += fi->size;
                         (*nbFilesDeleted)++;
@@ -838,14 +957,26 @@ void DownloadModel::freeUpSpace(bool isFakeRun,
                 }
             } else {
                 if (!isFakeRun)
-                    qDebug() << "Do not delete unknown file: " << fi->absoluteFilePath;
+                    qDebug() << "Do not delete unknown file: " << fi->absoluteFilePath();
             }
         }
     }
 }
 
 
-
+void DownloadModel::markForDownload(QModelIndexList rows, bool mark){
+    for (int i = 0; i<rows.size(); i++) {
+        int row = rows.at(i).row();
+        File * fi = selectedFileList.at(row);
+        if (mark) {
+            excludedFiles.remove(fi);
+        } else {
+            excludedFiles.insert(fi);
+        }
+        dataChanged(createIndex(row,0),createIndex(row,NB_COLUMNS));
+    }
+    emit selectionModified();
+}
 
 
 

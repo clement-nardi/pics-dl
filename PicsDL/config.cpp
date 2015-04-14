@@ -56,8 +56,8 @@ Config::Config()
         config.rename(devices_file_name);
     }
 
-    loadDevices();
     loadKnownFiles();
+    loadDevices();
     loadDailyComments();
     loadGUIParams();
 }
@@ -158,7 +158,7 @@ void Config::saveKnownFiles(){
             QJsonObject obj;
             File fi = i.next();
             obj[FILE_LASTMODIFIED] = QJsonValue(QString("%1").arg(fi.lastModified));
-            obj[FILE_ABSOLUTEFILEPATH] = QJsonValue(fi.absoluteFilePath);
+            obj[FILE_ABSOLUTEFILEPATH] = QJsonValue(fi.absoluteFilePath());
             obj[FILE_SIZE] = QJsonValue(QString("%1").arg(fi.size));
 
             jsa.append(obj);

@@ -55,10 +55,11 @@ public:
     QString getEXIFValue(QString key) const;
     QPixmap *getThumbnail();
     QStringList getEXIFTags();
-    QString absoluteFilePath;
+    const QString &absoluteFilePath() const;
+    const QString &fileName() const;
+    void setAbsoluteFilePath(QString s);
     QString IDPath;
     bool isDir;
-    QString fileName() const;
     QString extension() const;
     quint64 size;
     int operator<(File);
@@ -91,6 +92,8 @@ public:
     File *parentFile;
 
 private:
+    QString absoluteFilePath_p;
+    QString fileName_p;
     QPixmap thumbnail;
     bool exifLoadAttempted;
     ExifData *exifData;

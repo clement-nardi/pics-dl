@@ -33,6 +33,7 @@
 #include <QMessageBox>
 #include <QStyledItemDelegate>
 #include <QHeaderView>
+#include <QMenu>
 
 
 
@@ -106,7 +107,9 @@ public:
 
 DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DeviceConfigView)
+    ui(new Ui::DeviceConfigView),
+    do_not_download_action(QIcon(":/icons/remove"),"Do not download",this),
+    download_action(QIcon(":/icons/download"),"Download",this)
 {
     dpm = NULL;
     tm = NULL;
@@ -117,6 +120,9 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
     td = new TransferDialog(this);
     ui->setupUi(this);
     ui->Tabs->setCurrentIndex(0);
+
+    tableMenu.addAction(&do_not_download_action);
+    tableMenu.addAction(&download_action);
 
     connect(ui->openButton, SIGNAL(clicked()),this, SLOT(chooseDLTo()));
     connect(ui->trackOpenButton, SIGNAL(clicked()),this, SLOT(chooseTrackFolder()));
@@ -129,20 +135,24 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
     if (!editMode) {
         dpm = new DownloadModel(dc, pd, editMode);
         connect(dpm, SIGNAL(itemOfInterest(QModelIndex)), this, SLOT(makeVisible(QModelIndex)));
-        connect(dpm, SIGNAL(reloaded()), ui->tableView, SLOT(resizeColumnsToContents()));
         //        connect(dpm, SIGNAL(reloaded()), ui->tableView, SLOT(resizeRowsToContents()));
         connect(dpm, SIGNAL(reloaded()), this, SLOT(resizeRows()));
+        connect(dpm, SIGNAL(reloaded()), ui->tableView, SLOT(resizeColumnsToContents()));
+        connect(dpm, SIGNAL(reloaded()), this, SLOT(updateStatusText()));
+        connect(dpm, SIGNAL(selectionModified()), this, SLOT(updateStatusText()));
         ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
         //ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-        ui->tableView->verticalHeader()->setResizeContentsPrecision(100);
-        ui->tableView->horizontalHeader()->setResizeContentsPrecision(100);
+        //ui->tableView->verticalHeader()->setResizeContentsPrecision(100);
+        ui->tableView->horizontalHeader()->setResizeContentsPrecision(50);
         //ui->tableView->setItemDelegate(new CustomItemDelegate());
         //ui->tableView->setVerticalHeader(new CustomHeaderView(Qt::Vertical,ui->tableView));
         connect(ui->FillCommentsButton,SIGNAL(clicked()), dpm, SLOT(getAllCom()));
         connect(dpm, SIGNAL(EXIFLoadCanceled(bool)), ui->allowEXIFBox, SLOT(setChecked(bool)));
         connect(ui->seeAvTagsButton, SIGNAL(clicked()), this, SLOT(showEXIFTags()));
 
+        ui->tableView->horizontalHeader()->setSortIndicator(COL_DATE,Qt::AscendingOrder);
         ui->tableView->setModel(dpm);
+        ui->tableView->setColumnHidden(COL_FILEPATH,true);
         dpm->loadPreview(id);
         tm = new TransferManager(this,dpm);
         //ui->tableView->setItemDelegate(dpm->getItemDelegate());
@@ -150,6 +160,16 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
 
         connect(ui->automation, SIGNAL(performAction()),this,SLOT(go()));
         connect(ui->free_up_simulation,SIGNAL(linkActivated(QString)),this,SLOT(handleLinks(QString)));
+
+        reloadTimer.setSingleShot(true);
+        reloadTimer.setInterval(1000);
+        connect(&reloadTimer,SIGNAL(timeout()),dpm,SLOT(reloadSelection()));
+
+        ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(ui->tableView,SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(showTableContextMenu(QPoint)));
+        connect(&download_action,SIGNAL(triggered()),this,SLOT(download_handle()));
+        connect(&do_not_download_action,SIGNAL(triggered()),this,SLOT(do_not_download_handle()));
+
     } else {
         ui->goButton->setText("Save");
     }
@@ -323,14 +343,30 @@ void DeviceConfigView::CopyToConfig() {
 
     /* Detect config modification that trigger actions */
     if ((obj[CONFIG_FILESTODOWNLOAD].toString() == "All") != ui->allRadio->isChecked() ||
-        obj[CONFIG_FILTERTYPE].toInt() != ui->filterType->currentIndex() ||
-        obj[CONFIG_FILTER].toString() != ui->filter->text()) {
+        obj[CONFIG_FILTERTYPE].toInt() != ui->filterType->currentIndex()) {
         reloadNeeded = true;
     }
     if (obj[CONFIG_ALLOWEXIF].toBool() == false &&
         ui->allowEXIFBox->isChecked()) {
         reloadNeeded = true;
     }
+    if (!reloadNeeded) {
+        /* check if the filter was changed */
+        if (obj[CONFIG_FILTER].toString() != ui->filter->text()) {
+            reloadTimer.start();
+        }
+    }
+
+    /* impact on NewPath */
+    if (dpm != NULL) {
+        if (obj[CONFIG_NEWNAME].toString() != ui->newNameEdit->text() ||
+            obj[CONFIG_DOWNLOADTO].toString() != ui->DLToLine->text() ||
+            obj[CONFIG_ALLOWEXIF].toBool() != ui->allowEXIFBox->isChecked() ||
+            obj[CONFIG_USEEXIFDATE].toBool() != ui->UseEXIFDateBox->isChecked()) {
+            dpm->updateNewPaths();
+        }
+    }
+
     if (obj[CONFIG_GEOTAG].toBool() != ui->GeoTagBox->isChecked() ||
         obj[CONFIG_TRACKFOLDER].toString() != ui->TrackFolderLine->text()) {
         geotaggerUpdateNeeded = true;
@@ -377,7 +413,6 @@ void DeviceConfigView::CopyToConfig() {
     }
 
     updateButton();
-    updateStatusText();
 
     if (tm != NULL) {
         if (geotaggerUpdateNeeded) {
@@ -509,7 +544,7 @@ void DeviceConfigView::handleLinks(QString link){
     if (dpm != NULL) {
         QString file_list_str;
         for (int i = 0; i < dpm->deletedFiles.size(); i++) {
-            file_list_str += dpm->deletedFiles.at(i)->absoluteFilePath + "\n";
+            file_list_str += dpm->deletedFiles.at(i)->absoluteFilePath() + "\n";
         }
         if (dpm->deletedFiles.size() == 0) {
             file_list_str += "None!";
@@ -521,4 +556,23 @@ void DeviceConfigView::handleLinks(QString link){
                        QMessageBox::Ok);
         mb.exec();
     }
+}
+
+
+void DeviceConfigView::showTableContextMenu(QPoint p){
+    qDebug() << "showTableContextMenu" << p;
+    QModelIndexList rows = ui->tableView->selectionModel()->selectedRows();
+    if (rows.size() > 0) {
+        tableMenu.popup(ui->tableView->mapToGlobal(p));
+    }
+}
+
+void DeviceConfigView::download_handle(){
+    QModelIndexList rows = ui->tableView->selectionModel()->selectedRows();
+    dpm->markForDownload(rows,true);
+}
+
+void DeviceConfigView::do_not_download_handle(){
+    QModelIndexList rows = ui->tableView->selectionModel()->selectedRows();
+    dpm->markForDownload(rows,false);
 }

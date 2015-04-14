@@ -29,9 +29,20 @@
 #include <QItemDelegate>
 #include <QElapsedTimer>
 #include <QMutex>
+#include <QHash>
+#include <QMap>
 class Geotagger;
 
 extern QString ExifToolPath;
+
+#define NB_COLUMNS      6
+
+#define COL_THUMBNAIL   0
+#define COL_FILEPATH    1
+#define COL_FILENAME    2
+#define COL_SIZE        3
+#define COL_DATE        4
+#define COL_NEWPATH     5
 
 class DownloadModel : public QAbstractTableModel
 {
@@ -45,6 +56,8 @@ public:
     int columnCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    void sort(int column, Qt::SortOrder order);
+    Qt::ItemFlags flags(const QModelIndex & index) const;
     void loadPreview(QString id);
     bool launchDownload();
     void moveToFinalLocation();
@@ -56,6 +69,11 @@ public:
     void freeUpSpace(bool isFakeRun, qint64 *targetAvailable, qint64 *bytesDeleted, int *nbFilesDeleted);
     QList<File*> deletedFiles;
     QSize thumbnailSize(int row);
+    QList<int> sortColumnOrder;
+    bool sortIsAscending[NB_COLUMNS];
+    QString &newPath(File *fi) const;
+    QString newPath(File *fi, bool keepDComStr) const;
+    void markForDownload(QModelIndexList rows, bool mark);
 private:
     QElapsedTimer pdTimer;
     Config *dc;
@@ -65,9 +83,9 @@ private:
     QList<File*> completeFileList;
     QList<File*> completeFileList_byDate;
     QList<File*> selectedFileList;
+    QSet<File*> excludedFiles;
     bool isBlacklisted(File info);
     void treatDir(File dirInfo);
-    QString newPath(File *fi, bool keepDComStr = false) const;
     int itemBeingDownloaded;
     QString getDCom(File *fi, bool forceQuery = false) const;
     QString sessionComment;
@@ -78,15 +96,19 @@ private:
     void emptyFileList();
     QString DLTempFolder;
     QString tempPath(File *fi) const;
+    mutable QHash<File*,QString> newPathCache;
+    mutable QMap<QString,int> newPathCollisions;
 
 signals:
     void itemOfInterest(QModelIndex);
     void reloaded();
+    void selectionModified();
     void EXIFLoadCanceled(bool);
     void downloadFinished();
 public slots:
     void reloadSelection(bool firstTime = false);
     bool getAllCom();
+    void updateNewPaths();
 private slots:
     void readStarted(File * file);
     void writeFinished(File * file);

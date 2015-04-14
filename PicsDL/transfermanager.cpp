@@ -47,7 +47,7 @@ void TransferWorker::processList() {
                     .arg(geotag)
                     .arg(i)
                     .arg(fileList->size())
-                    .arg(file->absoluteFilePath);
+                    .arg(file->absoluteFilePath());
         emit launchFile(file,geotag);
     }
     qDebug() << QString("Worker %1 finished looping on %2 files").arg(geotag).arg(fileList->size());
@@ -119,17 +119,19 @@ void TransferManager::launchDownloads() {
         for (int i = 0; i < dm->selectedFileList.size(); i++) {
             if (wasStopped) return;
             File * file = dm->selectedFileList.at(i);
-            QString fi_newPath = dm->newPath(file);
-            if (QFile(fi_newPath).exists()) {
-                dm->dc->knownFiles.insert(*file);
-                qDebug() << "Will not overwrite " << fi_newPath;
-            } else {
-                totalToWrite += file->size;
-                nbFilesToTransfer++;
-                if (geotagger != NULL && file->size < 50*1024*1024) {
-                    filesToGeotag.append(file);
+            if (!dm->excludedFiles.contains(file)) {
+                QString fi_newPath = dm->newPath(file);
+                if (QFile(fi_newPath).exists()) {
+                    dm->dc->knownFiles.insert(*file);
+                    qDebug() << "Will not overwrite " << fi_newPath;
                 } else {
-                    filesToTransfer.append(file);
+                    totalToWrite += file->size;
+                    nbFilesToTransfer++;
+                    if (geotagger != NULL && file->size < 50*1024*1024) {
+                        filesToGeotag.append(file);
+                    } else {
+                        filesToTransfer.append(file);
+                    }
                 }
             }
         }
@@ -150,7 +152,7 @@ void TransferManager::stopDownloads() {
 
 void TransferManager::handleWriteFinished(File *file) {
     dm->dc->knownFiles.insert(*file);
-    qDebug() << "copied " << file->absoluteFilePath << " to " << dm->newPath(file);
+    qDebug() << "copied " << file->absoluteFilePath() << " to " << dm->newPath(file);
     nbFilesTransfered++;
     if (nbFilesToTransfer == nbFilesTransfered) {
         qDebug() << "That was the last file!";

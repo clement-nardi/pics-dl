@@ -209,8 +209,8 @@ bool DriveNotify::nativeEvent(const QByteArray & eventType, void * message, long
                 QList<File> content = fi.ls(&more);
                 qDebug() << "Listing content at the root of this drive: " << content.size() << " elements";
                 for (int i = 0; i<content.size(); i++) {
-                    qDebug() << content.at(i).absoluteFilePath;
-                    if (content.at(i).absoluteFilePath.endsWith(':')) {
+                    qDebug() << content.at(i).absoluteFilePath();
+                    if (content.at(i).absoluteFilePath().endsWith(':')) {
                         /* This is a standard drive, do not treat it as a WPD drive */
                         qDebug() << "ignoring a WPD drive because it is a standard drive";
                         isStandard = true;

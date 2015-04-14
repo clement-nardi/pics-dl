@@ -32,6 +32,8 @@ class TransferManager;
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QSpinBox>
+#include <QMenu>
+#include <QAction>
 
 class TransferDialog;
 
@@ -94,6 +96,10 @@ private:
     TransferDialog *td;
     bool geoTag();
     void showEvent(QShowEvent * event);
+    QTimer reloadTimer;
+    QMenu tableMenu;
+    QAction do_not_download_action;
+    QAction download_action;
 
 public slots:
     void chooseDLTo();
@@ -111,6 +117,9 @@ public slots:
 private slots:
     void handleLinks(QString link);
     void resizeRows();
+    void showTableContextMenu(QPoint p);
+    void download_handle();
+    void do_not_download_handle();
 };
 
 #endif // DEVICECONFIGVIEW_H
