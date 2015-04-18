@@ -79,7 +79,7 @@ private:
     Config *dc;
     bool editMode;
     QString id;
-    QList<File*> blacklistedDirectories;
+    QList<File> blacklistedDirectories;
     QList<File*> completeFileList;
     QList<File*> completeFileList_byDate;
     QList<File*> selectedFileList;

@@ -21,6 +21,7 @@
 #include "drivenotify.h"
 #include <QDebug>
 #include "file.h"
+#include "config.h"
 
 #ifdef _WIN32
 
@@ -34,8 +35,9 @@
 #endif
 
 
-DriveNotify::DriveNotify(DRIVENOTIFY_PARENT_TYPE *parent) :
+DriveNotify::DriveNotify(Config *dc_, DRIVENOTIFY_PARENT_TYPE *parent) :
     DRIVENOTIFY_PARENT_TYPE(parent) {
+    dc = dc_;
 
     tryAgainTimer.setSingleShot(true);
     tryAgainTimer.setInterval(2000);
@@ -46,6 +48,7 @@ DriveNotify::DriveNotify(DRIVENOTIFY_PARENT_TYPE *parent) :
 #ifdef _WIN32
 
     id = 0;
+    nbTries = 0;
 
     ITEMIDLIST* pidl;
 
@@ -101,21 +104,19 @@ void DriveNotify::reBuildSerialMap(){
     }
 }
 
-bool DriveNotify::getDeviceInfo(QString serial,
-                   QString *path,
-                   QString *name,
-                   qint64 *device_size,
-                   qint64 *bytes_available){
+void DriveNotify::updateConfigWithDeviceInfo(QStorageInfo si)
+{
+    QJsonObject obj = dc->devices[getSerial(si)].toObject();
+    obj[CONFIG_DISPLAYNAME]     = si.displayName();
+    obj[CONFIG_PATH]            = si.rootPath();
+    obj[CONFIG_DEVICESIZE]      = QString("%1").arg(si.bytesTotal());
+    obj[CONFIG_BYTESAVAILABLE]  = QString("%1").arg(si.bytesAvailable());
+    dc->devices[getSerial(si)] = obj;
+}
+
+bool DriveNotify::isPluggedIn(QString serial){
     QStorageInfo si = serialMap.value(serial);
-    if (si.isValid()) {
-        if (path != NULL)               *path               = si.rootPath();
-        if (name != NULL)               *name               = si.displayName();
-        if (device_size != NULL)        *device_size        = si.bytesTotal();
-        if (bytes_available != NULL)    *bytes_available    = si.bytesAvailable();
-        return true;
-    } else {
-        return false;
-    }
+    return si.isValid();
 }
 
 void DriveNotify::reloadMountPoints(bool firstTime) {
@@ -133,12 +134,10 @@ void DriveNotify::reloadMountPoints(bool firstTime) {
         QStorageInfo si = mountPoints.at(i);
         if (!oldList.contains(si)) {
             qDebug() << "New Mount Point: " << si.rootPath() << si.displayName();
+            updateConfigWithDeviceInfo(si);
+            dc->deviceFieldChanged(getSerial(si));
             if (!firstTime) {
-                driveAdded(si.rootPath(),
-                           getSerial(si),
-                           si.displayName(),
-                           si.bytesTotal(),
-                           si.bytesAvailable());
+                driveAdded(getSerial(si));
                 newFound = true;
             }
         }
@@ -148,13 +147,15 @@ void DriveNotify::reloadMountPoints(bool firstTime) {
         QStorageInfo si = oldList.at(i);
         if (!mountPoints.contains(si)) {
             qDebug() << "Device unplugged: " << si.rootPath() << si.displayName();
-            emit deviceUnplugged(getSerial(si));
+            dc->deviceFieldChanged(getSerial(si));
         }
     }
 
     if (!newFound && oldList.size() == mountPoints.size() && nbTries < 10) {
         qDebug() << QString("Tentative #%1. Will try again in 2s.").arg(nbTries);
         tryAgainTimer.start();
+    } else {
+        dc->saveDevices();
     }
 }
 
@@ -172,12 +173,14 @@ bool DriveNotify::nativeEvent(const QByteArray & eventType, void * message, long
             DEV_BROADCAST_HDR *deviceInfo = reinterpret_cast<DEV_BROADCAST_HDR*> (msg->lParam);
             qDebug() << "DriveNotify::nativeEvent DBT_DEVICEARRIVAL devicetype = " << deviceInfo->dbch_devicetype ;
             if (deviceInfo->dbch_devicetype == DBT_DEVTYP_VOLUME) {
+                nbTries = 0;
                 reloadMountPoints();
             }
         }
         if (msg->wParam == DBT_DEVICEREMOVECOMPLETE) {
             DEV_BROADCAST_HDR *deviceInfo = reinterpret_cast<DEV_BROADCAST_HDR*> (msg->lParam);
             qDebug() << "DriveNotify::nativeEvent DBT_DEVICEREMOVECOMPLETE devicetype = " << deviceInfo->dbch_devicetype ;
+            nbTries = 0;
             reloadMountPoints();
         }
         if (msg->wParam == DBT_DEVNODES_CHANGED) {
@@ -222,7 +225,12 @@ bool DriveNotify::nativeEvent(const QByteArray & eventType, void * message, long
                     if (content.size() == 0) {
                         qDebug() << "ignoring a WPD drive because it is empty";
                     } else {
-                        driveAdded("WPD:/" + id, id, name,0,0);
+                        QJsonObject obj = dc->devices[id].toObject();
+                        obj[CONFIG_DISPLAYNAME] = name;
+                        obj[CONFIG_PATH]        = name;
+                        obj[CONFIG_IDPATH]      = "WPD:/" + id;
+                        dc->devices[id] = obj;
+                        driveAdded(id);
                     }
                 }
             }

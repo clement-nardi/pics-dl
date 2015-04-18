@@ -74,16 +74,37 @@ void MainWindow::setDeviceWidgets() {
         ui->deviceTable->setIndexWidget(dm->index(i,COL_EDIT),dv->editButton);
         ui->deviceTable->setIndexWidget(dm->index(i,COL_LAUNCH),dv->launchButton);
         ui->deviceTable->setIndexWidget(dm->index(i,COL_REMOVE),dv->removeButton);
-        connect(dv,SIGNAL(launchTransfer(QString,QString,QString,qint64,qint64,bool)),
-                manager,SLOT(treatDrive(QString,QString,QString,qint64,qint64,bool)));
+        connect(dv,SIGNAL(launchTransfer(QString,bool)),
+                manager,SLOT(treatDrive(QString,bool)));
     }
 }
+
+/*
+bool MainWindow::event(QEvent * event){
+    //qDebug() << "event" << event;
+    return QMainWindow::event(event);
+}
+
+bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result){
+    MSG* msg = reinterpret_cast<MSG*> (message);
+    //qDebug() << "MainWindow::nativeEvent " << msg->message << msg->wParam << msg->lParam << msg->time << msg->pt.x << msg->pt.y ;
+    if (msg->message == WM_QUIT ||
+            msg->message == WM_CLOSE ||
+            msg->message == WM_QUERYENDSESSION ||
+            msg->message == WM_ENDSESSION) {
+        QCoreApplication::exit(0);
+    }
+    return QMainWindow::nativeEvent(eventType, message, result);
+}
+*/
 
 void MainWindow::sysTray_handle(QSystemTrayIcon::ActivationReason reason) {
     switch(reason) {
     case QSystemTrayIcon::DoubleClick:
     case QSystemTrayIcon::Trigger:
         sysTray.contextMenu()->defaultAction()->trigger();
+        break;
+    default:
         break;
     }
 }

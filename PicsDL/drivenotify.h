@@ -27,6 +27,7 @@
 #include <QString>
 #include <QTimer>
 #include <QMap>
+class Config;
 
 //moc doesn't recognize _WIN32
 #if defined(_WIN32) || defined(WIN32)
@@ -44,22 +45,14 @@ class DriveNotify : public DRIVENOTIFY_PARENT_TYPE
 {
     Q_OBJECT
 public:
-    explicit DriveNotify(DRIVENOTIFY_PARENT_TYPE *parent = 0);
+    explicit DriveNotify(Config *dc_, DRIVENOTIFY_PARENT_TYPE *parent = 0);
     ~DriveNotify();
     /**
      * @brief getDeviceInfo
      * @param[in] serial
-     * @param[out] path
-     * @param[out] name
-     * @param[out] device_size
-     * @param[out] bytes_available
      * @return true if the device is currently plugged-in
      */
-    bool getDeviceInfo(QString serial,
-                       QString *path = NULL,
-                       QString *name = NULL,
-                       qint64 *device_size = NULL,
-                       qint64 *bytes_available = NULL);
+    bool isPluggedIn(QString serial);
 
 private:
     QList<QStorageInfo> mountPoints;
@@ -68,9 +61,10 @@ private:
     void reBuildSerialMap();
     QTimer tryAgainTimer;
     int nbTries;
+    Config *dc;
+    void updateConfigWithDeviceInfo(QStorageInfo si);
 signals:
-    void driveAdded(QString path,QString serial,QString name, qint64 device_size, qint64 bytes_available);
-    void deviceUnplugged(QString serial);
+    void driveAdded(QString serial);
 
 private slots:
     void reloadMountPoints(bool firstTime = false);

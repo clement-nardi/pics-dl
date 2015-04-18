@@ -31,6 +31,7 @@
 #include <QFile>
 #include <QDateTime>
 #include "globals.h"
+#include <QAbstractNativeEventFilter>
 
 static QFile * debugFile;
 
@@ -61,11 +62,29 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     debugFile->flush();
 }
 
+class EventFilter: public QAbstractNativeEventFilter{
+    bool nativeEventFilter(const QByteArray & eventType, void * message, long * result){
+#ifdef _WIN32
+        MSG* msg = reinterpret_cast<MSG*> (message);
+        //qDebug() << "main thread nativeEvent " << msg->message << msg->wParam << msg->lParam << msg->time << msg->pt.x << msg->pt.y ;
+        if (msg->message == WM_QUIT ||
+            msg->message == WM_CLOSE ||
+            msg->message == WM_QUERYENDSESSION ||
+            msg->message == WM_ENDSESSION) {
+            QCoreApplication::exit(0);
+        }
+#endif
+        return false;
+    }
+};
+
 const char *perlIncludeDir;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication *a = new QApplication(argc, argv);
+    EventFilter *ef = new EventFilter();
+    a->installNativeEventFilter(ef);
     perlIncludeDir = QString(QCoreApplication::applicationDirPath() + "/perl").toStdString().c_str();
     if (argc > 1 && QString(argv[1]) == "-v") {
         debugFile = new QFile(QCoreApplication::applicationDirPath() + "/debug" + QDateTime::currentDateTime().toString("_yyyy-MM-dd_hh-mm-ss") + ".txt");
@@ -91,7 +110,7 @@ int main(int argc, char *argv[])
     }
 
 
-    a.setQuitOnLastWindowClosed(false);
+    a->setQuitOnLastWindowClosed(false);
 
     QCoreApplication::setOrganizationName("PicsDL");
     QCoreApplication::setApplicationName("PicsDL");
@@ -109,18 +128,18 @@ int main(int argc, char *argv[])
     qDebug() << QCoreApplication::applicationDirPath();
 
     Config *dc = new Config();
-    DriveNotify *dn = new DriveNotify();
+    DriveNotify *dn = new DriveNotify(dc);
     DeviceManager *dm = new DeviceManager(dc);
     MainWindow *w = new MainWindow(dc,dn,dm);
 
     im->connect(im, SIGNAL(applicationLaunched()),w, SLOT(applicationLaunched()));
 
-    dm->connect(dn,SIGNAL(driveAdded(QString,QString,QString,qint64,qint64)), dm, SLOT(treatDrive(QString,QString,QString,qint64,qint64)));
-    dm->connect(dn,SIGNAL(deviceUnplugged(QString)),dc,SLOT(deviceFieldChanged(QString)));
+    dm->connect(dn,SIGNAL(driveAdded(QString)), dm, SLOT(treatDrive(QString)));
 
     //w.show();
 
-    int res = a.exec();
+    int res = a->exec();
+    qDebug() << "Exiting";
     delete w;
     delete dm;
     delete dn;
@@ -129,5 +148,15 @@ int main(int argc, char *argv[])
     if (argc > 1 && QString(argv[1]) == "-v") {
         debugFile->close();
     }
+    delete a;
     return res;
 }
+/*
+#include "signal.h"
+
+void signalhandler(int sig){
+    qDebug() << "signalhandler" << sig;
+    if(sig==SIGINT){
+        //qApp->quit();
+    }
+}*/

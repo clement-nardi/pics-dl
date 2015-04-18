@@ -39,7 +39,7 @@ private:
     QSet<DeviceConfigView *> openedViews;
 
 public slots:
-    void treatDrive(QString drivePath, QString serial, QString displayName, qint64 deviceSize, qint64 bytes_available, bool force = false);
+    void treatDrive(QString serial, bool force = false);
     void handleDestroyed(QObject*);
 };
 

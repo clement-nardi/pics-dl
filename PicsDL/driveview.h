@@ -45,7 +45,7 @@ public:
 
 signals:
     void changed(int);
-    void launchTransfer(QString path,QString serial,QString name, qint64 device_size, qint64 bytes_available, bool force);
+    void launchTransfer(QString serial, bool force);
 public slots:
     void removed();
     void edit();

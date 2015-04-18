@@ -46,6 +46,8 @@ public:
     explicit MainWindow(Config *dc, DriveNotify *dn_, DeviceManager *manager_, QWidget *parent = 0);
     ~MainWindow();
     QSystemTrayIcon sysTray;
+/*    bool event(QEvent * event);
+      bool nativeEvent(const QByteArray & eventType, void * message, long * result); */
 
 private:
     Ui::MainWindow *ui;

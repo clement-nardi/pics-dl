@@ -642,7 +642,7 @@ bool DownloadModel::isBlacklisted(File element) {
     }
 }
 
-static bool bondFiles(File *file, File *attachment) {
+static bool bindFiles(File *file, File *attachment) {
     if (attachment->parentFile == NULL &&
             !attachment->isPicture() &&
             !attachment->isVideo() &&
@@ -659,19 +659,27 @@ static bool bondFiles(File *file, File *attachment) {
 }
 
 void DownloadModel::treatDir(File dirInfo) {
-    QList<File> content;
+    QList<File *> files;
+    QList<File> directoriesToBrowse;
     bool theresMore = true;
     browsedFolders++;
     int estimatedTotalFiles = discoveredFolders*browsedFiles/browsedFolders;
     while (theresMore) {
         QApplication::processEvents();
         QList<File> contentPart = dirInfo.ls(&theresMore);
-        content.append(contentPart);
         for (int i = 0; i < contentPart.size(); ++i) {
-            if (contentPart.at(i).isDir) {
+            File element = contentPart.at(i);
+            if (element.isDir) {
                 discoveredFolders++;
+                if (isBlacklisted(element)) {
+                    qDebug() << "Do NOT list content of" << element.fileName();
+                    blacklistedDirectories.append(element);
+                } else {
+                    directoriesToBrowse.append(element);
+                }
             } else {
                 browsedFiles++;
+                files.append(new File(element));
             }
         }
         if (pdTimer.elapsed() > 2000 && !pd->isVisible()) {
@@ -699,21 +707,6 @@ void DownloadModel::treatDir(File dirInfo) {
             }
         }
     }
-    QList<File *> files;
-    for (int i = 0; i < content.size(); ++i) {
-        File element = content.at(i);
-        if (element.isDir) {            
-            if (isBlacklisted(element)) {
-                qDebug() << "Do NOT list content of" << element.fileName();
-                blacklistedDirectories.append(new File(element));
-            } else {
-                treatDir(element);
-            }
-        } else {
-            files.append(new File(element));
-        }
-    }
-
     /* find attached files in the same directory */
     qSort(files.begin(),files.end(),pathLessThan);
     for (int i = 0; i < files.size(); ++i) {
@@ -722,7 +715,7 @@ void DownloadModel::treatDir(File dirInfo) {
             int j = i-1;
             while (j>=0) {
                 File *af = files.at(j);
-                if (bondFiles(fi,af)) {
+                if (bindFiles(fi,af)) {
                     j--;
                 } else {
                     break;
@@ -731,7 +724,7 @@ void DownloadModel::treatDir(File dirInfo) {
             j = i+1;
             while (j<files.size()) {
                 File *af = files.at(j);
-                if (bondFiles(fi,af)) {
+                if (bindFiles(fi,af)) {
                     j++;
                 } else {
                     break;
@@ -740,6 +733,10 @@ void DownloadModel::treatDir(File dirInfo) {
         }
     }
     completeFileList.append(files);
+
+    for (int i = 0; i < directoriesToBrowse.size(); ++i) {
+        treatDir(directoriesToBrowse.at(i));
+    }
 }
 
 void DownloadModel::reloadSelection(bool firstTime) {
@@ -750,12 +747,12 @@ void DownloadModel::reloadSelection(bool firstTime) {
 
     /* 1st step: check if some blacklisted directories need to be browsed */
     pdTimer.start();
-    QMutableListIterator<File*> bli(blacklistedDirectories);
+    QMutableListIterator<File> bli(blacklistedDirectories);
     bool sortNeeded = false;
     while (bli.hasNext()) {
-        File *element = bli.next();
-        if (!isBlacklisted(*element)) {
-            treatDir(*element);
+        File element = bli.next();
+        if (!isBlacklisted(element)) {
+            treatDir(element);
             bli.remove();
             sortNeeded = true;
         }

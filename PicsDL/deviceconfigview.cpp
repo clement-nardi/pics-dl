@@ -31,7 +31,6 @@
 #include "config.h"
 #include "transferdialog.h"
 #include <QMessageBox>
-#include <QStyledItemDelegate>
 #include <QHeaderView>
 #include <QMenu>
 
@@ -83,27 +82,6 @@ void SpinBoxView::readSpinBox(QJsonObject *obj){
 }
 
 
-class CustomItemDelegate: public QStyledItemDelegate {
-    QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {
-        int row = index.row();
-        qDebug() << "sizeHint " << row << index.column();
-        return QSize(30,100+10*(row%11));
-    }
-};
-
-class CustomHeaderView: public QHeaderView {
-public:
-    CustomHeaderView(Qt::Orientation orientation, QWidget * parent = 0)
-        :QHeaderView(orientation,parent){
-    }
-
-    int sectionSize(int logicalIndex) const {
-        qDebug() << "sectionSize " << logicalIndex;
-        return 50 + 10*(logicalIndex%5);
-    }
-};
-
-
 
 DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWidget *parent) :
     QWidget(parent),
@@ -141,11 +119,7 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
         connect(dpm, SIGNAL(reloaded()), this, SLOT(updateStatusText()));
         connect(dpm, SIGNAL(selectionModified()), this, SLOT(updateStatusText()));
         ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-        //ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-        //ui->tableView->verticalHeader()->setResizeContentsPrecision(100);
         ui->tableView->horizontalHeader()->setResizeContentsPrecision(50);
-        //ui->tableView->setItemDelegate(new CustomItemDelegate());
-        //ui->tableView->setVerticalHeader(new CustomHeaderView(Qt::Vertical,ui->tableView));
         connect(ui->FillCommentsButton,SIGNAL(clicked()), dpm, SLOT(getAllCom()));
         connect(dpm, SIGNAL(EXIFLoadCanceled(bool)), ui->allowEXIFBox, SLOT(setChecked(bool)));
         connect(ui->seeAvTagsButton, SIGNAL(clicked()), this, SLOT(showEXIFTags()));
@@ -155,8 +129,6 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
         ui->tableView->setColumnHidden(COL_FILEPATH,true);
         dpm->loadPreview(id);
         tm = new TransferManager(this,dpm);
-        //ui->tableView->setItemDelegate(dpm->getItemDelegate());
-        //ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
         connect(ui->automation, SIGNAL(performAction()),this,SLOT(go()));
         connect(ui->free_up_simulation,SIGNAL(linkActivated(QString)),this,SLOT(handleLinks(QString)));
@@ -173,7 +145,6 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
     } else {
         ui->goButton->setText("Save");
     }
-    //setCornerWidget(new QPushButton("Go",this),Qt::BottomRightCorner);
 
     updateStatusText();
     updateFreeUpSimulation();
@@ -181,9 +152,7 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
     if (!dc->LoadWindowGeometry(id,this)) {
         setWindowState(Qt::WindowMaximized);
     }
-    qDebug() << "before show " << geometry();
     show();
-    qDebug() << "after  show " << geometry();
 
     /* automation stuff */
     ui->automation->startCountDown();

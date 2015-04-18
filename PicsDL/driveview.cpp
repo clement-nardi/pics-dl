@@ -53,7 +53,7 @@ DriveView::DriveView(QString id_, Config *dc_, DriveNotify *dn_, QObject *parent
 
     connect(managedBox,SIGNAL(toggled(bool)),editButton,SLOT(setEnabled(bool)));
     managedBox->setChecked(obj[CONFIG_ISMANAGED].toBool());
-    launchButton->setEnabled(dn->getDeviceInfo(id));
+    launchButton->setEnabled(dn->isPluggedIn(id));
 
     connect(managedBox, SIGNAL(clicked(bool)), this, SLOT(managed(bool)));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removed()));
@@ -82,11 +82,7 @@ void DriveView::managed(bool checked){
 }
 
 void DriveView::launch(){
-    QString path;
-    QString name;
-    qint64 total;
-    qint64 available;
-    if (dn->getDeviceInfo(id,&path,&name,&total,&available)) {
-        emit launchTransfer(path,id,name,total,available,true);
+    if (dn->isPluggedIn(id)) {
+        emit launchTransfer(id,true);
     }
 }
