@@ -42,6 +42,7 @@ public:
     QPushButton *editButton;
     QPushButton *launchButton;
     int row;
+    bool canBeLaunched();
 
 signals:
     void changed(int);

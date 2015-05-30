@@ -40,6 +40,7 @@
 /* Drive properties */
 #define CONFIG_ISMANAGED            "isManaged"
 #define CONFIG_DISPLAYNAME          "displayName"
+#define CONFIG_DEVICETYPE           "deviceType"
 #define CONFIG_PATH                 "path"
 #define CONFIG_IDPATH               "IDPath"
 #define CONFIG_CAMERANAME           "CameraName"
@@ -47,10 +48,21 @@
 #define CONFIG_BYTESAVAILABLE       "BytesAvailable"
 #define CONFIG_LASTTRANSFER         "LastTransfer"
 
-/* macros for Download Tab */
+/* macros for Select & Download Tab */
 #define CONFIG_FILESTODOWNLOAD      "FilesToDownLoad"
 #define CONFIG_FILTERTYPE           "FilterType"
 #define CONFIG_FILTER               "Filter"
+#define CONFIG_LIMITDEPTH           "LimitSearchDepth"
+#define CONFIG_DEPTHLIMIT           "DepthLimit"
+#define CONFIG_PICTUREFILES         "DLPictureFiles"
+#define CONFIG_VIDEOFILES           "DLVideoFiles"
+#define CONFIG_OTHERFILES           "OtherFiles"
+#define CONFIG_OTHERFILESPATTERNS   "OtherFilesPatterns"
+#define CONFIG_MOVEFILES            "MoveInsteadOfCopy"
+#define CONFIG_OVERWRITEFILES       "OverWriteFilesAtDestination"
+
+
+/* macros for Organize tab */
 #define CONFIG_DOWNLOADTO           "DownloadTo"
 #define CONFIG_NEWNAME              "newName"
 #define CONFIG_ALLOWEXIF            "AllowEXIF"
@@ -92,7 +104,7 @@ public:
     void saveGUIParams();
     void saveKnownFiles();
 
-    void SaveWindowGeometry(QWidget *w, QString key);
+    void saveWindowGeometry(QWidget *w, QString key);
     bool LoadWindowGeometry(QString key, QWidget *w);
 
 private:

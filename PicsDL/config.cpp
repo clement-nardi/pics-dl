@@ -75,7 +75,7 @@ void Config::saveGUIParams(){
 }
 
 
-void Config::SaveWindowGeometry(QWidget *w, QString key){
+void Config::saveWindowGeometry(QWidget *w, QString key){
     QJsonObject obj = gui_params[key].toObject();
     obj.insert(WINDOW_X, QJsonValue(w->geometry().x()));
     obj.insert(WINDOW_Y, QJsonValue(w->geometry().y()));

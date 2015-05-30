@@ -68,6 +68,7 @@ public:
     bool isPicture() const;
     bool isVideo() const;
     bool isJPEG() const;
+    bool nameMatchesPatterns(QString &patterns) const;
     static QString size2Str(qint64 nbBytes);
 
     QList<File> ls(bool *theresMore = NULL);
@@ -76,7 +77,7 @@ public:
     bool setHidden();
     bool remove();
 
-    void launchTransferTo(QString to, TransferManager *tm_, bool geotag_);
+    void launchTransferTo(QString to, TransferManager *tm_, bool geotag_, bool move_instead_of_copy_);
     QBuffer * buffer;
     QBuffer * geotaggedBuffer;
     void setGeotaggedBuffer(QBuffer *geotaggedBuffer_);
@@ -85,12 +86,16 @@ public:
 
     QMap<QString,QString> geotags;
     QString transferTo;
+    QString thenMoveTo;
     int modelRow;
     bool transferOnGoing;
+    bool move_instead_of_copy;
 
     QList<File*> attachedFiles;
     File *parentFile;
 
+    bool isOnSameDriveAs(const File &other);
+    QString firstExistingParent() const ;
 private:
     QString absoluteFilePath_p;
     QString fileName_p;

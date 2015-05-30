@@ -119,7 +119,10 @@ void GeotaggerWorker::getGeotags(File *file) {
 
     file->geotags.clear();
     for (int i = 0; i< nbTags; i++) {
-        file->geotags.insert(QString(keys[i]),QString(values[i]));
+        QString value(values[i]);
+        if (value.size() > 0) {
+            file->geotags.insert(QString(keys[i]),QString(values[i]));
+        }
     }
     //qDebug() << file->geotags;
 

@@ -37,7 +37,7 @@ public:
 
 signals:
 
-public slots:
+private slots:
 };
 
 #endif // PROGRESSBARLABEL_H

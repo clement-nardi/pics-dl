@@ -33,52 +33,100 @@
 #include <QMessageBox>
 #include <QHeaderView>
 #include <QMenu>
+#include <QGroupBox>
+#include "newnameselection.h"
 
 
-
-BoxView::BoxView(QCheckBox *check_box_, QString field_name_, bool default_value_) {
+BoxView::BoxView(QCheckBox *check_box_, QString field_name_, bool default_value_, DeviceConfigView *dcv_)
+    :QObject(dcv_){
     check_box = check_box_;
     field_name = field_name_;
     default_value = default_value_;
+    dcv = dcv_;
+    setBox();
+    connect(check_box,SIGNAL(toggled(bool)),this,SLOT(readBox()));
 }
-void BoxView::setBox(QJsonObject *obj) {
-    if (obj->value(field_name).isNull() || obj->value(field_name).isUndefined()) {
-        obj->insert(field_name,QJsonValue(default_value));
+void BoxView::setBox() {
+    QJsonObject obj = dcv->dc->devices[dcv->id].toObject();
+    if (obj.value(field_name).isNull() || obj.value(field_name).isUndefined()) {
+        obj.insert(field_name,QJsonValue(default_value));
+        dcv->dc->devices[dcv->id] = obj;
     }
-    check_box->setChecked(obj->value(field_name).toBool());
+    check_box->setChecked(obj.value(field_name).toBool());
 }
-void BoxView::readBox(QJsonObject *obj) {
-    obj->insert(field_name,QJsonValue(check_box->isChecked()));
+void BoxView::readBox() {
+    QJsonObject obj = dcv->dc->devices[dcv->id].toObject();
+    obj.insert(field_name,QJsonValue(check_box->isChecked()));
+    dcv->dc->devices[dcv->id] = obj;
 }
 
-LineEditView::LineEditView(QLineEdit *line_edit_, QString field_name_, QString default_value_){
+GroupBoxView::GroupBoxView(QGroupBox *group_box_, QString field_name_, bool default_value_, DeviceConfigView *dcv_)
+    :QObject(dcv_){
+    group_box = group_box_;
+    field_name = field_name_;
+    default_value = default_value_;
+    dcv = dcv_;
+    setBox();
+    connect(group_box,SIGNAL(toggled(bool)),this,SLOT(readBox()));
+}
+void GroupBoxView::setBox() {
+    QJsonObject obj = dcv->dc->devices[dcv->id].toObject();
+    if (obj.value(field_name).isNull() || obj.value(field_name).isUndefined()) {
+        obj.insert(field_name,QJsonValue(default_value));
+        dcv->dc->devices[dcv->id] = obj;
+    }
+    group_box->setChecked(obj.value(field_name).toBool());
+}
+void GroupBoxView::readBox() {
+    QJsonObject obj = dcv->dc->devices[dcv->id].toObject();
+    obj.insert(field_name,QJsonValue(group_box->isChecked()));
+    dcv->dc->devices[dcv->id] = obj;
+}
+
+LineEditView::LineEditView(QLineEdit *line_edit_, QString field_name_, QString default_value_, DeviceConfigView *dcv_)
+    :QObject(dcv_){
     line_edit = line_edit_;
     field_name = field_name_;
     default_value = default_value_;
+    dcv = dcv_;
+    setLine();
+    connect(line_edit,SIGNAL(textChanged(QString)),this,SLOT(readLine()));
 }
-void LineEditView::setLine(QJsonObject *obj){
-    if (obj->value(field_name).isNull() || obj->value(field_name).isUndefined()) {
-        obj->insert(field_name,QJsonValue(default_value));
+void LineEditView::setLine(){
+    QJsonObject obj = dcv->dc->devices[dcv->id].toObject();
+    if (obj.value(field_name).isNull() || obj.value(field_name).isUndefined()) {
+        obj.insert(field_name,QJsonValue(default_value));
+        dcv->dc->devices[dcv->id] = obj;
     }
-    line_edit->setText(obj->value(field_name).toString());
+    line_edit->setText(obj.value(field_name).toString());
 }
-void LineEditView::readLine(QJsonObject *obj){
-    obj->insert(field_name,QJsonValue(line_edit->text()));
+void LineEditView::readLine(){
+    QJsonObject obj = dcv->dc->devices[dcv->id].toObject();
+    obj.insert(field_name,QJsonValue(line_edit->text()));
+    dcv->dc->devices[dcv->id] = obj;
 }
 
-SpinBoxView::SpinBoxView(QSpinBox *spin_box_, QString field_name_, int default_value_){
+SpinBoxView::SpinBoxView(QSpinBox *spin_box_, QString field_name_, int default_value_, DeviceConfigView *dcv_)
+    :QObject(dcv_){
     spin_box = spin_box_;
     field_name = field_name_;
     default_value = default_value_;
+    dcv = dcv_;
+    setSpinBox();
+    connect(spin_box,SIGNAL(valueChanged(int)),this,SLOT(readSpinBox()));
 }
-void SpinBoxView::setSpinBox(QJsonObject *obj){
-    if (obj->value(field_name).isNull() || obj->value(field_name).isUndefined()) {
-        obj->insert(field_name,QJsonValue(default_value));
+void SpinBoxView::setSpinBox(){
+    QJsonObject obj = dcv->dc->devices[dcv->id].toObject();
+    if (obj.value(field_name).isNull() || obj.value(field_name).isUndefined()) {
+        obj.insert(field_name,QJsonValue(default_value));
+        dcv->dc->devices[dcv->id] = obj;
     }
-    spin_box->setValue(obj->value(field_name).toInt());
+    spin_box->setValue(obj.value(field_name).toInt());
 }
-void SpinBoxView::readSpinBox(QJsonObject *obj){
-    obj->insert(field_name,QJsonValue(spin_box->value()));
+void SpinBoxView::readSpinBox(){
+    QJsonObject obj = dcv->dc->devices[dcv->id].toObject();
+    obj.insert(field_name,QJsonValue(spin_box->value()));
+    dcv->dc->devices[dcv->id] = obj;
 }
 
 
@@ -94,10 +142,31 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
     dc = dc_;
     id = id_;
     editMode = editMode_;
+
+    /* init the widget after the constructor has returned */
+    connect(this, SIGNAL(initLater()),this,SLOT(init()),Qt::QueuedConnection);
+    emit initLater();
+}
+
+void DeviceConfigView::init() {
     pd = new QProgressDialog(this);
     td = new TransferDialog(this);
     ui->setupUi(this);
-    ui->Tabs->setCurrentIndex(0);
+    QJsonObject obj = dc->devices[id].toObject();
+    NewNameSelection *nns = new NewNameSelection(this);
+    connect(ui->choose_new_name,SIGNAL(clicked()),nns,SLOT(show()));
+    connect(nns,SIGNAL(newNameSelected(QString)),this,SLOT(setNewNamePattern(QString)));
+
+    ui->keywordsTable->resizeColumnsToContents();
+    ui->keywordsTable->setMinimumWidth(ui->keywordsTable->horizontalHeader()->sectionSize(0) +
+                                       ui->keywordsTable->horizontalHeader()->sectionSize(1) + 2);
+
+    /* setup tabs (Qt Designer does not support QTabBar) */
+    ui->tabs->insertTab(TAB_SELECT      ,QIcon(":/icons/download"),tr("&Select && Download"));
+    ui->tabs->insertTab(TAB_ORGANIZE    ,QIcon(":/icons/tree"),tr("&Organize"));
+    ui->tabs->insertTab(TAB_GEOTAG      ,QIcon(":/icons/gps"),tr("&Geotag"));
+    ui->tabs->insertTab(TAB_FREEUPSPACE ,QIcon(":/icons/delete"),tr("&Free Up Space"));
+    connect(ui->tabs,SIGNAL(currentChanged(int)),this,SLOT(handleTabChange(int)));
 
     tableMenu.addAction(&do_not_download_action);
     tableMenu.addAction(&download_action);
@@ -105,6 +174,8 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
     connect(ui->openButton, SIGNAL(clicked()),this, SLOT(chooseDLTo()));
     connect(ui->trackOpenButton, SIGNAL(clicked()),this, SLOT(chooseTrackFolder()));
     ui->tableView->setWordWrap(false);
+
+    connect(ui->GeoTagBox,SIGNAL(toggled(bool)),this, SLOT(geotagToggled(bool)));
 
     setAttribute(Qt::WA_DeleteOnClose, true);
     setAttribute(Qt::WA_QuitOnClose, false);
@@ -126,7 +197,6 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
 
         ui->tableView->horizontalHeader()->setSortIndicator(COL_DATE,Qt::AscendingOrder);
         ui->tableView->setModel(dpm);
-        ui->tableView->setColumnHidden(COL_FILEPATH,true);
         dpm->loadPreview(id);
         tm = new TransferManager(this,dpm);
 
@@ -142,15 +212,51 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
         connect(&download_action,SIGNAL(triggered()),this,SLOT(download_handle()));
         connect(&do_not_download_action,SIGNAL(triggered()),this,SLOT(do_not_download_handle()));
 
+        /* Setup impacts on the model */
+        /* instant reload */
+        connect(ui->allRadio,SIGNAL(toggled(bool)),dpm,SLOT(reloadSelection()));
+        connect(ui->filterType,SIGNAL(currentIndexChanged(int)),dpm,SLOT(reloadSelection()));
+        connect(ui->limit_depth_box,SIGNAL(toggled(bool)),dpm,SLOT(reloadSelection()));
+        connect(ui->allowEXIFBox,SIGNAL(toggled(bool)),dpm,SLOT(reloadSelection()));
+        connect(ui->pictures_box,SIGNAL(toggled(bool)),dpm,SLOT(reloadSelection()));
+        connect(ui->videos_box,SIGNAL(toggled(bool)),dpm,SLOT(reloadSelection()));
+        connect(ui->others_box,SIGNAL(toggled(bool)),dpm,SLOT(reloadSelection()));
+        connect(ui->limit_depth_spin,SIGNAL(valueChanged(int)),dpm,SLOT(reloadSelection()));
+
+        /* delayed reload */
+        connect(ui->filter,SIGNAL(textChanged(QString)),&reloadTimer,SLOT(start()));
+        connect(ui->others_patterns,SIGNAL(textChanged(QString)),&reloadTimer,SLOT(start()));
+
+        /* destination */
+        connect(ui->allowEXIFBox,SIGNAL(toggled(bool)),dpm,SLOT(updateNewPaths()));
+        connect(ui->UseEXIFDateBox,SIGNAL(toggled(bool)),dpm,SLOT(updateNewPaths()));
+        connect(ui->newNameEdit,SIGNAL(textChanged(QString)),dpm,SLOT(updateNewPaths()));
+        connect(ui->DLToLine,SIGNAL(textChanged(QString)),dpm,SLOT(updateNewPaths()));
+        connect(ui->overwrite_destination_box,SIGNAL(toggled(bool)),dpm,SLOT(updateNewPaths())); /* impact in tool-tip */
+        connect(ui->move_instead_of_copy_box,SIGNAL(toggled(bool)),dpm,SLOT(updateNewPaths())); /* impact in tool-tip */
+        connect(ui->GeoTagBox,SIGNAL(toggled(bool)),dpm,SLOT(updateNewPaths())); /* impact on decoration */
+
+        /* impact on the geotagger */
+        connect(ui->GeoTagBox,SIGNAL(toggled(bool)),tm,SLOT(updateGeoTagger()));
+        connect(ui->TrackFolderLine,SIGNAL(textChanged(QString)),tm,SLOT(updateGeoTagger()));
+        connect(ui->TrackFolderRadio,SIGNAL(toggled(bool)),tm,SLOT(updateGeoTagger()));
+
+
     } else {
         ui->goButton->setText("Save");
     }
 
     updateStatusText();
-    updateFreeUpSimulation();
 
     if (!dc->LoadWindowGeometry(id,this)) {
         setWindowState(Qt::WindowMaximized);
+    }
+
+    if (obj[CONFIG_NEWNAME].toString() == "oFolder1-/oName" &&
+        obj[CONFIG_PATH].toString() == obj[CONFIG_DOWNLOADTO].toString()) {
+        ui->tabs->setCurrentIndex(TAB_GEOTAG);
+    } else {
+        ui->tabs->setCurrentIndex(TAB_ORGANIZE);
     }
     show();
 
@@ -162,7 +268,8 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
 DeviceConfigView::~DeviceConfigView() {
     qDebug() << "delete DeviceConfigView";
     qDebug() << "during destructor " << geometry();
-    dc->SaveWindowGeometry(this,id);
+    dc->saveWindowGeometry(this,id);
+    saveConfig();
     delete ui;
     delete dpm;
     delete pd;
@@ -210,29 +317,11 @@ void DeviceConfigView::FillWithConfig() {
     }
     this->setWindowTitle(title);
 
-    boxes << BoxView(ui->allowEXIFBox,CONFIG_ALLOWEXIF,false);
-    boxes << BoxView(ui->UseEXIFDateBox,CONFIG_USEEXIFDATE,true);
-    boxes << BoxView(ui->automation->box,CONFIG_AUTOMATION,false);
-    boxes << BoxView(ui->GeoTagBox,CONFIG_GEOTAG,false);
-    boxes << BoxView(ui->free_up_box,CONFIG_FREEUPSPACE,false);
-    boxes << BoxView(ui->target_pct_box,CONFIG_TARGETPERCENTAGE,false);
-    boxes << BoxView(ui->nbPics_box,CONFIG_TARGETNBPICS,true);
-    boxes << BoxView(ui->protect_days_box,CONFIG_PROTECTDAYS,true);
-    boxes << BoxView(ui->protect_transfer_box,CONFIG_PROTECTTRANSFER,true);
+    /* special widget connections */
+    connect(ui->filterType,SIGNAL(currentIndexChanged(int)),this,SLOT(updateButton()));
+    connect(ui->newNameEdit,SIGNAL(textChanged(QString)),this,SLOT(updateButton()));
 
-    lines << LineEditView(ui->filter,CONFIG_FILTER,obj[CONFIG_IDPATH].toString().startsWith("WPD")?"DCIM;Camera;Auto;*ANDRO;user;media;*iPhone*;*APPLE;Pictures;Screenshots;Download;WhatsApp*;Media":"");
-    lines << LineEditView(ui->DLToLine,CONFIG_DOWNLOADTO,QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0));
-    lines << LineEditView(ui->newNameEdit,CONFIG_NEWNAME,"yyyy-MM/yyyy-MM-dd/yyyy-MM-dd_HH-mm-ss_oName");
-    lines << LineEditView(ui->TrackFolderLine,CONFIG_TRACKFOLDER,"");
-    lines << LineEditView(ui->OPAccessKeyLine,CONFIG_OPACCESSKEY,"");
-    lines << LineEditView(ui->OPSecretKeyLine,CONFIG_OPSECRETKEY,"");
-    lines << LineEditView(ui->nbPics,CONFIG_NBPICS,"200");
-
-    spinBoxes << SpinBoxView(ui->target_pct,CONFIG_TARGETPERCENTAGEVALUE,25);
-    spinBoxes << SpinBoxView(ui->protect_days,CONFIG_PROTECTDAYSVALUE,30);
-
-
-    /* Download part */
+    /* Initialize special widgets (comboBox and radioButton) */
     if (obj[CONFIG_FILESTODOWNLOAD].isNull() || obj[CONFIG_FILESTODOWNLOAD].isUndefined()) {
         obj.insert(CONFIG_FILESTODOWNLOAD,QJsonValue(QString("New")));
     }
@@ -251,9 +340,6 @@ void DeviceConfigView::FillWithConfig() {
     }
     ui->filterType->setCurrentIndex(obj[CONFIG_FILTERTYPE].toInt());
 
-    /* Organize part */
-
-    /* Geo Tagging */
     if (obj[CONFIG_GEOTAGMODE].isNull() || obj[CONFIG_GEOTAGMODE].isUndefined()) {
         obj.insert(CONFIG_GEOTAGMODE,QJsonValue(QString("Track Folder")));
     }
@@ -263,30 +349,70 @@ void DeviceConfigView::FillWithConfig() {
         ui->TrackFolderRadio->setChecked(true);
     }
 
-    for (int i = 0; i < boxes.size(); i++) {
-        boxes[i].setBox(&obj);
-        connect(boxes.at(i).check_box,SIGNAL(clicked()),this,SLOT(CopyToConfig()));
-    }
-    for (int i = 0; i < lines.size(); i++) {
-        lines[i].setLine(&obj);
-        connect(lines.at(i).line_edit,SIGNAL(textEdited(QString)),this,SLOT(CopyToConfig()));
-    }
-    for (int i = 0; i < spinBoxes.size(); i++) {
-        spinBoxes[i].setSpinBox(&obj);
-        connect(spinBoxes.at(i).spin_box,SIGNAL(valueChanged(int)),this,SLOT(CopyToConfig()));
-    }
-
     dc->devices[id] = obj;
+
+    /* special widgets synchronisation with the JSON config */
+    connect(ui->allRadio,SIGNAL(toggled(bool)),this,SLOT(readSpecialWidgets()));
+    connect(ui->filterType,SIGNAL(currentIndexChanged(int)),this,SLOT(readSpecialWidgets()));
+    connect(ui->TrackFolderRadio,SIGNAL(toggled(bool)),this,SLOT(readSpecialWidgets()));
+
+    /* initialze and setup standard widgets */
+    checkBoxes << new BoxView(ui->allowEXIFBox,CONFIG_ALLOWEXIF,false,this);
+    checkBoxes << new BoxView(ui->UseEXIFDateBox,CONFIG_USEEXIFDATE,true,this);
+    checkBoxes << new BoxView(ui->automation->box,CONFIG_AUTOMATION,false,this);
+    checkBoxes << new BoxView(ui->GeoTagBox,CONFIG_GEOTAG,false,this);
+    checkBoxes << new BoxView(ui->free_up_box,CONFIG_FREEUPSPACE,false,this);
+    checkBoxes << new BoxView(ui->target_pct_box,CONFIG_TARGETPERCENTAGE,false,this);
+    checkBoxes << new BoxView(ui->nbPics_box,CONFIG_TARGETNBPICS,true,this);
+    checkBoxes << new BoxView(ui->protect_days_box,CONFIG_PROTECTDAYS,true,this);
+    checkBoxes << new BoxView(ui->protect_transfer_box,CONFIG_PROTECTTRANSFER,true,this);
+    checkBoxes << new BoxView(ui->limit_depth_box,CONFIG_LIMITDEPTH,false,this);
+    checkBoxes << new BoxView(ui->pictures_box,CONFIG_PICTUREFILES,true,this);
+    checkBoxes << new BoxView(ui->videos_box,CONFIG_VIDEOFILES,true,this);
+    checkBoxes << new BoxView(ui->move_instead_of_copy_box,CONFIG_MOVEFILES,false,this);
+    checkBoxes << new BoxView(ui->overwrite_destination_box,CONFIG_OVERWRITEFILES,false,this);
+
+    groupBoxes << new GroupBoxView(ui->others_box,CONFIG_OTHERFILES,false,this);
+
+    lines << new LineEditView(ui->filter,CONFIG_FILTER,obj[CONFIG_IDPATH].toString().startsWith("WPD")?"DCIM;Camera;Auto;*ANDRO;user;media;*iPhone*;*APPLE;Pictures;Screenshots;Download;WhatsApp*;Media":"",this);
+    lines << new LineEditView(ui->DLToLine,CONFIG_DOWNLOADTO,QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0),this);
+    lines << new LineEditView(ui->newNameEdit,CONFIG_NEWNAME,"yyyy-MM/yyyy-MM-dd/yyyy-MM-dd_HH-mm-ss_oName",this);
+    lines << new LineEditView(ui->TrackFolderLine,CONFIG_TRACKFOLDER,"",this);
+    lines << new LineEditView(ui->OPAccessKeyLine,CONFIG_OPACCESSKEY,"",this);
+    lines << new LineEditView(ui->OPSecretKeyLine,CONFIG_OPSECRETKEY,"",this);
+    lines << new LineEditView(ui->nbPics,CONFIG_NBPICS,"200",this);
+    lines << new LineEditView(ui->others_patterns,CONFIG_OTHERFILESPATTERNS,"*.gpx;*.kml;*.xml",this);
+
+    spinBoxes << new SpinBoxView(ui->target_pct,CONFIG_TARGETPERCENTAGEVALUE,25,this);
+    spinBoxes << new SpinBoxView(ui->protect_days,CONFIG_PROTECTDAYSVALUE,30,this);
+    spinBoxes << new SpinBoxView(ui->limit_depth_spin,CONFIG_DEPTHLIMIT,0,this);
+
+    connect(ui->free_up_box,SIGNAL(toggled(bool)),this,SLOT(updateFreeUpSimulation()));
+    connect(ui->target_pct_box,SIGNAL(toggled(bool)),this,SLOT(updateFreeUpSimulation()));
+    connect(ui->nbPics_box,SIGNAL(toggled(bool)),this,SLOT(updateFreeUpSimulation()));
+    connect(ui->protect_days_box,SIGNAL(toggled(bool)),this,SLOT(updateFreeUpSimulation()));
+    connect(ui->protect_transfer_box,SIGNAL(toggled(bool)),this,SLOT(updateFreeUpSimulation()));
+    connect(ui->target_pct,SIGNAL(valueChanged(int)),this,SLOT(updateFreeUpSimulation()));
+    connect(ui->nbPics,SIGNAL(textChanged(QString)),this,SLOT(updateFreeUpSimulation()));
+    connect(ui->protect_days,SIGNAL(valueChanged(int)),this,SLOT(updateFreeUpSimulation()));
+
+
     dc->saveDevices();
 
-    //ui->tableView->resizeRowsToContents();
-
-    updateButton();
-
     if (obj[CONFIG_IDPATH].toString().startsWith("WPD")) {
+        QString tooltip = tr("This feature is not available for devices connected via tha MTP or PTP protocols");
         ui->free_up_box->setEnabled(false);
+        ui->free_up_box->setToolTip(tooltip);
+        ui->move_instead_of_copy_box->setEnabled(false);
+        ui->move_instead_of_copy_box->setToolTip(tooltip);
     }
+    if (obj[CONFIG_DEVICETYPE].toString() == "Folder") {
+        ui->free_up_box->setEnabled(false);
+        ui->free_up_box->setToolTip(tr("This feature is not available for folders"));
+    }
+
     ui->OpenPathsRadio->setEnabled(false);
+    ui->OpenPathsRadio->setToolTip(tr("This feature is not implemented yet"));
 }
 
 
@@ -298,48 +424,12 @@ void DeviceConfigView::updateButton(){
     } else {
         ui->FillCommentsButton->setDisabled(true);
     }
-    bool exifAllowed = ui->allowEXIFBox->isChecked();
-    ui->UseEXIFDateBox->setEnabled(exifAllowed);
-    ui->seeAvTagsButton->setEnabled(exifAllowed);
     ui->filter->setEnabled(ui->filterType->currentIndex() != 0);
 }
 
-void DeviceConfigView::CopyToConfig() {
+void DeviceConfigView::readSpecialWidgets() {
     qDebug() << "CopyToConfig";
     QJsonObject obj = dc->devices[id].toObject();
-    bool reloadNeeded = false;
-    bool geotaggerUpdateNeeded = false;
-
-    /* Detect config modification that trigger actions */
-    if ((obj[CONFIG_FILESTODOWNLOAD].toString() == "All") != ui->allRadio->isChecked() ||
-        obj[CONFIG_FILTERTYPE].toInt() != ui->filterType->currentIndex()) {
-        reloadNeeded = true;
-    }
-    if (obj[CONFIG_ALLOWEXIF].toBool() == false &&
-        ui->allowEXIFBox->isChecked()) {
-        reloadNeeded = true;
-    }
-    if (!reloadNeeded) {
-        /* check if the filter was changed */
-        if (obj[CONFIG_FILTER].toString() != ui->filter->text()) {
-            reloadTimer.start();
-        }
-    }
-
-    /* impact on NewPath */
-    if (dpm != NULL) {
-        if (obj[CONFIG_NEWNAME].toString() != ui->newNameEdit->text() ||
-            obj[CONFIG_DOWNLOADTO].toString() != ui->DLToLine->text() ||
-            obj[CONFIG_ALLOWEXIF].toBool() != ui->allowEXIFBox->isChecked() ||
-            obj[CONFIG_USEEXIFDATE].toBool() != ui->UseEXIFDateBox->isChecked()) {
-            dpm->updateNewPaths();
-        }
-    }
-
-    if (obj[CONFIG_GEOTAG].toBool() != ui->GeoTagBox->isChecked() ||
-        obj[CONFIG_TRACKFOLDER].toString() != ui->TrackFolderLine->text()) {
-        geotaggerUpdateNeeded = true;
-    }
 
     /* update non-standard fields */
     if (ui->allRadio->isChecked()) {
@@ -355,42 +445,10 @@ void DeviceConfigView::CopyToConfig() {
         obj.insert(CONFIG_GEOTAGMODE,QJsonValue(QString("Track Folder")));
     }
 
-    /* update standard fields */
-    for (int i = 0; i < boxes.size(); i++) {
-        boxes[i].readBox(&obj);
-    }
-    for (int i = 0; i < lines.size(); i++) {
-        lines[i].readLine(&obj);
-    }
-    for (int i = 0; i < spinBoxes.size(); i++) {
-        spinBoxes[i].readSpinBox(&obj);
-    }
-
     dc->devices[id] = obj;
-    //dc->saveConfig();
-    if (dpm != NULL) {
-        if (reloadNeeded) {
-            dpm->reloadSelection();
-        } else {
-            dpm->dataChanged(QModelIndex(), QModelIndex());
-        }
-    }
-    //ui->tableView->resizeRowsToContents();
-    //ui->tableView->resizeColumnsToContents();
-    if (ui->Tabs->currentIndex() == 2 || reloadNeeded) {
-        updateFreeUpSimulation();
-    }
-
-    updateButton();
-
-    if (tm != NULL) {
-        if (geotaggerUpdateNeeded) {
-            tm->udpateGeoTagger();
-        }
-    }
 }
 
-void DeviceConfigView::SaveConfig() {
+void DeviceConfigView::saveConfig() {
     qDebug() << "SaveConfig";
     if (dpm != NULL) {
         QString guessedCameraName = dpm->guessCameraName();
@@ -410,7 +468,7 @@ void DeviceConfigView::chooseDLTo() {
 
     if (dir.size()>0) {
         ui->DLToLine->setText(dir);
-        CopyToConfig();
+        readSpecialWidgets();
     }
 }
 
@@ -420,7 +478,7 @@ void DeviceConfigView::chooseTrackFolder() {
 
     if (dir.size()>0) {
         ui->TrackFolderLine->setText(dir);
-        CopyToConfig();
+        readSpecialWidgets();
     }
 }
 
@@ -463,12 +521,12 @@ void DeviceConfigView::updateFreeUpSimulation() {
 
 
 void DeviceConfigView::go(){
-    SaveConfig();
+    saveConfig();
     if (tm != NULL) {        
         if (!dpm->getAllCom()) return;
 
         connect(tm,SIGNAL(downloadFinished()),this,SLOT(postDownloadActions()));
-        ui->Tabs->setCurrentIndex(0);
+        ui->tabs->setCurrentIndex(TAB_ORGANIZE);
         td->showProgress(tm);
         tm->launchDownloads();
 
@@ -476,7 +534,7 @@ void DeviceConfigView::go(){
         obj.insert(CONFIG_LASTTRANSFER,QJsonValue(QString("%1").arg(QDateTime::currentDateTime().toTime_t())));
         dc->devices[id] = obj;
         dc->deviceFieldChanged(id);
-        SaveConfig();
+        saveConfig();
     } else {
         deleteLater();
     }
@@ -491,7 +549,7 @@ void DeviceConfigView::postDownloadActions(){
 
         if (nbFilesDeleted > 0) {
             td->hide();
-            ui->Tabs->setCurrentIndex(2);
+            ui->tabs->setCurrentIndex(TAB_FREEUPSPACE);
             QMessageBox mb(QMessageBox::Question,
                            QCoreApplication::applicationName(),
                            QString("PicsDL is about to delete %1 files (%2) from your device.\nAre you sure?")
@@ -544,4 +602,67 @@ void DeviceConfigView::download_handle(){
 void DeviceConfigView::do_not_download_handle(){
     QModelIndexList rows = ui->tableView->selectionModel()->selectedRows();
     dpm->markForDownload(rows,false);
+}
+
+#define L1_WITH_TABLEVIEW       1
+#define L1_WITHOUT_TABLEVIEW    0
+#define L2_SELECT               0
+#define L2_ORGANIZE             1
+#define L2_GEOTAG               2
+
+void DeviceConfigView::handleTabChange(int idx){
+    qDebug() << "handleTabChange" << idx;
+    switch (idx) {
+    case TAB_SELECT:
+        ui->level_1_stack->setCurrentIndex(L1_WITH_TABLEVIEW);
+        ui->level_2_stack->setCurrentIndex(L2_SELECT);
+        ui->tableView->setColumnHidden(COL_FILEPATH,false);
+        ui->tableView->setColumnHidden(COL_FILENAME,true);
+        ui->tableView->setColumnHidden(COL_SIZE,false);
+        ui->tableView->setColumnHidden(COL_MODIFIED,false);
+        ui->tableView->setColumnHidden(COL_DATE,true);
+        ui->tableView->setColumnHidden(COL_GPS,true);
+        ui->tableView->setColumnHidden(COL_NEWPATH,false);
+        break;
+    case TAB_ORGANIZE:
+        ui->level_1_stack->setCurrentIndex(L1_WITH_TABLEVIEW);
+        ui->level_2_stack->setCurrentIndex(L2_ORGANIZE);
+        ui->tableView->setColumnHidden(COL_FILEPATH,true);
+        ui->tableView->setColumnHidden(COL_FILENAME,false);
+        ui->tableView->setColumnHidden(COL_SIZE,true);
+        ui->tableView->setColumnHidden(COL_MODIFIED,false);
+        ui->tableView->setColumnHidden(COL_DATE,true);
+        ui->tableView->setColumnHidden(COL_GPS,true);
+        ui->tableView->setColumnHidden(COL_NEWPATH,false);
+        break;
+    case TAB_GEOTAG:
+        ui->level_1_stack->setCurrentIndex(L1_WITH_TABLEVIEW);
+        ui->level_2_stack->setCurrentIndex(L2_GEOTAG);
+        ui->tableView->setColumnHidden(COL_FILEPATH,true);
+        ui->tableView->setColumnHidden(COL_FILENAME,false);
+        ui->tableView->setColumnHidden(COL_SIZE,true);
+        ui->tableView->setColumnHidden(COL_MODIFIED,true);
+        ui->tableView->setColumnHidden(COL_DATE,false);
+        ui->tableView->setColumnHidden(COL_GPS,false);
+        ui->tableView->setColumnHidden(COL_NEWPATH,true);
+        break;
+    case TAB_FREEUPSPACE:
+        ui->level_1_stack->setCurrentIndex(L1_WITHOUT_TABLEVIEW);
+        updateFreeUpSimulation();
+        break;
+    default:
+        qDebug() << "Unknown tab index!!";
+        break;
+    }
+}
+
+void DeviceConfigView::setNewNamePattern(QString pattern) {
+    ui->newNameEdit->setText(pattern);
+}
+
+void DeviceConfigView::geotagToggled(bool checked){
+    if (checked) {
+        ui->allowEXIFBox->setChecked(true);
+    }
+    ui->allowEXIFBox->setEnabled(!checked);
 }

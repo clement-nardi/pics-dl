@@ -60,12 +60,12 @@ Just click Next.
 Install Strawberry Perl, leave all default settings.  
 Once installed, launch "CPAN Client", and write in the terminal:  
 
+    install Image::ExifTool
+
 ###2.5 Git  
 **Must be installed after Strawberry Perl**  
 **At the 4th step, select the 3rd option**: "Use Git and optional Unix tools from the Windows Command Prompt"
 Otherwise Just click Next.  
-
-    install Image::ExifTool
 
 ###2.7 Inno Setup 5  
 Just Click Next (leave default options)  

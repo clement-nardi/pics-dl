@@ -32,9 +32,9 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QProcess>
-#include <QUuid>
 #include <QCryptographicHash>
 #include "geotagger.h"
+#include <QGeoCoordinate>
 
 
 static int thumbnailSurface(File *fi) {
@@ -96,10 +96,18 @@ void DownloadModel::sort(int column, Qt::SortOrder order){
     sortColumnOrder.prepend(column);
     sortIsAscending[column] = (order == Qt::AscendingOrder);
     beginResetModel();
-    dpm_s = this;
-    qSort(selectedFileList.begin(),selectedFileList.end(),fileLessThan);
+    sortSelection();
     endResetModel();
     reloaded();
+}
+
+void DownloadModel::sortSelection() {
+    dpm_s = this;
+    qSort(selectedFileList.begin(),selectedFileList.end(),fileLessThan);
+    for (int i = 0; i < selectedFileList.size(); i++) {
+        File *fi = selectedFileList.at(i);
+        fi->modelRow = i;
+    }
 }
 
 int DownloadModel::rowCount(const QModelIndex & parent) const{
@@ -107,6 +115,15 @@ int DownloadModel::rowCount(const QModelIndex & parent) const{
 }
 int DownloadModel::columnCount(const QModelIndex & parent) const {
     return NB_COLUMNS;
+}
+
+QDateTime DownloadModel::dateForNewName(File* fi) const{
+    if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool() &&
+            dc->devices[id].toObject()[CONFIG_USEEXIFDATE].toBool()    ) {
+        return QDateTime::fromTime_t(fi->dateTaken());
+    } else {
+        return QDateTime::fromTime_t(fi->lastModified);
+    }
 }
 
 QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
@@ -117,14 +134,8 @@ QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
         QJsonObject obj = dc->devices[id].toObject();
         QString newName = obj[CONFIG_NEWNAME].toString();
         QString newPath;
-        QDateTime lm;
+        QDateTime lm = dateForNewName(fi);
         int tagidx = -1;
-        if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool() &&
-                dc->devices[id].toObject()[CONFIG_USEEXIFDATE].toBool()    ) {
-            lm = QDateTime::fromTime_t(fi->dateTaken());
-        } else {
-            lm = QDateTime::fromTime_t(fi->lastModified);
-        }
         QStringList oNameList = fi->fileName().split(".");
         QString oExt = oNameList.last();
         oNameList.removeLast();
@@ -134,6 +145,54 @@ QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
             newName.replace(dateKeywords.at(i),lm.toString(dateKeywords.at(i)));
         }
         newName.replace("oName",oName);
+
+        /* oFolder management */
+        int oFolderPos = 0;
+        QRegExp oFolderPattern = QRegExp("oFolder(-?)([1-9]\\d*)-(([1-9]\\d*)?)");
+        QStringList oFolderList = fi->absoluteFilePath().mid(obj[CONFIG_PATH].toString().size()).split('/');
+        oFolderList.removeLast();
+        while ((oFolderPos = oFolderPattern.indexIn(newName,oFolderPos)) >= 0) {
+            bool m_is_present;
+            int n = oFolderPattern.cap(2).toInt();
+            int m = oFolderPattern.cap(3).toInt(&m_is_present);
+            bool invert = oFolderPattern.cap(1).size()>0;
+            int first;
+            int nb;
+            if (m_is_present) {
+                nb = std::max(n,m) - std::min(n,m) + 1;
+                if (!invert) {
+                    first = std::min(n,m) - 1;
+                } else {
+                    first = oFolderList.size() - std::max(n,m);
+                }
+            } else {
+                if (!invert) {
+                    first = n - 1;
+                    nb = -1;
+                } else {
+                    first = 0;
+                    nb = oFolderList.size() - (n - 1);
+                    if (nb < 0) nb = 0;
+                }
+            }
+            newName.replace(oFolderPattern.cap(),
+                            QStringList(oFolderList.mid(first,nb)).join('/'));
+        }
+        oFolderPos = 0;
+        oFolderPattern = QRegExp("oFolder(-?)([1-9]\\d*)");
+        while ((oFolderPos = oFolderPattern.indexIn(newName,oFolderPos)) >= 0) {
+            int n = oFolderPattern.cap(2).toInt();
+            bool invert = oFolderPattern.cap(1).size()>0;
+            int idx;
+            if (!invert) {
+                idx = n - 1;
+            } else {
+                idx = oFolderList.size() - n;
+            }
+            newName.replace(oFolderPattern.cap(),
+                            (idx>=0 && idx<oFolderList.size())?oFolderList.at(idx):"");
+        }
+
         if (!keepDComStr && newName.contains("dCom")) {
             newName.replace("dCom",getDCom(fi));
         }
@@ -189,6 +248,19 @@ void DownloadModel::updateNewPaths() {
     newPathCollisions.clear();
     dataChanged(createIndex(0,COL_NEWPATH),
                 createIndex(selectedFileList.size()-1,COL_NEWPATH));
+}
+
+void DownloadModel::receiveGPSCoord(File *fi){
+    qDebug() << "receiveGPSCoord " << fi->modelRow;
+    dataChanged(createIndex(fi->modelRow,COL_GPS),
+                createIndex(fi->modelRow,COL_GPS));
+}
+
+void DownloadModel::updateGPS(){
+    qDebug() << "updateGPS";
+    GPSRequested.clear();
+    dataChanged(createIndex(0,COL_GPS),
+                createIndex(selectedFileList.size()-1,COL_GPS));
 }
 
 /* Not used anymore */
@@ -391,17 +463,66 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             return File::size2Str(fi->size);
         }
             break;
-        case COL_DATE:
+        case COL_MODIFIED:
         {
             QDateTime lm = QDateTime::fromTime_t(fi->lastModified);
             return lm.toString("yyyy/MM/dd HH:mm:ss");
+        }
+            break;
+        case COL_DATE:
+        {
+            QDateTime date = dateForNewName(fi);
+            return date.toString("yyyy/MM/dd HH:mm:ss");
         }
             break;
         case COL_NEWPATH:
             if (excludedFiles.contains(fi)) {
                 return "This file will not be downloaded.";
             } else {
-                return newPath(fi);
+                QString np = newPath(fi);
+                if (np == fi->absoluteFilePath()) {
+                    return "[same file]";
+                } else {
+                    return np;
+                }
+            }
+            break;
+        case COL_GPS:
+            QJsonObject obj = dc->devices[id].toObject();
+            if (!obj[CONFIG_GEOTAG].toBool()) {
+                return "";
+            }
+            if (!GPSRequested.contains(fi)){
+                GPSRequested.insert(fi);
+                emit requestGPSCoord(fi);
+            }
+            if (fi->geotags.size() > 0 ) {
+                QRegExp coord = QRegExp("(\\d+) (\\d+) (\\d*.?\\d*)");
+                QString latiref = fi->geotags["GPSLatitudeRef"];
+                QString longiref = fi->geotags["GPSLongitudeRef"];
+                if ((latiref  == "N" || latiref  == "S") &&
+                    (longiref == "E" || longiref == "W")   ) {
+                    if (coord.indexIn(fi->geotags["GPSLatitude"]) >= 0) {
+                        double lati = (coord.cap(1).toDouble() +
+                                coord.cap(2).toDouble()/60 +
+                                coord.cap(3).toDouble()/60/60) * (double)((latiref  == "N")?1:-1) ;
+                        //qDebug() << lati << coord.cap() << coord.cap(1) << coord.cap(2) << coord.cap(3);
+                        if (coord.indexIn(fi->geotags["GPSLongitude"]) >= 0) {
+                            double longi = (coord.cap(1).toDouble() +
+                                    coord.cap(2).toDouble()/60 +
+                                    coord.cap(3).toDouble()/60/60) * (double)((longiref  == "E")?1:-1) ;
+                            //qDebug() << longi << coord.cap() << coord.cap(1) << coord.cap(2) << coord.cap(3);
+                            return QGeoCoordinate(lati,longi).toString();
+                        }
+                    }
+                }
+                /* raw format */
+                return fi->geotags["GPSLatitudeRef"] + " "
+                     + fi->geotags["GPSLatitude"] + " "
+                     + fi->geotags["GPSLongitudeRef"] + " "
+                     + fi->geotags["GPSLongitude"];
+            } else {
+                return "Computing GPS coordinates";
             }
             break;
         }
@@ -440,28 +561,64 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             return QString("%1 Bytes").arg(fi->size);
         }
             break;
-        case COL_DATE:
+        case COL_MODIFIED:
         {
             QDateTime lm = QDateTime::fromTime_t(fi->lastModified);
             return lm.toString(Qt::SystemLocaleLongDate);
+        }
+            break;
+        case COL_DATE:
+        {
+            QDateTime date = dateForNewName(fi);
+            return date.toString(Qt::SystemLocaleLongDate);
         }
             break;
         case COL_NEWPATH:
         {
             if (!excludedFiles.contains(fi)) {
                 QString tooltip = newPath(fi);
+                QJsonObject obj = dc->devices[id].toObject();
                 if (fi->transferOnGoing) {
-                    tooltip += "\nThis file is being transfered";
+                    tooltip += "\n" + tr("This file is being transfered");
+                } else if (newPath(fi) == fi->absoluteFilePath()) {
+                    if (obj[CONFIG_GEOTAG].toBool()) {
+                        tooltip += "\n" + tr("Same file, it will just be geotagged");
+                    } else {
+                        tooltip += "\n" + tr("Same file, nothing will happen");
+                    }
                 } else if (QFile(newPath(fi)).exists()) {
                     if (fi->transferTo.size()>0) {
-                        tooltip += "\nThis file was just transfered";
+                        tooltip += "\n" + tr("This file was just transfered");
                     } else {
-                        tooltip += "\nThis file already exists, it will not be overwritten";
+                        if (obj[CONFIG_OVERWRITEFILES].toBool()) {
+                            tooltip += "\n" + tr("This file already exists but it WILL be overwritten");
+                        } else {
+                            tooltip += "\n" + tr("This file already exists and it will NOT be overwritten");
+                        }
                     }
                 } else {
-                    tooltip += "\nThis file will be transfered";
+                    if (obj[CONFIG_MOVEFILES].toBool()) {
+                        tooltip += "\n" + tr("The file will be moved here");
+                    } else {
+                        tooltip += "\n" + tr("The file will be transfered here");
+                    }
                 }
                 return tooltip;
+            }
+        }
+            break;
+        case COL_GPS:
+        {
+            if (fi->geotags.size() > 0 ) {
+                QString gps = tr("These EXIF tags will be inserted in the file:") + "\n";
+                QMapIterator<QString, QString> i(fi->geotags);
+                while (i.hasNext()) {
+                    i.next();
+                    gps +=  i.key() + "=" + i.value() + "\n";
+                }
+                return gps;
+            } else {
+                return tr("The coordinates are being computed.");
             }
         }
             break;
@@ -493,19 +650,31 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             }
         }
         if (index.column() == COL_NEWPATH) {
+            QJsonObject obj = dc->devices[id].toObject();
             if (excludedFiles.contains(fi)) {
                 return QIcon(":/icons/remove");
             } else if (fi->transferOnGoing) {
                 return QIcon(":/icons/download");
+            } else if (newPath(fi) == fi->absoluteFilePath()) {
+                if (obj[CONFIG_GEOTAG].toBool()) {
+                    return QIcon(":/icons/gps");
+                } else {
+                    return QIcon(":/icons/warning");
+                }
             } else if (QFile(newPath(fi)).exists()) {
                 if (fi->transferTo.size()>0) {
                     return QIcon(":/icons/ok");
+                } else if (obj[CONFIG_OVERWRITEFILES].toBool()) {
+                    return QIcon(":/icons/play");
                 } else {
                     return QIcon(":/icons/warning");
                 }
             } else {
                 return QIcon(":/icons/play");
             }
+        }
+        if (index.column() == COL_GPS) {
+            return QIcon(":/icons/gps");
         }
         break;
     case Qt::SizeHintRole:
@@ -536,8 +705,10 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
             case COL_FILEPATH: return "File Path"; break;
             case COL_FILENAME: return "File Name"; break;
             case COL_SIZE: return "Size"; break;
+            case COL_MODIFIED: return "Date modified"; break;
             case COL_DATE: return "Date"; break;
             case COL_NEWPATH: return "Destination"; break;
+            case COL_GPS: return "GPS Coordinates"; break;
             }
             break;
         case Qt::Vertical:
@@ -601,17 +772,50 @@ void DownloadModel::loadPreview(QString id_) {
 
 
 bool DownloadModel::isBlacklisted(File element) {
-    if (dc->devices[id].toObject()[CONFIG_FILTERTYPE].toInt() == 0) { /* from all directories */
+    QJsonObject obj = dc->devices[id].toObject();
+
+    if (obj[CONFIG_LIMITDEPTH].toBool()){
+        QStringList directoryList = element.absoluteFilePath().split("/");
+        QString     root_of_search = obj[CONFIG_PATH].toString();
+        int depth_of_root;
+        int current_depth;
+        int depth_limit = obj[CONFIG_DEPTHLIMIT].toInt();
+
+        if (!element.isDir) {
+            directoryList.removeLast();
+        }
+        current_depth = directoryList.size();
+
+        while (root_of_search[root_of_search.size()-1] == '/') {
+            root_of_search = root_of_search.left(root_of_search.size()-1);
+        }
+        depth_of_root = root_of_search.split('/').size();
+        if (current_depth > depth_of_root + depth_limit) {
+            return true;
+        }
+    }
+
+    if (obj[CONFIG_FILTERTYPE].toInt() == 0) { /* from all directories */
         return false;
     } else {
         bool patternMatchedOnceInPath = false;
         int reverseNonMatchingIndex = 0;
 
-        QStringList patternList = dc->devices[id].toObject()[CONFIG_FILTER].toString().split(";");
+        QStringList patternList = obj[CONFIG_FILTER].toString().split(";");
         QStringList directoryList = element.absoluteFilePath().split("/");
+        QString     root_of_search = obj[CONFIG_PATH].toString();
+        int depth_of_root;
+
         if (!element.isDir) {
             directoryList.removeLast();
         }
+
+        while (root_of_search[root_of_search.size()-1] == '/') {
+            root_of_search = root_of_search.left(root_of_search.size()-1);
+        }
+        depth_of_root = root_of_search.split('/').size();
+
+
         for (int dirIdx = directoryList.size()-1; dirIdx >= 0; dirIdx--) {
             bool patternMatchedOnce = false;
             for (int j = 0; j < patternList.size(); j++) {
@@ -628,14 +832,14 @@ bool DownloadModel::isBlacklisted(File element) {
                 reverseNonMatchingIndex = dirIdx;
             }
         }
-        if (dc->devices[id].toObject()[CONFIG_FILTERTYPE].toInt() == 1) { /* from all directories except: */
+        if (obj[CONFIG_FILTERTYPE].toInt() == 1) { /* from all directories except: */
             return patternMatchedOnceInPath;
         } else { /* from these directories: */
-            int minMatchIdx = 1; /* Don't need to match H: in H:/DCIM/116_FUJI */
+            int minMatchIdx = depth_of_root; /* Don't need to match H: in H:/DCIM/116_FUJI */
             if (element.IDPath.startsWith("WPD:/")) {
                 /* Don't need to match "LGE Nexus 5/Mémoire de stockage interne"
                                      in LGE Nexus 5/Mémoire de stockage interne/DCIM/Camera/   */
-                minMatchIdx = 2;
+                minMatchIdx = depth_of_root+1;
             }
             return reverseNonMatchingIndex >= minMatchIdx;
         }
@@ -741,7 +945,12 @@ void DownloadModel::treatDir(File dirInfo) {
 
 void DownloadModel::reloadSelection(bool firstTime) {
     qDebug() << "dpm.reloadSelection";
-    bool selectall = (dc->devices[id].toObject()[CONFIG_FILESTODOWNLOAD].toString() == "All");
+    QJsonObject obj = dc->devices[id].toObject();
+    bool select_known       = (obj[CONFIG_FILESTODOWNLOAD].toString() == "All");
+    bool select_pictures    = obj[CONFIG_PICTUREFILES].toBool();
+    bool select_videos      = obj[CONFIG_VIDEOFILES].toBool();
+    bool select_others      = obj[CONFIG_OTHERFILES].toBool();
+    QString other_patterns  = obj[CONFIG_OTHERFILESPATTERNS].toString();
     beginResetModel();
     selectedFileList.clear();
 
@@ -771,8 +980,10 @@ void DownloadModel::reloadSelection(bool firstTime) {
 
     for (int i = 0; i < completeFileList.size(); i++) {
         File *fi = completeFileList.at(i);
-        if (fi->isPicture() || fi->isVideo()) {
-            if ((selectall || !dc->knownFiles.contains(*fi)) &&
+        if ((select_pictures && fi->isPicture()) ||
+            (select_videos   && fi->isVideo  ()) ||
+            (select_others   && fi->nameMatchesPatterns(other_patterns))){
+            if ((select_known || !dc->knownFiles.contains(*fi)) &&
                 !isBlacklisted(*fi)) {
                 selectedFileList.append(fi);
                 selectedFileList.append(fi->attachedFiles);
@@ -789,7 +1000,6 @@ void DownloadModel::reloadSelection(bool firstTime) {
             if (pd->isVisible()) {
                 pd->setValue(i);
                 if (pd->wasCanceled()) {
-                    QJsonObject obj = dc->devices[id].toObject();
                     obj.insert(CONFIG_ALLOWEXIF,QJsonValue(false));
                     dc->devices[id] = obj;
                     dc->saveDevices();
@@ -821,9 +1031,8 @@ void DownloadModel::reloadSelection(bool firstTime) {
     int countPics = 0;
     for (int i = 0; i < selectedFileList.size(); i++) {
         File *fi = selectedFileList.at(i);
-        fi->modelRow = i;
-        connect(fi,SIGNAL(readStarted(File*)),this,SLOT(readStarted(File*)));
-        connect(fi,SIGNAL(writeFinished(File*)),this,SLOT(writeFinished(File*)));
+        connect(fi,SIGNAL(readStarted(File*)),this,SLOT(readStarted(File*)),Qt::UniqueConnection);
+        connect(fi,SIGNAL(writeFinished(File*)),this,SLOT(writeFinished(File*)),Qt::UniqueConnection);
         if (fi->isPicture()) {
             averagePicSize += fi->size;
             countPics++;
@@ -845,8 +1054,7 @@ void DownloadModel::reloadSelection(bool firstTime) {
             averagePicSize = 5*1024*1024;
         }
     }
-    dpm_s = this;
-    qSort(selectedFileList.begin(),selectedFileList.end(),fileLessThan);
+    sortSelection();
     qDebug() << "endResetModel";
     endResetModel();
     qDebug() << "reloaded";

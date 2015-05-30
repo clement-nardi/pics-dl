@@ -34,6 +34,8 @@
 #include <QDir>
 #include "transfermanager.h"
 #include "geotagger.h"
+#include <QStorageInfo>
+#include <QUuid>
 
 #ifdef _WIN32
 #include "WPDInterface.h"
@@ -1088,6 +1090,18 @@ bool File::isJPEG() const {
     return JPEGExtensions.contains(extension());
 }
 
+bool File::nameMatchesPatterns(QString &patterns_) const{
+    QStringList patterns = patterns_.replace(',',';').split(";");
+    for (int i = 0; i < patterns.size(); i++) {
+        QString pattern = patterns[i];
+        QRegExp regexp = QRegExp("^" + pattern.replace(".","\\.").replace("*",".*") + "$");
+        if (regexp.indexIn(fileName_p) >= 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void File::loadExifData() {
     if (exifData == NULL && !exifLoadAttempted) {
         exifLoadAttempted = true;
@@ -1613,20 +1627,68 @@ void File::writeFinished() {
         if (tm->wasStopped) {
             QFile(pipedTo).remove();
         } else {
+            if (move_instead_of_copy){
+                remove();
+            }
+            if (thenMoveTo.size() != 0) {
+                File(thenMoveTo).remove();
+                File(transferTo).moveWithDirs(thenMoveTo);
+            }
             emit writeFinished(this);
         }
     }
 }
 
-void File::launchTransferTo(QString to, TransferManager *tm_, bool geotag_) {
+QString File::firstExistingParent() const{
+    QDir dir = QFileInfo(absoluteFilePath()).dir();
+    while (! dir.exists()) {
+        if (! dir.cdUp()) {
+            break;
+        }
+    }
+    return dir.absolutePath();
+}
+
+bool File::isOnSameDriveAs(const File & other){
+    return QStorageInfo(this->firstExistingParent()) == QStorageInfo(other.firstExistingParent());
+}
+
+/* This function assumes that the destination file can be removed */
+void File::launchTransferTo(QString to, TransferManager *tm_, bool geotag_, bool move_instead_of_copy_) {
     qDebug() << QString("%1 - launchTransferTo %2").arg(fileName()).arg(to);
     tm = tm_;
     transferTo = to;
     geotag = geotag_;
-    if (geotag) {
-        pipeToBuffer();
+    move_instead_of_copy = move_instead_of_copy_;
+
+    qDebug() << move_instead_of_copy << geotag << QStorageInfo(absoluteFilePath()).rootPath() << QStorageInfo(transferTo).rootPath();
+
+    if (QFileInfo(absoluteFilePath()) == QFileInfo(transferTo)) {
+        if (geotag) {
+            qDebug() << QString("%1 - Same file - Geotag in place");
+            thenMoveTo = transferTo;
+            transferTo = QFileInfo(transferTo).dir().absolutePath() + '/' + QUuid::createUuid().toString();
+            pipeToBuffer();
+        } else {
+            qDebug() << QString("%1 - Same file - Nothing to do");
+            tm->directSemaphore.release();
+            emit writeFinished(this);
+        }
+    } else if (move_instead_of_copy &&
+               !geotag &&
+               isOnSameDriveAs(File(transferTo))) {
+        /* this file can be simply renamed */
+        qDebug() << QString("%1 - RENAME into %2").arg(fileName()).arg(transferTo);
+        File(transferTo).remove();
+        moveWithDirs(transferTo);
+        tm->directSemaphore.release();
+        emit writeFinished(this);
     } else {
-        pipe(to);
+        if (geotag) {
+            pipeToBuffer();
+        } else {
+            pipe(transferTo);
+        }
     }
 }
 
@@ -1717,7 +1779,7 @@ void File::pipe(QIODevice *in, QIODevice *out){
     }
 }
 
-
+/* not used anymore */
 bool File::FillIODeviceWithContent(QIODevice *out) {
     if (!IDPath.startsWith("WPD:/")) {
         QFile in(absoluteFilePath());

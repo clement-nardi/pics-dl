@@ -40,7 +40,6 @@ DriveView::DriveView(QString id_, Config *dc_, DriveNotify *dn_, QObject *parent
     managedBox_centered = new QWidget();
     managedBox = new QCheckBox(managedBox_centered);
 
-    editButton->setEnabled(false);
     launchButton->setEnabled(false);
 
     QHBoxLayout *managedLayout = new QHBoxLayout(managedBox_centered);
@@ -51,9 +50,9 @@ DriveView::DriveView(QString id_, Config *dc_, DriveNotify *dn_, QObject *parent
     managedLayout->setMargin(0);
     managedBox_centered->setLayout(managedLayout);
 
-    connect(managedBox,SIGNAL(toggled(bool)),editButton,SLOT(setEnabled(bool)));
     managedBox->setChecked(obj[CONFIG_ISMANAGED].toBool());
-    launchButton->setEnabled(dn->isPluggedIn(id));
+    managedBox->setEnabled(obj[CONFIG_DEVICETYPE].toString() != "Folder");
+    launchButton->setEnabled(canBeLaunched());
 
     connect(managedBox, SIGNAL(clicked(bool)), this, SLOT(managed(bool)));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removed()));
@@ -82,7 +81,13 @@ void DriveView::managed(bool checked){
 }
 
 void DriveView::launch(){
-    if (dn->isPluggedIn(id)) {
+    if (canBeLaunched()) {
         emit launchTransfer(id,true);
     }
+}
+
+bool DriveView::canBeLaunched() {
+    QJsonObject obj = dc->devices[id].toObject();
+    return  dn->isPluggedIn(id) ||
+            obj[CONFIG_DEVICETYPE].toString() == "Folder" && QDir(obj[CONFIG_PATH].toString()).exists();
 }

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NewNameSelection</class>
+ <widget class="QDialog" name="NewNameSelection">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>994</width>
+    <height>463</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_10">
+   <item>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;New arborescence/name pattern&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Example&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="radio_grid">
+         <item row="1" column="0">
+          <widget class="QRadioButton" name="radio_1">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="pattern_1">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;yyyy&lt;/span&gt;/&lt;span style=&quot; color:#0000ff;&quot;&gt;yyyy&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;MM&lt;/span&gt;/&lt;span style=&quot; color:#0000ff;&quot;&gt;yyyy&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;MM&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;dd &lt;/span&gt;&lt;span style=&quot; color:#ff5500;&quot;&gt;dCom&lt;/span&gt;/&lt;span style=&quot; color:#0000ff;&quot;&gt;yyyy&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;MM&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;dd &lt;/span&gt;&lt;span style=&quot; color:#aaaa00;&quot;&gt;HH-mm-ss &lt;/span&gt;&lt;span style=&quot; color:#ffaa00;&quot;&gt;oName&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QRadioButton" name="radio_0">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QRadioButton" name="radio_2">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLabel" name="pattern_4">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffaa7f;&quot;&gt;oFolder1-&lt;/span&gt;/&lt;span style=&quot; color:#ffaa00;&quot;&gt;oName&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="pattern_3">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#00aa7f;&quot;&gt;&amp;lt;Make&amp;gt; &amp;lt;Model&amp;gt;&lt;/span&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;/yyyy&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;MM&lt;/span&gt;/&lt;span style=&quot; color:#ffaa00;&quot;&gt;oName&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="pattern_2">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;yyyy&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;MM &lt;/span&gt;&lt;span style=&quot; color:#ff00ff;&quot;&gt;MMMM&lt;/span&gt;/&lt;span style=&quot; color:#ffaa00;&quot;&gt;oName&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QRadioButton" name="radio_4">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QRadioButton" name="radio_3">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="pattern_0">
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;yyyy&lt;/span&gt;/&lt;span style=&quot; color:#0000ff;&quot;&gt;yyyy&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;MM&lt;/span&gt;/&lt;span style=&quot; color:#0000ff;&quot;&gt;yyyy&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;MM&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;dd&lt;/span&gt;/&lt;span style=&quot; color:#0000ff;&quot;&gt;yyyy&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;MM&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;dd &lt;/span&gt;&lt;span style=&quot; color:#aaaa00;&quot;&gt;HH-mm-ss &lt;/span&gt;&lt;span style=&quot; color:#ffaa00;&quot;&gt;oName&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="1">
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Arborescence on device</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;DCIM/&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|- DSC00001.JPG&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|- DSC00002.JPG&lt;br/&gt;
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|- DSC00003.JPG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Arborescence created in destination folder</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QStackedWidget" name="destination_stack">
+            <property name="currentIndex">
+             <number>1</number>
+            </property>
+            <widget class="QWidget" name="page_5">
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;/&lt;br/&gt;   |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01&lt;/span&gt;/&lt;br/&gt;   |        |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;31&lt;/span&gt;/&lt;br/&gt;   |        |         |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;31&lt;/span&gt;&lt;span style=&quot; color:#aaaa00;&quot;&gt; 05-50-00 &lt;/span&gt;&lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00001&lt;/span&gt;.JPG&lt;br/&gt;   |        |         |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;31 &lt;/span&gt;&lt;span style=&quot; color:#aaaa00;&quot;&gt;05-55-12 &lt;/span&gt;&lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00002&lt;/span&gt;.JPG&lt;br/&gt;   |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;02&lt;/span&gt;/&lt;br/&gt;   |        |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;02&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;01&lt;/span&gt;/&lt;br/&gt;   |        |         |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;02&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;01&lt;/span&gt;&lt;span style=&quot; color:#aaaa00;&quot;&gt; 14-20-04 &lt;/span&gt;&lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00003&lt;/span&gt;.JPG &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page">
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;/&lt;br/&gt;   |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01&lt;/span&gt;/&lt;br/&gt;   |        |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;31&lt;/span&gt;&lt;span style=&quot; color:#ff5500;&quot;&gt; kid's birthday party&lt;/span&gt;/&lt;br/&gt;   |        |         |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;31&lt;/span&gt;&lt;span style=&quot; color:#aaaa00;&quot;&gt; 05-50-00 &lt;/span&gt;&lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00001&lt;/span&gt;.JPG&lt;br/&gt;   |        |         |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;31 &lt;/span&gt;&lt;span style=&quot; color:#aaaa00;&quot;&gt;05-55-12 &lt;/span&gt;&lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00002&lt;/span&gt;.JPG&lt;br/&gt;   |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;02&lt;/span&gt;/&lt;br/&gt;   |        |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;02&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;01&lt;/span&gt;&lt;span style=&quot; color:#ff5500;&quot;&gt; bicycle ride at the lake&lt;/span&gt;/&lt;br/&gt;   |        |         |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;02&lt;/span&gt;-&lt;span style=&quot; color:#005500;&quot;&gt;01&lt;/span&gt;&lt;span style=&quot; color:#aaaa00;&quot;&gt; 14-20-04 &lt;/span&gt;&lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00003&lt;/span&gt;.JPG &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_3">
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01 &lt;/span&gt;&lt;span style=&quot; color:#ff00ff;&quot;&gt;January&lt;/span&gt;/&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|- &lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00001&lt;/span&gt;.JPG&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|- &lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00002&lt;/span&gt;.JPG&lt;br/&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;02 &lt;/span&gt;&lt;span style=&quot; color:#ff00ff;&quot;&gt;February&lt;/span&gt;/&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;|- &lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00003&lt;/span&gt;.JPG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_4">
+             <layout class="QVBoxLayout" name="verticalLayout_4">
+              <item>
+               <widget class="QLabel" name="label_10">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#55aa7f;&quot;&gt;FUJIFILM X-M1&lt;/span&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;/&lt;br/&gt;&lt;/span&gt;          |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;01 &lt;/span&gt;&lt;span style=&quot; color:#ff00ff;&quot;&gt;January&lt;/span&gt;/&lt;br/&gt;                    |- &lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00001&lt;/span&gt;.JPG&lt;br/&gt;                    |- &lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00002&lt;/span&gt;.JPG&lt;br/&gt;          |- &lt;span style=&quot; color:#0000ff;&quot;&gt;2015&lt;/span&gt;-&lt;span style=&quot; color:#aa00ff;&quot;&gt;02 &lt;/span&gt;&lt;span style=&quot; color:#ff00ff;&quot;&gt;February&lt;/span&gt;/&lt;br/&gt;                    |- &lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00003&lt;/span&gt;.JPG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="page_2">
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <item>
+               <widget class="QLabel" name="label_13">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffaa7f;&quot;&gt;DCIM&lt;/span&gt;/&lt;br/&gt;    |- &lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00001&lt;/span&gt;.JPG&lt;br/&gt;    |- &lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00002&lt;/span&gt;.JPG&lt;br/&gt;    |- &lt;span style=&quot; color:#ffaa00;&quot;&gt;DSC00003&lt;/span&gt;.JPG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>NewNameSelection</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>231</x>
+     <y>430</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>NewNameSelection</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>436</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

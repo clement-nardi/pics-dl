@@ -68,10 +68,12 @@ class EventFilter: public QAbstractNativeEventFilter{
         MSG* msg = reinterpret_cast<MSG*> (message);
         //qDebug() << "main thread nativeEvent " << msg->message << msg->wParam << msg->lParam << msg->time << msg->pt.x << msg->pt.y ;
         if (msg->message == WM_QUIT ||
-            msg->message == WM_CLOSE ||
+            msg->message == WM_CLOSE || // sent here as soon as a window is closed...
             msg->message == WM_QUERYENDSESSION ||
             msg->message == WM_ENDSESSION) {
-            QCoreApplication::exit(0);
+            qDebug() << "main thread nativeEvent " << msg->message << msg->wParam << msg->lParam << msg->time << msg->pt.x << msg->pt.y ;
+
+            //QCoreApplication::exit(0);
         }
 #endif
         return false;

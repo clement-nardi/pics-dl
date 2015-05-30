@@ -63,7 +63,7 @@ PRE_TARGETDEPS += exiftool_app
 include( ../o2-master/src/src.pri )
 
 
-QT       += core gui
+QT       += core gui positioning
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -95,7 +95,8 @@ SOURCES += main.cpp\
     transferdialog.cpp \
     globals.cpp \
     devicemodel.cpp \
-    config.cpp
+    config.cpp \
+    newnameselection.cpp
 
 HEADERS  += mainwindow.h \
     drivenotify.h \
@@ -120,7 +121,8 @@ HEADERS  += mainwindow.h \
     transferdialog.h \
     globals.h \
     devicemodel.h \
-    config.h
+    config.h \
+    newnameselection.h
 
 
 FORMS    += mainwindow.ui \
@@ -128,7 +130,8 @@ FORMS    += mainwindow.ui \
             dcomdialog.ui \
             exifdialog.ui \
             about.ui \
-            transferdialog.ui
+            transferdialog.ui \
+    newnameselection.ui
 
 win32{
     LIBS += -L"C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x86/" -lshell32

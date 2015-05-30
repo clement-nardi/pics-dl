@@ -11,7 +11,6 @@
         <file alias="picture">resources/1391895594_image.png</file>
         <file alias="image">resources/1391895583_image2.png</file>
         <file alias="camcorder">resources/1391895513_cam.png</file>
-        <file alias="folder">resources/1286719705_folder_open.png</file>
         <file alias="picsDL">PicsDL.ico</file>
         <file alias="edit">resources/1297534676_edit.png</file>
         <file alias="gps">resources/1420219735_internt_web_technology-08-128.png</file>
@@ -22,5 +21,10 @@
         <file>PicsDL.png</file>
         <file alias="delete">resources/1427039229_delete.png</file>
         <file alias="info">resources/1427570115_info.png</file>
+        <file alias="folder_camera">resources/1429385282_folder_images.png</file>
+        <file alias="folder">resources/1429385303_folder_yellow.png</file>
+        <file alias="usb">resources/1429387866_usbpendrive_unmount.png</file>
+        <file alias="phone">resources/1429388675_phone-512.png</file>
+        <file alias="tree">resources/1429394607_view_tree.png</file>
     </qresource>
 </RCC>

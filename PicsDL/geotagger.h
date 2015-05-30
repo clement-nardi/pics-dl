@@ -38,6 +38,7 @@ public:
     ~Geotagger();
     void setTrackFilesFolder(File trackFilesFolder);
     void geotag(File *in);
+public slots:
     void getGeotags(File *);
 
 private:

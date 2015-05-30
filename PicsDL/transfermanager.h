@@ -76,7 +76,7 @@ public:
     QSemaphore geotagSemaphore;
     DownloadModel *dm;
 public slots:
-    void udpateGeoTagger();
+    void updateGeoTagger();
 
 signals:
     void downloadFinished();
@@ -88,6 +88,7 @@ private:
     void initWorker(int idx);
     TransferWorker *tw[NB_WORKERS]; /* 0 for direct transfers, 1 for geotag transfers */
     QThread *wt[NB_WORKERS];
+    bool move_instead_of_copy;
 
 private slots:
     void handleWriteFinished(File *file);
