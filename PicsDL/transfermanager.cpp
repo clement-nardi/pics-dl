@@ -105,6 +105,7 @@ TransferManager::~TransferManager(){
 
 void TransferManager::launchDownloads() {
     qDebug() << "TransferManager::launchDownloads";
+    bool overwrite = dm->dc->devices[dm->id].toObject()[CONFIG_OVERWRITEFILES].toBool();
 
     filesToTransfer.clear();
     filesToGeotag.clear();
@@ -122,7 +123,7 @@ void TransferManager::launchDownloads() {
             File * file = dm->selectedFileList.at(i);
             if (!dm->excludedFiles.contains(file)) {
                 QString fi_newPath = dm->newPath(file);
-                if (QFile(fi_newPath).exists()) {
+                if (!overwrite && QFile(fi_newPath).exists()) {
                     dm->dc->knownFiles.insert(*file);
                     qDebug() << "Will not overwrite " << fi_newPath;
                 } else {

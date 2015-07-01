@@ -163,6 +163,8 @@ void MainWindow::dl_from_folder_handle() {
         obj[CONFIG_PATH]            = dir;
         obj[CONFIG_DEVICETYPE]      = "Folder";
         obj[CONFIG_ISMANAGED]       = false;
+        obj[CONFIG_ALLOWEXIF]       = true;
+        obj[CONFIG_USEEXIFDATE]     = true;
         dc->devices.insert(dir,obj);
         dc->deviceFieldChanged(dir);
         manager->treatDrive(dir,true);
@@ -181,6 +183,8 @@ void MainWindow::reorganize_handle() {
         obj[CONFIG_FILESTODOWNLOAD] = "All";
         obj[CONFIG_DOWNLOADTO]      = dir;
         obj[CONFIG_MOVEFILES]       = true;
+        obj[CONFIG_ALLOWEXIF]       = true;
+        obj[CONFIG_USEEXIFDATE]     = true;
         dc->devices.insert(dir,obj);
         dc->deviceFieldChanged(dir);
         manager->treatDrive(dir,true);
@@ -200,6 +204,9 @@ void MainWindow::geotag_handle() {
         obj[CONFIG_MOVEFILES]       = true;
         obj[CONFIG_OVERWRITEFILES]  = true;
         obj[CONFIG_NEWNAME]         = "oFolder1-/oName";
+        obj[CONFIG_GEOTAG]          = true;
+        obj[CONFIG_ALLOWEXIF]       = true;
+        obj[CONFIG_USEEXIFDATE]     = true;
         dc->devices.insert(dir,obj);
         dc->deviceFieldChanged(dir);
         manager->treatDrive(dir,true);

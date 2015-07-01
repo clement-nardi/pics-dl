@@ -1663,11 +1663,15 @@ void File::launchTransferTo(QString to, TransferManager *tm_, bool geotag_, bool
 
     qDebug() << move_instead_of_copy << geotag << QStorageInfo(absoluteFilePath()).rootPath() << QStorageInfo(transferTo).rootPath();
 
-    if (QFileInfo(absoluteFilePath()) == QFileInfo(transferTo)) {
+    if (QFileInfo(transferTo).exists()) {
+        thenMoveTo = transferTo;
+        transferTo = QFileInfo(transferTo).dir().absolutePath() + '/' + QUuid::createUuid().toString();
+        qDebug() << QString("%1 - destination file already exists, transfer to temporary location first");
+    }
+
+    if (QFileInfo(absoluteFilePath()) == QFileInfo(to)) {
         if (geotag) {
             qDebug() << QString("%1 - Same file - Geotag in place");
-            thenMoveTo = transferTo;
-            transferTo = QFileInfo(transferTo).dir().absolutePath() + '/' + QUuid::createUuid().toString();
             pipeToBuffer();
         } else {
             qDebug() << QString("%1 - Same file - Nothing to do");
@@ -1676,11 +1680,11 @@ void File::launchTransferTo(QString to, TransferManager *tm_, bool geotag_, bool
         }
     } else if (move_instead_of_copy &&
                !geotag &&
-               isOnSameDriveAs(File(transferTo))) {
+               isOnSameDriveAs(File(to))) {
         /* this file can be simply renamed */
-        qDebug() << QString("%1 - RENAME into %2").arg(fileName()).arg(transferTo);
-        File(transferTo).remove();
-        moveWithDirs(transferTo);
+        qDebug() << QString("%1 - RENAME into %2").arg(fileName()).arg(to);
+        File(to).remove();
+        moveWithDirs(to);
         tm->directSemaphore.release();
         emit writeFinished(this);
     } else {
