@@ -1105,7 +1105,7 @@ bool File::nameMatchesPatterns(QString &patterns_) const{
 void File::loadExifData() {
     if (exifData == NULL && !exifLoadAttempted) {
         exifLoadAttempted = true;
-        if (IDPath.startsWith("WPD:/")) {
+        if (isWPDFile()) {
 
 #ifdef _WIN32
             static QMap<QString,DWORD> lastSuccessfulTransferSize;
@@ -1401,7 +1401,7 @@ QList<File> File::ls(bool *theresMore) {
     QList<File> res;
     if (theresMore!=NULL)
         *theresMore = false;
-    if (IDPath.startsWith("WPD:/")) {
+    if (isWPDFile()) {
 
 #ifdef _WIN32
         if (absoluteFilePath().count("/") > 5) return res;
@@ -1650,6 +1650,9 @@ QString File::firstExistingParent() const{
 }
 
 bool File::isOnSameDriveAs(const File & other){
+    if (isWPDFile()) {
+        return false;
+    }
     return QStorageInfo(this->firstExistingParent()) == QStorageInfo(other.firstExistingParent());
 }
 
@@ -1669,7 +1672,7 @@ void File::launchTransferTo(QString to, TransferManager *tm_, bool geotag_, bool
         qDebug() << QString("%1 - destination file already exists, transfer to temporary location first");
     }
 
-    if (QFileInfo(absoluteFilePath()) == QFileInfo(to)) {
+    if (!isWPDFile() && QFileInfo(absoluteFilePath()) == QFileInfo(to)) {
         if (geotag) {
             qDebug() << QString("%1 - Same file - Geotag in place");
             pipeToBuffer();
@@ -1703,12 +1706,15 @@ void File::setGeotaggedBuffer(QBuffer *geotaggedBuffer_) {
     pipe(transferTo);
 }
 
+bool File::isWPDFile() {
+    return IDPath.startsWith("WPD:/");
+}
 
 QIODevice *File::getReadDevice() {
-    if (!IDPath.startsWith("WPD:/")) {
+    if (!isWPDFile()) {
         return new QFile(absoluteFilePath());
 #ifdef _WIN32
-    } else if (IDPath.startsWith("WPD:/")) {
+    } else if (isWPDFile()) {
         return new WPDIODevice(IDPath);
 #endif
     } else {
@@ -1785,7 +1791,7 @@ void File::pipe(QIODevice *in, QIODevice *out){
 
 /* not used anymore */
 bool File::FillIODeviceWithContent(QIODevice *out) {
-    if (!IDPath.startsWith("WPD:/")) {
+    if (!isWPDFile()) {
         QFile in(absoluteFilePath());
 
         if (!in.open(QIODevice::ReadOnly)) {
@@ -1800,7 +1806,7 @@ bool File::FillIODeviceWithContent(QIODevice *out) {
         in.close();
         return written > 0;
 #ifdef _WIN32
-    } else if (IDPath.startsWith("WPD:/")) {
+    } else if (isWPDFile()) {
         QElapsedTimer timer;
         qint64 initTime;
         qint64 transferTime = 0;
@@ -1887,11 +1893,11 @@ bool File::setHidden() {
 
 
 bool File::remove() {
-    if (!IDPath.startsWith("WPD:/")) {
+    if (!isWPDFile()) {
         QFile file(absoluteFilePath());
         return file.remove();
 #ifdef _WIN32
-    } else if (IDPath.startsWith("WPD:/")) {
+    } else if (isWPDFile()) {
         qDebug() << "Removing a file on a Windows Portable Device is not yet supported in PicsDL";
 #endif
     }

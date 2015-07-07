@@ -96,6 +96,7 @@ public:
 
     bool isOnSameDriveAs(const File &other);
     QString firstExistingParent() const ;
+    bool isWPDFile();
 private:
     QString absoluteFilePath_p;
     QString fileName_p;
