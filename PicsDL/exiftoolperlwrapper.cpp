@@ -225,13 +225,8 @@ void ExifToolPerlWrapper::getGeotags(const char *geotime, int *nbTags,  char key
 
     fprintf(stderr,"geotime = %s\n",geotime);fflush(stderr);
 
-    eval_pv("print {STDERR} 'geotime ' . Dumper($geotime)", TRUE);
-    fprintf(stderr,"toto\n");fflush(stderr);
-
     eval_pv("$exifTool->SetNewValue('Geotime', $geotime);", TRUE);
-    fprintf(stderr,"toto1\n");fflush(stderr);
-    eval_pv("print {STDERR} 'Count ' . Dumper($exifTool->CountNewValues())", TRUE);
-    fprintf(stderr,"toto2\n");fflush(stderr);
+    //eval_pv("print {STDERR} 'Count ' . Dumper($exifTool->CountNewValues())", TRUE);
     *nbTags = 0;
     char * value = NULL;
 
@@ -281,9 +276,8 @@ void ExifToolPerlWrapper::getGeotags(const char *geotime, int *nbTags,  char key
     strcpy(keys[*nbTags],"GPSDateStamp");
     strcpy(values[(*nbTags)++],value);
 
-    eval_pv("print {STDERR} 'GPSLongitude ' . Dumper($exifTool->GetNewValues('GPSLongitude'))", TRUE);
-    eval_pv("print {STDERR} 'GPSAltitude ' . Dumper($exifTool->GetNewValues('GPSAltitude'))", TRUE);
-    fprintf(stderr,"toto3\n");fflush(stderr);
+    //eval_pv("print {STDERR} 'GPSLongitude ' . Dumper($exifTool->GetNewValues('GPSLongitude'))", TRUE);
+    //eval_pv("print {STDERR} 'GPSAltitude ' . Dumper($exifTool->GetNewValues('GPSAltitude'))", TRUE);
 }
 
 

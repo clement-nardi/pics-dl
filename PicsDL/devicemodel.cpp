@@ -1,3 +1,23 @@
+/**
+ * Copyright 2014-2015 Clément Nardi
+ *
+ * This file is part of PicsDL.
+ *
+ * PicsDL is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * PicsDL is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with PicsDL.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ **/
+
 #include "devicemodel.h"
 #include "config.h"
 #include "driveview.h"
@@ -97,15 +117,15 @@ QVariant DeviceModel::headerData(int section, Qt::Orientation orientation, int r
         switch (orientation) {
         case Qt::Horizontal:
             switch (section) {
-            case COL_NAME: return "Device Name";
-            case COL_AVAILABLE: return "available";
-            case COL_TOTAL: return "total";
-            case COL_CAMERA: return "Camera";
-            case COL_MANAGE: return "Manage";
-            case COL_EDIT: return "Edit";
-            case COL_LAUNCH: return "Launch";
-            case COL_REMOVE: return "Remove";
-            case COL_LASTTRANSFER: return "Last Transfer";
+            case COL_NAME: return tr("Device Name");
+            case COL_AVAILABLE: return tr("available");
+            case COL_TOTAL: return tr("total");
+            case COL_CAMERA: return tr("Camera");
+            case COL_MANAGE: return tr("Manage");
+            case COL_EDIT: return tr("Edit");
+            case COL_LAUNCH: return tr("Launch");
+            case COL_REMOVE: return tr("Remove");
+            case COL_LASTTRANSFER: return tr("Last Transfer");
             }
             break;
         case Qt::Vertical:
@@ -139,26 +159,27 @@ QVariant DeviceModel::data(const QModelIndex & index, int role) const{
         case COL_EDIT: break;
         case COL_LAUNCH: break;
         case COL_REMOVE: break;
-        case COL_LASTTRANSFER: return obj[CONFIG_LASTTRANSFER].isNull()?"Never":
+        case COL_LASTTRANSFER: return obj[CONFIG_LASTTRANSFER].isNull()?tr("Never"):
                                                                         (QDateTime::fromTime_t(obj[CONFIG_LASTTRANSFER].toString().toUInt()).toString("yyyy/MM/dd hh:mm:ss"));
         }
         break;
     case Qt::ToolTipRole:
         switch (index.column()) {
         case COL_NAME: return dv->id;
-        case COL_AVAILABLE: return QString("Available space on this device: %1 (%2 Bytes)")
+        case COL_AVAILABLE: return QString(tr("Available space on this device: %1 (%2 Bytes)"))
                        .arg(File::size2Str(obj[CONFIG_BYTESAVAILABLE].toString().toLongLong()))
                        .arg(obj[CONFIG_BYTESAVAILABLE].toString());
-        case COL_TOTAL: return QString("You can store up to %1 (%2 Bytes) of data on this device.")
+        case COL_TOTAL: return QString(tr("You can store up to %1 (%2 Bytes) of data on this device."))
                        .arg(File::size2Str(obj[CONFIG_DEVICESIZE].toString().toLongLong()))
                        .arg(obj[CONFIG_DEVICESIZE].toString());
-        case COL_CAMERA: return QString("Some pictures stored on this device\nwhere taken with a %1").arg(obj[CONFIG_CAMERANAME].toString());
-        case COL_MANAGE: return obj[CONFIG_ISMANAGED].toBool()?"This device is managed by PicsDL":"Click here to manage this device with PicsDL.";
-        case COL_EDIT: return "Edit the configuration of this device";
-        case COL_LAUNCH: return "Launch the transfer of files from this device";
-        case COL_REMOVE: return "Remove this device from this list";
-        case COL_LASTTRANSFER: return obj[CONFIG_LASTTRANSFER].isNull()?"No file was ever downloaded from this device":
-                                                                        (QString("The last time some files were transfered from this device was on %1")
+        case COL_CAMERA: return QString(tr("Some pictures stored on this device\nwhere taken with a %1")).arg(obj[CONFIG_CAMERANAME].toString());
+        case COL_MANAGE: return (obj[CONFIG_ISMANAGED].toBool()?tr("This device is managed by PicsDL"):tr("Click here to manage this device with PicsDL."))
+                                + "\n" + tr("Managed devices are treated as soon as they are plugged in.");
+        case COL_EDIT: return tr("Edit the configuration of this device");
+        case COL_LAUNCH: return tr("Launch the transfer of files from this device");
+        case COL_REMOVE: return tr("Remove this device from this list");
+        case COL_LASTTRANSFER: return obj[CONFIG_LASTTRANSFER].isNull()?tr("No file was ever downloaded from this device"):
+                                                                        (QString(tr("The last time some files were transfered from this device was on %1"))
                                                                          .arg(QDateTime::fromTime_t(obj[CONFIG_LASTTRANSFER].toString().toUInt()).toString()));
         }
         break;

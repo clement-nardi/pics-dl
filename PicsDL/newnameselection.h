@@ -18,14 +18,32 @@
  *
  **/
 
-#include "globals.h"
+#ifndef NEWNAMESELECTION_H
+#define NEWNAMESELECTION_H
 
-#define MAJOR_VERSION __MAJOR_VERSION__
-#define MINOR_VERSION __MINOR_VERSION__
-#define PATCH_NUMBER __PATCH_NUMBER__
-#define BUILD_NUMBER __BUILD_NUMBER__
+#include <QDialog>
+#include <QButtonGroup>
 
-int major = MAJOR_VERSION;
-int minor = MINOR_VERSION;
-int patch = PATCH_NUMBER;
-int build = BUILD_NUMBER;
+namespace Ui {
+class NewNameSelection;
+}
+
+class NewNameSelection : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit NewNameSelection(QWidget *parent = 0);
+    ~NewNameSelection();
+
+private:
+    Ui::NewNameSelection *ui;
+    QButtonGroup *bg;
+    void mousePressEvent(QMouseEvent * event);
+signals:
+    void newNameSelected(QString);
+private slots:
+    void sendNewName();
+};
+
+#endif // NEWNAMESELECTION_H

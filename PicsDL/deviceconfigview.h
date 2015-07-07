@@ -34,41 +34,72 @@ class TransferManager;
 #include <QSpinBox>
 #include <QMenu>
 #include <QAction>
+#include <QGroupBox>
 
 class TransferDialog;
+class DeviceConfigView;
+
+#define TAB_SELECT      0
+#define TAB_ORGANIZE    1
+#define TAB_GEOTAG      2
+#define TAB_FREEUPSPACE 3
 
 namespace Ui {
 class DeviceConfigView;
 }
 
-class BoxView {
+class BoxView: public QObject {
+    Q_OBJECT
 public:
-    BoxView(QCheckBox *check_box_, QString field_name_, bool default_value_);
-    void setBox(QJsonObject *obj);
-    void readBox(QJsonObject *obj);
+    BoxView(QCheckBox *check_box_, QString field_name_, bool default_value_, DeviceConfigView *dcv_);
+    void setBox();
     QCheckBox *check_box;
     QString field_name;
     bool default_value;
+    DeviceConfigView *dcv;
+private slots:
+    void readBox();
 };
 
-class LineEditView {
+class GroupBoxView: public QObject {
+    Q_OBJECT
 public:
-    LineEditView(QLineEdit *line_edit_, QString field_name_, QString default_value_);
-    void setLine(QJsonObject *obj);
-    void readLine(QJsonObject *obj);
+    GroupBoxView(QGroupBox *group_box_, QString field_name_, bool default_value_, DeviceConfigView *dcv_);
+    void setBox();
+    QGroupBox *group_box;
+    QString field_name;
+    bool default_value;
+    DeviceConfigView *dcv;
+private slots:
+    void readBox();
+};
+
+class LineEditView: public QObject {
+    Q_OBJECT
+public:
+    LineEditView(QLineEdit *line_edit_, QString field_name_, QString default_value_, DeviceConfigView *dcv_);
+private:
+    void setLine();
     QLineEdit *line_edit;
     QString field_name;
     QString default_value;
+    DeviceConfigView *dcv;
+private slots:
+    void readLine();
 };
 
-class SpinBoxView {
+class SpinBoxView: public QObject {
+    Q_OBJECT
 public:
-    SpinBoxView(QSpinBox *spin_box_, QString field_name_, int default_value_);
-    void setSpinBox(QJsonObject *obj);
-    void readSpinBox(QJsonObject *obj);
+    SpinBoxView(QSpinBox *spin_box_, QString field_name_, int default_value_, DeviceConfigView *dcv_);
+private:
+    void setSpinBox();
     QSpinBox *spin_box;
     QString field_name;
     int default_value;
+    DeviceConfigView *dcv;
+private slots:
+    void readSpinBox();
 };
 
 class DeviceConfigView : public QWidget
@@ -78,17 +109,18 @@ class DeviceConfigView : public QWidget
 public:
     explicit DeviceConfigView(Config *dc, QString id, bool editMode = false, QWidget *parent = 0);
     ~DeviceConfigView();
+    Config *dc;
     QString id;
 
 private:
     bool editMode;
     void FillWithConfig();
     Ui::DeviceConfigView *ui;
-    QList<BoxView> boxes;
-    QList<LineEditView> lines;
-    QList<SpinBoxView> spinBoxes;
+    QList<BoxView* > checkBoxes;
+    QList<GroupBoxView* > groupBoxes;
+    QList<LineEditView*> lines;
+    QList<SpinBoxView*> spinBoxes;
 
-    Config *dc;
     QProgressDialog *pd;
 
     DownloadModel *dpm;
@@ -104,8 +136,8 @@ private:
 public slots:
     void chooseDLTo();
     void chooseTrackFolder();
-    void CopyToConfig();
-    void SaveConfig();
+    void readSpecialWidgets();
+    void saveConfig();
     void makeVisible(QModelIndex);
     void updateButton();
     void updateFreeUpSimulation();
@@ -120,6 +152,13 @@ private slots:
     void showTableContextMenu(QPoint p);
     void download_handle();
     void do_not_download_handle();
+    void handleTabChange(int idx);
+    void setNewNamePattern(QString pattern);
+    void geotagToggled(bool checked);
+    void init();
+
+signals:
+    void initLater();
 };
 
 #endif // DEVICECONFIGVIEW_H

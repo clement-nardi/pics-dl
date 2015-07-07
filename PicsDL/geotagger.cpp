@@ -30,6 +30,7 @@ Geotagger::Geotagger()
     connect(p->gw,SIGNAL(writeFinished(File*)),this,SIGNAL(writeFinished(File*)));
     connect(p->gw,SIGNAL(loadingTrackFile(int,int)),this,SIGNAL(loadingTrackFile(int,int)));
     connect(p->gw,SIGNAL(loadingTrackFilesFinished()),this,SIGNAL(loadingTrackFilesFinished()));
+    connect(p->gw,SIGNAL(getGeotagsFinished(File*)),this,SIGNAL(getGeotagsFinished(File*)));
 }
 
 Geotagger::~Geotagger()

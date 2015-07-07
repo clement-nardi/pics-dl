@@ -30,6 +30,8 @@
 #include "devicemodel.h"
 #include "devicemanager.h"
 #include <QDebug>
+#include <QStandardPaths>
+#include <QFileDialog>
 
 
 MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  QWidget *parent) :
@@ -57,6 +59,9 @@ MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  
     connect(ui->actionQuit, SIGNAL(triggered()),this,SLOT(quit_handle()));
     connect(ui->actionShow, SIGNAL(triggered()),this,SLOT(show_handle()));
     connect(ui->actionAbout, SIGNAL(triggered()),this,SLOT(about_handle()));
+    connect(ui->actionDownload_pictures_from_Folder, SIGNAL(triggered()),this,SLOT(dl_from_folder_handle()));
+    connect(ui->actionReorganize_a_folder, SIGNAL(triggered()),this,SLOT(reorganize_handle()));
+    connect(ui->actionGeotag_some_pictures, SIGNAL(triggered()),this,SLOT(geotag_handle()));
 
     dm = new DeviceModel(dc,dn_);
     ui->deviceTable->horizontalHeader()->setSortIndicator(COL_LAUNCH,Qt::DescendingOrder);
@@ -110,14 +115,17 @@ void MainWindow::sysTray_handle(QSystemTrayIcon::ActivationReason reason) {
 }
 
 void MainWindow::show_handle() {
+    static bool welcomeIsShown = false; /* in case the function is called twice */
     show();
-    if (dm->deviceList.size() == 0) {
+    if (dm->deviceList.size() == 0 && !welcomeIsShown) {
         QMessageBox msgBox;
         msgBox.setText(QString(tr("No known device.")));
         msgBox.setInformativeText(tr("PicsDL does not know any of your devices! Please plug a device (smartphone, memory card, camera, USB key) in order to start downloading the pictures it contains."));
         msgBox.setIcon(QMessageBox::Information);
         msgBox.setStandardButtons(QMessageBox::Ok);
+        welcomeIsShown = true;
         int ret = msgBox.exec();
+        welcomeIsShown = false;
     }
 }
 
@@ -146,11 +154,69 @@ void MainWindow::quit_handle() {
     }
 }
 
+void MainWindow::dl_from_folder_handle() {
+    QString dir = QFileDialog::getExistingDirectory(this,"Choose the directory where the pictures are located",
+                                           QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0));
+    if (dir.size()>0) {
+        QJsonObject obj = dc->devices[dir].toObject();
+        obj[CONFIG_DISPLAYNAME]     = dir;
+        obj[CONFIG_PATH]            = dir;
+        obj[CONFIG_DEVICETYPE]      = "Folder";
+        obj[CONFIG_ISMANAGED]       = false;
+        obj[CONFIG_ALLOWEXIF]       = true;
+        obj[CONFIG_USEEXIFDATE]     = true;
+        dc->devices.insert(dir,obj);
+        dc->deviceFieldChanged(dir);
+        manager->treatDrive(dir,true);
+    }
+}
+
+void MainWindow::reorganize_handle() {
+    QString dir = QFileDialog::getExistingDirectory(this,"Choose the directory to reorganize",
+                                           QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0));
+    if (dir.size()>0) {
+        QJsonObject obj = dc->devices[dir].toObject();
+        obj[CONFIG_DISPLAYNAME]     = dir;
+        obj[CONFIG_PATH]            = dir;
+        obj[CONFIG_DEVICETYPE]      = "Folder";
+        obj[CONFIG_ISMANAGED]       = false;
+        obj[CONFIG_FILESTODOWNLOAD] = "All";
+        obj[CONFIG_DOWNLOADTO]      = dir;
+        obj[CONFIG_MOVEFILES]       = true;
+        obj[CONFIG_ALLOWEXIF]       = true;
+        obj[CONFIG_USEEXIFDATE]     = true;
+        dc->devices.insert(dir,obj);
+        dc->deviceFieldChanged(dir);
+        manager->treatDrive(dir,true);
+    }
+}
+void MainWindow::geotag_handle() {
+    QString dir = QFileDialog::getExistingDirectory(this,"Choose the directory containing the files to geotag",
+                                           QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0));
+    if (dir.size()>0) {
+        QJsonObject obj = dc->devices[dir].toObject();
+        obj[CONFIG_DISPLAYNAME]     = dir;
+        obj[CONFIG_PATH]            = dir;
+        obj[CONFIG_DEVICETYPE]      = "Folder";
+        obj[CONFIG_ISMANAGED]       = false;
+        obj[CONFIG_FILESTODOWNLOAD] = "All";
+        obj[CONFIG_DOWNLOADTO]      = dir;
+        obj[CONFIG_MOVEFILES]       = true;
+        obj[CONFIG_OVERWRITEFILES]  = true;
+        obj[CONFIG_NEWNAME]         = "oFolder1-/oName";
+        obj[CONFIG_GEOTAG]          = true;
+        obj[CONFIG_ALLOWEXIF]       = true;
+        obj[CONFIG_USEEXIFDATE]     = true;
+        dc->devices.insert(dir,obj);
+        dc->deviceFieldChanged(dir);
+        manager->treatDrive(dir,true);
+    }
+}
 
 MainWindow::~MainWindow()
 {
     qDebug() << "delete MainWindow";
-    dc->SaveWindowGeometry(this,"MainWindow");
+    dc->saveWindowGeometry(this,"MainWindow");
     delete ui;
     about->deleteLater();
 }

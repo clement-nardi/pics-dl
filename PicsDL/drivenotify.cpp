@@ -134,9 +134,9 @@ void DriveNotify::reloadMountPoints(bool firstTime) {
         QStorageInfo si = mountPoints.at(i);
         if (!oldList.contains(si)) {
             qDebug() << "New Mount Point: " << si.rootPath() << si.displayName();
-            updateConfigWithDeviceInfo(si);
-            dc->deviceFieldChanged(getSerial(si));
             if (!firstTime) {
+                updateConfigWithDeviceInfo(si);
+                dc->deviceFieldChanged(getSerial(si));
                 driveAdded(getSerial(si));
                 newFound = true;
             }

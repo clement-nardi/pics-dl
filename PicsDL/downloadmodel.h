@@ -35,14 +35,16 @@ class Geotagger;
 
 extern QString ExifToolPath;
 
-#define NB_COLUMNS      6
+#define NB_COLUMNS      8
 
 #define COL_THUMBNAIL   0
 #define COL_FILEPATH    1
 #define COL_FILENAME    2
 #define COL_SIZE        3
-#define COL_DATE        4
-#define COL_NEWPATH     5
+#define COL_MODIFIED    4
+#define COL_DATE        5
+#define COL_NEWPATH     6
+#define COL_GPS         7
 
 class DownloadModel : public QAbstractTableModel
 {
@@ -98,17 +100,23 @@ private:
     QString tempPath(File *fi) const;
     mutable QHash<File*,QString> newPathCache;
     mutable QMap<QString,int> newPathCollisions;
+    mutable QSet<File*> GPSRequested;
+    QDateTime dateForNewName(File *fi) const;
 
+    void sortSelection();
 signals:
     void itemOfInterest(QModelIndex);
     void reloaded();
     void selectionModified();
     void EXIFLoadCanceled(bool);
     void downloadFinished();
+    void requestGPSCoord(File *) const;
 public slots:
     void reloadSelection(bool firstTime = false);
     bool getAllCom();
     void updateNewPaths();
+    void receiveGPSCoord(File*fi);
+    void updateGPS();
 private slots:
     void readStarted(File * file);
     void writeFinished(File * file);

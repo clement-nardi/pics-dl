@@ -58,7 +58,7 @@ TransferManager::TransferManager(QObject *parent, DownloadModel *dm_) : QObject(
 {
     dm = dm_;
     geotagger = NULL;
-    udpateGeoTagger();
+    updateGeoTagger();
     resetStats();
 
     for (int i = 0; i<NB_WORKERS; i++) {
@@ -79,7 +79,7 @@ void TransferManager::initWorker(int idx) {
 void TransferManager::launchFile(File *file, bool geotag) {
     QString fi_newPath = dm->newPath(file);
     connect(file,SIGNAL(writeFinished(File*)),this,SLOT(handleWriteFinished(File*)),Qt::UniqueConnection);
-    file->launchTransferTo(fi_newPath,this,geotag);
+    file->launchTransferTo(fi_newPath,this,geotag,move_instead_of_copy);
 }
 
 void TransferManager::resetStats() {
@@ -105,14 +105,16 @@ TransferManager::~TransferManager(){
 
 void TransferManager::launchDownloads() {
     qDebug() << "TransferManager::launchDownloads";
+    bool overwrite = dm->dc->devices[dm->id].toObject()[CONFIG_OVERWRITEFILES].toBool();
 
     filesToTransfer.clear();
     filesToGeotag.clear();
     wasStopped = false;
+    move_instead_of_copy = dm->dc->devices[dm->id].toObject()[CONFIG_MOVEFILES].toBool();
 
     if (dm->selectedFileList.size() > 0) {
 
-        udpateGeoTagger();
+        updateGeoTagger();
         resetStats();
 
         totalToWrite = 0;
@@ -121,7 +123,7 @@ void TransferManager::launchDownloads() {
             File * file = dm->selectedFileList.at(i);
             if (!dm->excludedFiles.contains(file)) {
                 QString fi_newPath = dm->newPath(file);
-                if (QFile(fi_newPath).exists()) {
+                if (!overwrite && QFile(fi_newPath).exists()) {
                     dm->dc->knownFiles.insert(*file);
                     qDebug() << "Will not overwrite " << fi_newPath;
                 } else {
@@ -161,7 +163,7 @@ void TransferManager::handleWriteFinished(File *file) {
     }
 }
 
-void TransferManager::udpateGeoTagger() {
+void TransferManager::updateGeoTagger() {
     QString tf = dm->getTrackingFolder();
 
     if (tf == "" || !QDir(tf).exists()) {
@@ -170,7 +172,10 @@ void TransferManager::udpateGeoTagger() {
     } else {
         if (geotagger == NULL) {
             geotagger = new Geotagger();
+            connect(dm,SIGNAL(requestGPSCoord(File *)),geotagger,SLOT(getGeotags(File*)));
+            connect(geotagger,SIGNAL(getGeotagsFinished(File*)),dm,SLOT(receiveGPSCoord(File*)));
         }
         geotagger->setTrackFilesFolder(File(tf));
     }
+    dm->updateGPS();
 }

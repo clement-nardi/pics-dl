@@ -61,6 +61,9 @@ public slots:
     void show_handle();
     void about_handle();
     void sysTray_handle(QSystemTrayIcon::ActivationReason reason);
+    void dl_from_folder_handle();
+    void reorganize_handle();
+    void geotag_handle();
     void applicationLaunched();
     void setDeviceWidgets();
 
