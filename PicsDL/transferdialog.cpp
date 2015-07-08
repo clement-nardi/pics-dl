@@ -100,7 +100,7 @@ void TransferDialog::update()
 
     qint64 rt = diff?((tr-lastRead)*1000/diff):0; //Read Throughput
     qint64 wt = diff?((tw-lastWritten)*1000/diff):0; //Write Throughput
-    qint64 averageThroughput = totalElapsed?(tr*1000/totalElapsed):0;
+    //qint64 averageThroughput = totalElapsed?(tr*1000/totalElapsed):0;
 
     maxReadThroughput = std::max(maxReadThroughput,rt);
     maxWriteThroughput = std::max(maxWriteThroughput,wt);

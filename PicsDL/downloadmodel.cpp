@@ -110,10 +110,10 @@ void DownloadModel::sortSelection() {
     }
 }
 
-int DownloadModel::rowCount(const QModelIndex & parent) const{
+int DownloadModel::rowCount(const QModelIndex & parent __attribute__ ((unused))) const{
     return selectedFileList.size();
 }
-int DownloadModel::columnCount(const QModelIndex & parent) const {
+int DownloadModel::columnCount(const QModelIndex & parent __attribute__ ((unused))) const {
     return NB_COLUMNS;
 }
 
@@ -284,26 +284,12 @@ QString DownloadModel::guessCameraName() {
     return "";
 }
 
-QString DownloadModel::getDCom(File *fi, bool forceQuery) const{
+QString DownloadModel::getDCom(File *fi) const{
     QDateTime fileDate = QDateTime::fromTime_t(fi->lastModified);
     QString dayKey = fileDate.toString("yyyy-MM-dd");
     QJsonObject obj = dc->daily_comments;
     QJsonValue com = obj[dayKey];
     QString comment = com.toString();
-    /*
-    if (com.isNull() || com.isUndefined() || forceQuery) {
-        bool ok;
-        comment = QInputDialog::getText(this,
-                                        "Dayly comment",
-                                        "Please enter a comment or a series of keywords for\n" + fileDate.toString(Qt::SystemLocaleLongDate),
-                                        QLineEdit::Normal,
-                                        com.toString(),
-                                        &ok);
-        if (ok) {
-            obj[dayKey] = comment;
-            dc->conf["dCom"] = obj;
-        }
-    } */
     return comment;
 }
 
@@ -690,8 +676,11 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
 }
 
 Qt::ItemFlags DownloadModel::flags(const QModelIndex & index) const{
-    return Qt::ItemIsSelectable|
-           Qt::ItemIsEnabled;
+    switch (index.column()) {
+    default:
+        return Qt::ItemIsSelectable|
+               Qt::ItemIsEnabled;
+    }
 }
 
 QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int role) const{

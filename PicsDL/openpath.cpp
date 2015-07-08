@@ -19,6 +19,7 @@
  **/
 
 #include "openpath.h"
+#include <QDebug>
 
 OpenPath::OpenPath(QString accessKey_, QString secretKey_, QObject *parent) :
     QObject(parent) {
@@ -28,5 +29,6 @@ OpenPath::OpenPath(QString accessKey_, QString secretKey_, QObject *parent) :
 }
 
 QString OpenPath::getDirectoryForDateRange(QDateTime from, QDateTime to) {
-
+    qDebug() << "getDirectoryForDateRange(" << from << ", " << to << ")";
+    return "";
 }

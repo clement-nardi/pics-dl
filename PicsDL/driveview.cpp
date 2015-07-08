@@ -89,5 +89,5 @@ void DriveView::launch(){
 bool DriveView::canBeLaunched() {
     QJsonObject obj = dc->devices[id].toObject();
     return  dn->isPluggedIn(id) ||
-            obj[CONFIG_DEVICETYPE].toString() == "Folder" && QDir(obj[CONFIG_PATH].toString()).exists();
+            (obj[CONFIG_DEVICETYPE].toString() == "Folder" && QDir(obj[CONFIG_PATH].toString()).exists());
 }

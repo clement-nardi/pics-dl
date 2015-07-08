@@ -91,7 +91,8 @@ bool WPDIODevice::atEnd() const {
     return at_end;
 }
 
-qint64 WPDIODevice::writeData(const char * data, qint64 maxSize){
+qint64 WPDIODevice::writeData(const char * data __attribute__ ((unused)),
+                              qint64 maxSize __attribute__ ((unused))){
     qWarning() << "WARNING: WPDIODevice does not support writing!!";
     return -1;
 }

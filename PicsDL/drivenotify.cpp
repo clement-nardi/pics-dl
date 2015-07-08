@@ -52,10 +52,11 @@ DriveNotify::DriveNotify(Config *dc_, DRIVENOTIFY_PARENT_TYPE *parent) :
 
     ITEMIDLIST* pidl;
 
+    /*
     if (!SHChangeNotifyRegister) {
         qDebug() << "Could not get SHChangeNotifyRegister entry point.";
         return;
-    }
+    }*/
     HRESULT res = SHGetSpecialFolderLocation(0, CSIDL_DESKTOP, &pidl);
 
     qDebug() << "pidl=" << pidl << "res=" << ((res==S_OK)?"OK":"NOT OK");
@@ -162,10 +163,10 @@ void DriveNotify::reloadMountPoints(bool firstTime) {
 
 #ifdef _WIN32
 
-bool DriveNotify::nativeEvent(const QByteArray & eventType, void * message, long * result) {
+bool DriveNotify::nativeEvent(const QByteArray & eventType, void * message, long * result __attribute__ ((unused))) {
 
     MSG* msg = reinterpret_cast<MSG*> (message);
-    qDebug() << msg->message;
+    qDebug() << eventType << " " << msg->message;
 
     if (msg->message == WM_DEVICECHANGE) {
         qDebug() << "DriveNotify::nativeEvent " << msg->message << msg->wParam << msg->lParam << msg->time << msg->pt.x << msg->pt.y ;

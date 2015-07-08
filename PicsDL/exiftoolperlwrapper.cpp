@@ -27,14 +27,14 @@ EXTERN_C void boot_DynaLoader (pTHX_ CV* cv);
 EXTERN_C void
 xs_init(pTHX)
 {
-    char *file = __FILE__;
+    const char *file = __FILE__;
     /* DynaLoader is a special case */
     newXS("DynaLoader::boot_DynaLoader", boot_DynaLoader, file);
 }
 
 
 static int argc = 3;
-static char* argv[3] = {"perl", "-e" , "0"};
+static char* argv[3] = {(char *)"perl", (char *)"-e" , (char *)"0"};
 static char** env = NULL;
 static bool globalInitDone = false;
 
@@ -50,7 +50,7 @@ ExifToolPerlWrapper::ExifToolPerlWrapper(const char *includeDir) {
 
     perl_construct(my_perl);
     PL_exit_flags |= PERL_EXIT_DESTRUCT_END;
-    perl_parse(my_perl, xs_init, argc, argv, (char **)NULL);
+    perl_parse(my_perl, xs_init, argc, argv, env);
     perl_run(my_perl);
 
 
@@ -160,6 +160,9 @@ void ExifToolPerlWrapper::geotagPipe(char *in, long in_size, char **out, long *o
     $exifTool->WriteInfo($sourceHandle, $pipeOut);\
 }", TRUE);
     fflush(stderr);
+
+    *out = NULL;
+    *out_size = 0;
 
 }
 

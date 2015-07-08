@@ -293,7 +293,6 @@
   <zorder>cancel</zorder>
   <zorder>transfer_bar</zorder>
   <zorder>transfered_files</zorder>
-  <zorder>horizontalSpacer</zorder>
   <zorder>transfered_data</zorder>
   <zorder>read_bar</zorder>
   <zorder>transfered_data</zorder>
@@ -304,10 +303,6 @@
   <zorder>write_bar</zorder>
   <zorder>write_max</zorder>
   <zorder>write_current</zorder>
-  <zorder>verticalSpacer</zorder>
-  <zorder>verticalSpacer_2</zorder>
-  <zorder></zorder>
-  <zorder>horizontalSpacer_2</zorder>
   <zorder>track_label</zorder>
   <zorder>track_bar</zorder>
  </widget>

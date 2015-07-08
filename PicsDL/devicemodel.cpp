@@ -136,11 +136,11 @@ QVariant DeviceModel::headerData(int section, Qt::Orientation orientation, int r
 }
 
 
-int DeviceModel::rowCount(const QModelIndex & parent) const{
+int DeviceModel::rowCount(const QModelIndex & parent __attribute__ ((unused))) const{
     return dc->devices.count();
 }
 
-int DeviceModel::columnCount(const QModelIndex & parent) const{
+int DeviceModel::columnCount(const QModelIndex & parent __attribute__ ((unused))) const{
     return NB_COLUMNS;
 }
 

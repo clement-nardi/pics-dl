@@ -124,7 +124,7 @@ void MainWindow::show_handle() {
         msgBox.setIcon(QMessageBox::Information);
         msgBox.setStandardButtons(QMessageBox::Ok);
         welcomeIsShown = true;
-        int ret = msgBox.exec();
+        msgBox.exec();
         welcomeIsShown = false;
     }
 }

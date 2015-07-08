@@ -89,7 +89,7 @@ private:
     bool isBlacklisted(File info);
     void treatDir(File dirInfo);
     int itemBeingDownloaded;
-    QString getDCom(File *fi, bool forceQuery = false) const;
+    QString getDCom(File *fi) const;
     QString sessionComment;
     QProgressDialog *pd;
     int discoveredFolders;

@@ -31,7 +31,7 @@ DESTDIR = bin
 
 MAJOR=0
 MINOR=6
-PATCH=0
+PATCH=1
 
 
 !contains(BUILD_NUMBER_UPDATE,false) {
@@ -59,6 +59,7 @@ PRE_TARGETDEPS += exiftool_app
 
 #with "/" it doesn't work under win7
 #and with "\" it doesn't work on my brand new windows 8.1 ...
+#Actually this probably depends on which interpreter is used (the one bundled with Git or the one from strawberry perl)
 #win32: include( ..\o2-master\src\src.pri )
 include( ../o2-master/src/src.pri )
 
@@ -173,7 +174,7 @@ binaries.path = /usr/bin
 binaries.files = $$DESTDIR/$$TARGET
 INSTALLS += binaries
 
-win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
+#win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 #unix: QMAKE_POST_LINK += ../package-debian/create-debian-package.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 #mac: QMAKE_POST_LINK += ../package-macos/make_dmg.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 

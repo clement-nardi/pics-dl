@@ -62,31 +62,11 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     debugFile->flush();
 }
 
-class EventFilter: public QAbstractNativeEventFilter{
-    bool nativeEventFilter(const QByteArray & eventType, void * message, long * result){
-#ifdef _WIN32
-        MSG* msg = reinterpret_cast<MSG*> (message);
-        //qDebug() << "main thread nativeEvent " << msg->message << msg->wParam << msg->lParam << msg->time << msg->pt.x << msg->pt.y ;
-        if (msg->message == WM_QUIT ||
-            msg->message == WM_CLOSE || // sent here as soon as a window is closed...
-            msg->message == WM_QUERYENDSESSION ||
-            msg->message == WM_ENDSESSION) {
-            qDebug() << "main thread nativeEvent " << msg->message << msg->wParam << msg->lParam << msg->time << msg->pt.x << msg->pt.y ;
-
-            //QCoreApplication::exit(0);
-        }
-#endif
-        return false;
-    }
-};
-
 const char *perlIncludeDir;
 
 int main(int argc, char *argv[])
 {
     QApplication *a = new QApplication(argc, argv);
-    EventFilter *ef = new EventFilter();
-    a->installNativeEventFilter(ef);
     perlIncludeDir = QString(QCoreApplication::applicationDirPath() + "/perl").toStdString().c_str();
     if (argc > 1 && QString(argv[1]) == "-v") {
         debugFile = new QFile(QCoreApplication::applicationDirPath() + "/debug" + QDateTime::currentDateTime().toString("_yyyy-MM-dd_hh-mm-ss") + ".txt");

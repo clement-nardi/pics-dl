@@ -72,9 +72,8 @@ public:
     static QString size2Str(qint64 nbBytes);
 
     QList<File> ls(bool *theresMore = NULL);
-    bool copyWithDirs(QString to);
     bool moveWithDirs(QString to);
-    bool setHidden();
+    void setHidden();
     bool remove();
 
     void launchTransferTo(QString to, TransferManager *tm_, bool geotag_, bool move_instead_of_copy_);
@@ -105,7 +104,6 @@ private:
     ExifData *exifData;
     void init(QFileInfo qfi);
     void constructCommonFields();
-    bool FillIODeviceWithContent(QIODevice *out);
     void pipe(QIODevice *in, QIODevice *out);
     QString pipedTo;
     bool geotag;
