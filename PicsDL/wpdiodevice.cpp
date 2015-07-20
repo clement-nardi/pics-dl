@@ -28,7 +28,6 @@
 WPDIODevice::WPDIODevice(QString IDPath_)
 {
     IDPath = IDPath_;
-    at_end = false;
 }
 
 WPDIODevice::~WPDIODevice()
@@ -78,17 +77,10 @@ qint64 WPDIODevice::readData(char * data, qint64 maxSize) {
         if (read == 0) {
             return -1;
         }
-        if (read < maxSize) {
-            at_end = true;
-        }
         return read;
     } else {
         return 0;
     }
-}
-
-bool WPDIODevice::atEnd() const {
-    return at_end;
 }
 
 qint64 WPDIODevice::writeData(const char * data __attribute__ ((unused)),

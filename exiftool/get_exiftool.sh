@@ -1,4 +1,4 @@
-
+echo $0
 current_dir=`pwd`
 script_dir=$current_dir/`dirname $0`/
 script_dir=`cd $script_dir;pwd`

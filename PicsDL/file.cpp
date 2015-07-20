@@ -1424,8 +1424,9 @@ void IOReader::run() {
         if (deviceIsFile) {
             tm->totalRead+=ba.size();
         }
-        theEnd = device->atEnd();
+        theEnd = ba.size() != CHUNK_SIZE;
         emit dataChunk(ba); /* send 4KB data chuncks */
+        //qDebug() << "IOReader " << ba.size() << theEnd;
     }
     emit readFinished();
     device->close();
