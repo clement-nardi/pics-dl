@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dayly comments</string>
+   <string>Daily comments</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

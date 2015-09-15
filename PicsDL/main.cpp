@@ -32,6 +32,8 @@
 #include <QDateTime>
 #include "globals.h"
 #include <QAbstractNativeEventFilter>
+#include <QTranslator>
+#include <QLibraryInfo>
 
 static QFile * debugFile;
 
@@ -110,6 +112,16 @@ int main(int argc, char *argv[])
     qDebug() << QCoreApplication::applicationDirPath();
 
     Config *dc = new Config();
+
+    QTranslator myappTranslator;
+    if (dc->gui_params["language"].isUndefined() || dc->gui_params["language"].isNull()) {
+        dc->gui_params.insert("language",QJsonValue(QLocale::system().name().left(2)));
+        dc->saveGUIParams();
+        qDebug() << "language initialized to: " << dc->gui_params["language"].toString();
+    } else {
+        qDebug() << "language setting is: " << dc->gui_params["language"].toString();
+    }
+
     DriveNotify *dn = new DriveNotify(dc);
     DeviceManager *dm = new DeviceManager(dc);
     MainWindow *w = new MainWindow(dc,dn,dm);

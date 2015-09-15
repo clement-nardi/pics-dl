@@ -142,7 +142,7 @@ void Config::loadJSONFromFile(QJsonObject *obj, QString file_name){
     } else {
         qDebug() << "Could not open the file containing JSON data: " << file_name;
     }
-    qDebug() << QJsonDocument(*obj).toJson();
+    //qDebug() << QJsonDocument(*obj).toJson();
 }
 
 

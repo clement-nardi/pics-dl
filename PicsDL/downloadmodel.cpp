@@ -142,7 +142,7 @@ QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
         QString oName = oNameList.join(".");
 
         for (int i = 0; i < dateKeywords.size(); i++) {
-            newName.replace(dateKeywords.at(i),lm.toString(dateKeywords.at(i)));
+            newName.replace(dateKeywords.at(i),QLocale().toString(lm,dateKeywords.at(i)));
         }
         newName.replace("oName",oName);
 
@@ -310,7 +310,7 @@ bool DownloadModel::getAllCom(){
         if (newName.contains("dCom")) {
             for (int i = 0; i < selectedFileList.size(); i++) {
                 File *fi = selectedFileList.at(i);
-                QDate fileDate = QDateTime::fromTime_t(fi->lastModified).date();
+                QDate fileDate = dateForNewName(fi).date();
                 QString dayKey = fileDate.toString("yyyy-MM-dd");
                 QJsonValue com = obj[dayKey];
                 if (!daylycomments->contains(dayKey)) {
@@ -384,7 +384,7 @@ bool DownloadModel::getAllCom(){
             queryTable->setItem(i,1,valueItem);
         }
         if (newName.contains("sCom")) {
-            QTableWidgetItem *keyItem = new QTableWidgetItem("Session Comment");
+            QTableWidgetItem *keyItem = new QTableWidgetItem(tr("Session Comment"));
             keyItem->setFlags(Qt::ItemIsEnabled);
             QTableWidgetItem *valueItem = new QTableWidgetItem(sessionComment);
             valueItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsEditable);
@@ -463,11 +463,11 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             break;
         case COL_NEWPATH:
             if (excludedFiles.contains(fi)) {
-                return "This file will not be downloaded.";
+                return tr("This file will not be downloaded.");
             } else {
                 QString np = newPath(fi);
                 if (np == fi->absoluteFilePath()) {
-                    return "[same file]";
+                    return tr("[same file]");
                 } else {
                     return np;
                 }
@@ -527,24 +527,24 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
         {
             QString tooltip = fi->absoluteFilePath();
             if (fi->parentFile != NULL) {
-                tooltip += "\n" + QString("This file is an attachment of %1").arg(fi->parentFile->fileName());
+                tooltip += "\n" + QString(tr("This file is an attachment of %1")).arg(fi->parentFile->fileName());
             }
             if (fi->attachedFiles.size() != 0) {
-                tooltip += "\n" + QString("This file has %1 %2.")
+                tooltip += "\n" + QString(tr("This file has %1 %2."))
                                     .arg(fi->attachedFiles.size())
-                                    .arg(fi->attachedFiles.size()==1?"attachment":"attachments");
+                                    .arg(fi->attachedFiles.size()==1?tr("attachment"):tr("attachments"));
             }
             if (dc->knownFiles.contains(*fi)) {
-                tooltip += "\n" + QString("This file was tranfered before");
+                tooltip += "\n" + QString(tr("This file was tranfered before"));
             } else {
-                tooltip += "\n" + QString("This is a new file");
+                tooltip += "\n" + QString(tr("This is a new file"));
             }
             return tooltip;
         }
             break;
         case COL_SIZE:
         {
-            return QString("%1 Bytes").arg(fi->size);
+            return QString(tr("%1 Bytes")).arg(fi->size);
         }
             break;
         case COL_MODIFIED:
@@ -691,13 +691,13 @@ QVariant DownloadModel::headerData(int section, Qt::Orientation orientation, int
         case Qt::Horizontal:
             switch (section) {
             case COL_THUMBNAIL: return ""; break;
-            case COL_FILEPATH: return "File Path"; break;
-            case COL_FILENAME: return "File Name"; break;
-            case COL_SIZE: return "Size"; break;
-            case COL_MODIFIED: return "Date modified"; break;
-            case COL_DATE: return "Date"; break;
-            case COL_NEWPATH: return "Destination"; break;
-            case COL_GPS: return "GPS Coordinates"; break;
+            case COL_FILEPATH: return tr("File Path"); break;
+            case COL_FILENAME: return tr("File Name"); break;
+            case COL_SIZE: return tr("Size"); break;
+            case COL_MODIFIED: return tr("Date modified"); break;
+            case COL_DATE: return tr("Date"); break;
+            case COL_NEWPATH: return tr("Destination"); break;
+            case COL_GPS: return tr("GPS Coordinates"); break;
             }
             break;
         case Qt::Vertical:
@@ -877,7 +877,7 @@ void DownloadModel::treatDir(File dirInfo) {
         }
         if (pdTimer.elapsed() > 2000 && !pd->isVisible()) {
             pd->reset();
-            pd->setLabelText("Looking for files on the device");
+            pd->setLabelText(tr("Looking for files on the device"));
             pd->setMinimum(0);
             pd->setMaximum(1);
             pd->setWindowModality(Qt::WindowModal);
@@ -893,10 +893,10 @@ void DownloadModel::treatDir(File dirInfo) {
             if (pdTimer.elapsed() > 10000 &&
                     (dc->devices[id].toObject()[CONFIG_FILTER].toString().size() == 0 ||
                      dc->devices[id].toObject()[CONFIG_FILTERTYPE].toInt() == 0)) {
-                pd->setLabelText(QString("Your device is being browsed, and this is taking a long time...\n") +
-                                 QString("Once this dialog window is finished, you will be able to setup\n") +
-                                 QString("some filters on the directories that may or may not be browsed.\n") +
-                                 QString("Doing so can dramatically speed-up this process for next time."));
+                pd->setLabelText(QString(tr("Your device is being browsed, and this is taking a long time...\n"\
+                                            "Once this dialog window is finished, you will be able to setup\n"\
+                                            "some filters on the directories that may or may not be browsed.\n"\
+                                            "Doing so can dramatically speed-up this process for next time.")));
             }
         }
     }
@@ -1000,7 +1000,7 @@ void DownloadModel::reloadSelection(bool firstTime) {
             if (pdTimer.elapsed() > 1000 && !pd->isVisible()) {
                 /* only show the progress bar if the process lasts more than a second. */
                 pd->reset();
-                pd->setLabelText("Loading EXIF Data");
+                pd->setLabelText(tr("Loading EXIF Data"));
                 pd->setMinimum(0);
                 pd->setMaximum(selectedFileList.size());
                 pd->setWindowModality(Qt::WindowModal);

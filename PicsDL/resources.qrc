@@ -26,5 +26,11 @@
         <file alias="usb">resources/1429387866_usbpendrive_unmount.png</file>
         <file alias="phone">resources/1429388675_phone-512.png</file>
         <file alias="tree">resources/1429394607_view_tree.png</file>
+        <file>resources/flag_en.png</file>
+        <file>resources/flag_es.png</file>
+        <file>resources/flag_fr.png</file>
+        <file>resources/flag_it.png</file>
+        <file>resources/flag_us.png</file>
+        <file>resources/flag_zh.png</file>
     </qresource>
 </RCC>

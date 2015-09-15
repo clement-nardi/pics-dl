@@ -134,8 +134,8 @@ void SpinBoxView::readSpinBox(){
 DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DeviceConfigView),
-    do_not_download_action(QIcon(":/icons/remove"),"Do not download",this),
-    download_action(QIcon(":/icons/download"),"Download",this)
+    do_not_download_action(QIcon(":/icons/remove"),tr("Do not download"),this),
+    download_action(QIcon(":/icons/download"),tr("Download"),this)
 {
     dpm = NULL;
     tm = NULL;
@@ -243,7 +243,7 @@ void DeviceConfigView::init() {
 
 
     } else {
-        ui->goButton->setText("Save");
+        ui->goButton->setText(tr("Save"));
     }
 
     updateStatusText();
@@ -463,7 +463,7 @@ void DeviceConfigView::saveConfig() {
 }
 
 void DeviceConfigView::chooseDLTo() {
-    QString dir = QFileDialog::getExistingDirectory(this,"Choose the directory where to download the picture files",
+    QString dir = QFileDialog::getExistingDirectory(this,tr("Choose the directory where to download the picture files"),
                                            ui->DLToLine->text());
 
     if (dir.size()>0) {
@@ -473,7 +473,7 @@ void DeviceConfigView::chooseDLTo() {
 }
 
 void DeviceConfigView::chooseTrackFolder() {
-    QString dir = QFileDialog::getExistingDirectory(this,"Choose the directory containing the tracking files",
+    QString dir = QFileDialog::getExistingDirectory(this,tr("Choose the directory containing the tracking files"),
                                            ui->TrackFolderLine->text());
 
     if (dir.size()>0) {
@@ -489,7 +489,7 @@ void DeviceConfigView::updateStatusText(){
     if (dpm != NULL) {
         dpm->getStats(&totalToDownload, &nbFilesToDownload);
     }
-    ui->statusText->setText(QString("%1 files are selected for download (%2)").arg(nbFilesToDownload).arg(File::size2Str(totalToDownload)));
+    ui->statusText->setText(QString(tr("%1 files are selected for download (%2)")).arg(nbFilesToDownload).arg(File::size2Str(totalToDownload)));
 }
 
 void DeviceConfigView::updateFreeUpSimulation() {
@@ -501,13 +501,13 @@ void DeviceConfigView::updateFreeUpSimulation() {
     if (dpm != NULL) {
         int nbPics = ui->nbPics->text().toInt();
         dpm->freeUpSpace(true,&targetAvailable,&bytesDeleted,&nbFilesDeleted);
-        ui->free_up_nbpics_label->setText(QString("pictures. 1 picture = %1, so %2 pictures = %3")
+        ui->free_up_nbpics_label->setText(QString(tr("pictures. 1 picture = %1, so %2 pictures = %3"))
                                           .arg(File::size2Str(dpm->averagePicSize))
                                           .arg(nbPics)
                                           .arg(File::size2Str(dpm->averagePicSize*nbPics)));
     }
 
-    ui->free_up_simulation->setText(QString("<html><head/><body><p>%1 (%2\%)<br/>%3 (<a href=\"files to delete\"><span style=\" text-decoration: underline; color:#0000ff;\">%4 files</span></a>)<br/>%5 (%6\%)<br/>%7 (%8\%)</p></body></html>")
+    ui->free_up_simulation->setText(QString("<html><head/><body><p>%1 (%2\%)<br/>%3 (<a href=\"" + tr("files to delete") + "\"><span style=\" text-decoration: underline; color:#0000ff;\">%4 " + tr("files") + "</span></a>)<br/>%5 (%6\%)<br/>%7 (%8\%)</p></body></html>")
                                     .arg(File::size2Str(available))
                                     .arg((float)available*100/(float)totalSpace,0,'f',1)
                                     .arg(File::size2Str(bytesDeleted))
@@ -552,7 +552,7 @@ void DeviceConfigView::postDownloadActions(){
             ui->tabs->setCurrentIndex(TAB_FREEUPSPACE);
             QMessageBox mb(QMessageBox::Question,
                            QCoreApplication::applicationName(),
-                           QString("PicsDL is about to delete %1 files (%2) from your device.\nAre you sure?")
+                           QString(tr("PicsDL is about to delete %1 files (%2) from your device.\nAre you sure?"))
                            .arg(nbFilesDeleted)
                            .arg(File::size2Str(bytesDeleted)),
                            QMessageBox::Yes | QMessageBox::No);
@@ -574,11 +574,11 @@ void DeviceConfigView::handleLinks(QString link){
             file_list_str += dpm->deletedFiles.at(i)->absoluteFilePath() + "\n";
         }
         if (dpm->deletedFiles.size() == 0) {
-            file_list_str += "None!";
+            file_list_str += tr("None!");
         }
 
         QMessageBox mb(QMessageBox::Information,
-                       "Files to delete",
+                       tr("Files to delete"),
                        file_list_str,
                        QMessageBox::Ok);
         mb.exec();

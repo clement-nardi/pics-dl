@@ -31,6 +31,8 @@
 class DeviceModel;
 class DriveNotify;
 class DeviceManager;
+class QActionGroup;
+class QTranslator;
 
 class About;
 
@@ -55,6 +57,9 @@ private:
     About *about;
     DeviceModel *dm;
     DeviceManager *manager;
+    QActionGroup *languageActionGroup;
+    QTranslator *currentTranslator;
+    void addLanguage(QString languageCode);
 
 public slots:
     void quit_handle();
@@ -66,6 +71,7 @@ public slots:
     void geotag_handle();
     void applicationLaunched();
     void setDeviceWidgets();
+    void language_handle(QAction *action);
 
 };
 

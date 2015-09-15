@@ -30,7 +30,7 @@ About::About(QWidget *parent) :
     ui(new Ui::About)
 {
     ui->setupUi(this);
-    ui->picsdl_version->setText(QString("Version %1 - Build %2")
+    ui->picsdl_version->setText(QString(tr("Version %1 - Build %2"))
                                 .arg(QCoreApplication::applicationVersion())
                                 .arg(build));
     connect(ui->main_label, SIGNAL(linkActivated(QString)),this,SLOT(handleLink(QString)));

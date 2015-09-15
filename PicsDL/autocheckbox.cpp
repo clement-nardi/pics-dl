@@ -34,7 +34,7 @@ autoCheckBox::autoCheckBox(QWidget *parent) :
     pb->setValue(0);
     pb->setTextVisible(false);
 
-    box = new QCheckBox("0-click mode",this);
+    box = new QCheckBox(tr("0-click mode"),this);
     box->setStyleSheet("background:transparent");
     connect(box,SIGNAL(clicked()),this,SIGNAL(clicked()));
 

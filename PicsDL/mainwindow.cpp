@@ -32,6 +32,8 @@
 #include <QDebug>
 #include <QStandardPaths>
 #include <QFileDialog>
+#include <QFileInfoList>
+#include <QTranslator>
 
 
 MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  QWidget *parent) :
@@ -42,6 +44,7 @@ MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  
     manager = manager_;
     ui->setupUi(this);
     about =  new About();
+    currentTranslator = new QTranslator(this);
 
     QMenu *menu = new QMenu;
     menu->addAction(ui->actionShow);
@@ -54,6 +57,23 @@ MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  
 #ifdef __APPLE__
     menu->setAsDockMenu();
 #endif
+
+    QFileInfoList languageFiles = QDir(QCoreApplication::applicationDirPath()).entryInfoList();
+    QRegExp languageFilePattern = QRegExp("picsdl_(.*)\\.qm");
+    languageActionGroup = new QActionGroup(this);
+    connect(languageActionGroup,SIGNAL(triggered(QAction*)),this,SLOT(language_handle(QAction*)));
+    addLanguage("en");
+    for (int i = 0; i< languageFiles.size(); i++) {
+        QFileInfo languageFile = languageFiles.at(i);
+        //qDebug() << "listing content of executable directory: " << languageFile.absoluteFilePath();
+        if (languageFilePattern.indexIn(languageFile.fileName()) >= 0) {
+            qDebug() << "language file found: " << languageFile.absoluteFilePath();
+            QString languageCode = languageFilePattern.cap(1);
+            if (languageCode != "blank_translation") {
+                addLanguage(languageCode);
+            }
+        }
+    }
 
     connect(&sysTray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(sysTray_handle(QSystemTrayIcon::ActivationReason)));
     connect(ui->actionQuit, SIGNAL(triggered()),this,SLOT(quit_handle()));
@@ -71,6 +91,37 @@ MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  
     connect(dm,SIGNAL(modelReset()),this,SLOT(setDeviceWidgets()));
     dc->LoadWindowGeometry("MainWindow",this);
 }
+
+void MainWindow::addLanguage(QString languageCode) {
+    qDebug() << "addLanguage: " << languageCode;
+    QAction * action = ui->menuLanguage->addAction(QIcon(QString(":/icons/resources/flag_%1.png").arg(languageCode)),
+                                                   languageCode);
+    action->setActionGroup(languageActionGroup);
+    action->setCheckable(true);
+    if (languageCode == dc->gui_params["language"].toString()) {
+        action->setChecked(true);
+        language_handle(action);
+    }
+}
+
+void MainWindow::language_handle(QAction *action) {
+    qDebug() << QString("language_handle(%1)").arg(action->text());
+
+    QApplication::removeTranslator(currentTranslator);
+
+    if (currentTranslator->load("picsdl_" + action->text(),QCoreApplication::applicationDirPath())) {
+        qDebug() << "language file was successfully loaded!";
+        QApplication::installTranslator(currentTranslator);
+        QLocale::setDefault(QLocale(action->text()));
+    } else {
+        qDebug() << "language file was NOT successfully loaded... -> back to English + system's locale";
+        QLocale::setDefault(QLocale::system());
+    }
+    ui->retranslateUi(this);
+    dc->gui_params.insert("language",action->text());
+    dc->saveGUIParams();
+}
+
 
 void MainWindow::setDeviceWidgets() {
     for (int i = 0; i < dm->deviceList.size(); i++) {
@@ -135,8 +186,8 @@ void MainWindow::about_handle() {
 
 void MainWindow::applicationLaunched() {
     qDebug() << "applicationLaunched()";
-    sysTray.showMessage("PicsDL is running in the background",
-                        "Please plug your device (smartphone, memory card, camera, USB key)",
+    sysTray.showMessage(tr("PicsDL is running in the background"),
+                        tr("Please plug your device (smartphone, memory card, camera, USB key)"),
                         QSystemTrayIcon::Information);
 }
 
@@ -155,7 +206,7 @@ void MainWindow::quit_handle() {
 }
 
 void MainWindow::dl_from_folder_handle() {
-    QString dir = QFileDialog::getExistingDirectory(this,"Choose the directory where the pictures are located",
+    QString dir = QFileDialog::getExistingDirectory(this,tr("Choose the directory where the pictures are located"),
                                            QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0));
     if (dir.size()>0) {
         QJsonObject obj = dc->devices[dir].toObject();
@@ -172,7 +223,7 @@ void MainWindow::dl_from_folder_handle() {
 }
 
 void MainWindow::reorganize_handle() {
-    QString dir = QFileDialog::getExistingDirectory(this,"Choose the directory to reorganize",
+    QString dir = QFileDialog::getExistingDirectory(this,tr("Choose the directory to reorganize"),
                                            QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0));
     if (dir.size()>0) {
         QJsonObject obj = dc->devices[dir].toObject();
@@ -191,7 +242,7 @@ void MainWindow::reorganize_handle() {
     }
 }
 void MainWindow::geotag_handle() {
-    QString dir = QFileDialog::getExistingDirectory(this,"Choose the directory containing the files to geotag",
+    QString dir = QFileDialog::getExistingDirectory(this,tr("Choose the directory containing the files to geotag"),
                                            QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0));
     if (dir.size()>0) {
         QJsonObject obj = dc->devices[dir].toObject();

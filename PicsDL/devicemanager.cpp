@@ -56,8 +56,9 @@ void DeviceManager::treatDrive(QString serial, bool force){
 
             QMessageBox mb(QMessageBox::Question,
                            QCoreApplication::applicationName(),
-                           "New device detected: " + deviceDescription +  "\n" +
-                           "Would you like to manage this device with " + QCoreApplication::applicationName() + "?",
+                           QString(tr("New device detected: %1\nWould you like to manage this device with %2?"))
+                                .arg(deviceDescription)
+                                .arg(QCoreApplication::applicationName()),
                            QMessageBox::Yes | QMessageBox::No);
             int answer = mb.exec();
             qDebug() << "answer is " << answer;

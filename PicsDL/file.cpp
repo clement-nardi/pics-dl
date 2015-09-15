@@ -1268,7 +1268,7 @@ QString File::size2Str(qint64 nbBytes) {
     if (nbBytes < 0) {
         return "-" + size2Str(-nbBytes);
     }
-    QString baseUnit = "B"; // Byte
+    QString baseUnit = tr("B","Byte"); // Byte
     QStringList prefixes;
     prefixes << "" << "K" << "M" << "G" << "T" << "P" << "E" << "Z" << "Y";
     int prefixIdx = 0;

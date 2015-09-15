@@ -31,7 +31,7 @@ DESTDIR = bin
 
 MAJOR=0
 MINOR=6
-PATCH=1
+PATCH=2
 
 
 !contains(BUILD_NUMBER_UPDATE,false) {
@@ -174,7 +174,20 @@ binaries.path = /usr/bin
 binaries.files = $$DESTDIR/$$TARGET
 INSTALLS += binaries
 
-win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
+#win32: QMAKE_POST_LINK += ../package-win32/create-installer.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 #unix: QMAKE_POST_LINK += ../package-debian/create-debian-package.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 #mac: QMAKE_POST_LINK += ../package-macos/make_dmg.sh \"$$OUT_PWD/$$DESTDIR/\" \"$$TARGET\"
 
+
+########## Translations ############
+
+lrelease.target = qm_files
+lrelease.commands = lrelease ../PicsDL/PicsDL.pro; \
+                    cp ../Translations/*.qm $$DESTDIR/
+QMAKE_EXTRA_TARGETS += lrelease
+PRE_TARGETDEPS += qm_files
+
+TRANSLATIONS = ../Translations/picsdl_fr.ts \
+               ../Translations/picsdl_blank_translation.ts
+
+QMAKE_POST_LINK += lupdate ../PicsDL/PicsDL.pro
