@@ -86,8 +86,9 @@ Source: "C:\Strawberry\perl\bin\libwinpthread-1.dll"; DestDir: "{app}"; Flags: i
 Source: "PicsDL_debug.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Strawberry\perl\bin\perl520.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\exiftool\exiftool.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: vcredist_2013_x86.exe; DestDir: {app}\bin\;
+Source: vcredist_2013_x86.exe; DestDir: {app}\bin\;   
 Source: ".\perl\*"; DestDir: "{app}\perl\"; Flags: recursesubdirs;
+Source: "..\Translations\*.qm"; DestDir: "{app}"; Flags: ignoreversion;
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
