@@ -39,7 +39,7 @@ static char** env = NULL;
 static bool globalInitDone = false;
 
 
-ExifToolPerlWrapper::ExifToolPerlWrapper(const char *includeDir) {
+ExifToolPerlWrapper::ExifToolPerlWrapper(const char *includeDirs_) {
     if (!globalInitDone) {
         globalInitDone = true;
         PERL_SYS_INIT3(&argc,(char ***)&argv,&env);
@@ -53,10 +53,15 @@ ExifToolPerlWrapper::ExifToolPerlWrapper(const char *includeDir) {
     perl_parse(my_perl, xs_init, argc, argv, env);
     perl_run(my_perl);
 
-
-    SV* includeDir_SV = get_sv("includeDir", GV_ADD);
-    sv_setpv(includeDir_SV, includeDir);
-    eval_pv("BEGIN { push @INC, $includeDir }", TRUE);
+    char * includeDirs = new char [strlen(includeDirs_)+1];
+    strcpy(includeDirs,includeDirs_);
+    char * includeDir = strtok(includeDirs,",");
+    while (includeDir != NULL) {
+        SV* includeDir_SV = get_sv("includeDir", GV_ADD);
+        sv_setpv(includeDir_SV, includeDir);
+        eval_pv("BEGIN { push @INC, $includeDir }", TRUE);
+        includeDir = strtok(NULL,",");
+    }
     eval_pv("use Image::ExifTool qw(:Public);", TRUE);
     eval_pv("use Data::Dumper;", TRUE);
     eval_pv("use IO::Scalar;", TRUE);

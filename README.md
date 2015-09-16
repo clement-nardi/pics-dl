@@ -4,7 +4,7 @@
 ##Main features:  
 * Retrieves pictures and videos from any type of device (camera, smartphone, memory card, USB stick, External Hard Drive).
 * All-automatic mode: simply plug the device and watch your pictures being downloaded and organised.
-* Organise and rename your files based on date/time and EXIF tags (such as camera brand/name, etc.)
+* Organize and rename your files based on date/time and EXIF tags (such as camera brand/name, etc.)
 * Geo-tag the pictures
   
 ---

@@ -26,7 +26,7 @@ typedef struct interpreter PerlInterpreter;
 class ExifToolPerlWrapper
 {
 public:
-    ExifToolPerlWrapper(const char *);
+    ExifToolPerlWrapper(const char *includeDirs_);
     ~ExifToolPerlWrapper();
     void loadTrackFile(const char *trackFilePath);
     void loadTrackContent(const char * trackFileContent, long size);

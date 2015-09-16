@@ -44,7 +44,7 @@ GeotaggerWorker::~GeotaggerWorker() {
 void GeotaggerWorker::init() {
     if (exiftool == NULL) {
         qDebug() << "initializing the worker";
-        exiftool = new ExifToolPerlWrapper(QString(QCoreApplication::applicationDirPath() + "/perl").toStdString().c_str());
+        exiftool = new ExifToolPerlWrapper(QString(QCoreApplication::applicationDirPath() + "/perl,./perl,../../package-win32/perl").toStdString().c_str());
     }
 }
 

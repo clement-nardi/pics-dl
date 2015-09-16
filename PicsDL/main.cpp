@@ -64,12 +64,10 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     debugFile->flush();
 }
 
-const char *perlIncludeDir;
 
 int main(int argc, char *argv[])
 {
     QApplication *a = new QApplication(argc, argv);
-    perlIncludeDir = QString(QCoreApplication::applicationDirPath() + "/perl").toStdString().c_str();
     if (argc > 1 && QString(argv[1]) == "-v") {
         debugFile = new QFile(QCoreApplication::applicationDirPath() + "/debug" + QDateTime::currentDateTime().toString("_yyyy-MM-dd_hh-mm-ss") + ".txt");
         debugFile->open(QIODevice::WriteOnly);

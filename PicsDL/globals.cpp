@@ -23,7 +23,7 @@
 #define MAJOR_VERSION 0
 #define MINOR_VERSION 6
 #define PATCH_NUMBER 2
-#define BUILD_NUMBER 1684
+#define BUILD_NUMBER 1698
 
 int major = MAJOR_VERSION;
 int minor = MINOR_VERSION;
