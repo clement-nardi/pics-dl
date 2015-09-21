@@ -17,7 +17,7 @@
  * along with PicsDL.  If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-
+/*
 #ifndef OPENPATH_H
 #define OPENPATH_H
 
@@ -45,5 +45,5 @@ signals:
 public slots:
 
 };
-
+*/
 #endif // OPENPATH_H

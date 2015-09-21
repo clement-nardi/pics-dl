@@ -17,7 +17,7 @@
  * along with PicsDL.  If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-
+/*
 #include "openpath.h"
 #include <QDebug>
 
@@ -32,3 +32,4 @@ QString OpenPath::getDirectoryForDateRange(QDateTime from, QDateTime to) {
     qDebug() << "getDirectoryForDateRange(" << from << ", " << to << ")";
     return "";
 }
+*/

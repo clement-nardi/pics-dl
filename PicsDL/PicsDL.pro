@@ -61,7 +61,7 @@ PRE_TARGETDEPS += exiftool_app
 #and with "\" it doesn't work on my brand new windows 8.1 ...
 #Actually this probably depends on which interpreter is used (the one bundled with Git or the one from strawberry perl)
 #win32: include( ..\o2-master\src\src.pri )
-include( ../o2-master/src/src.pri )
+#include( ../o2-master/src/src.pri )
 
 
 QT       += core gui positioning
