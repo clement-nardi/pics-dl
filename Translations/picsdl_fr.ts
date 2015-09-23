@@ -1005,8 +1005,8 @@ En faisant cela vous pourrez réduire considérablement la durée de la recherch
     <name>MainWindow</name>
     <message>
         <location filename="../PicsDL/mainwindow.ui" line="14"/>
-        <source>MainWindow</source>
-        <translation></translation>
+        <source>PicsDL</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../PicsDL/mainwindow.ui" line="65"/>
@@ -1074,47 +1074,47 @@ En faisant cela vous pourrez réduire considérablement la durée de la recherch
         <translation>Géomarquer des photos</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="173"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="176"/>
         <source>No known device.</source>
         <translation>Aucun appareil connu.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="174"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="177"/>
         <source>PicsDL does not know any of your devices! Please plug a device (smartphone, memory card, camera, USB key) in order to start downloading the pictures it contains.</source>
         <translation>PicsDL ne connait aucun de vos appareils! Branchez un appareil (smartphone, carte mémoire, appareil photo, clef USB) pour que PicsDL commence à transférer les photos qu&apos;il contient.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="189"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="192"/>
         <source>PicsDL is running in the background</source>
         <translation>PicsDL s&apos;exécute en arrière plan</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="190"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="193"/>
         <source>Please plug your device (smartphone, memory card, camera, USB key)</source>
         <translation>Branchez votre appareil s&apos;il-vous-plaît (smartphone, carte mémoire, appareil photo, clef USB)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="196"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="199"/>
         <source>Are you sure you want to exit PicsDL?</source>
         <translation>Etes-vous sûr de vouloir quitter PicsDL?</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="197"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="200"/>
         <source>PicsDL needs to run in the background in order to detect when you plug a camera or memory card to your computer.</source>
         <translation>PicsDL doit s&apos;exécuter en arrière plan pour pouvoir détecter quand vous branchez un appareil photo ou une carte mémoire à votre ordinateur.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="209"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="212"/>
         <source>Choose the directory where the pictures are located</source>
         <translation>Choisir le dossier où se trouvent les photos</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="226"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="229"/>
         <source>Choose the directory to reorganize</source>
         <translation>Choisir le dossier à réorganiser</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="245"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="248"/>
         <source>Choose the directory containing the files to geotag</source>
         <translation>Choisir le dossier contenant les fichiers à géomarquer</translation>
     </message>

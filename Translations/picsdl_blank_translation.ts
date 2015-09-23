@@ -986,7 +986,7 @@ Doing so can dramatically speed-up this process for next time.</source>
     <name>MainWindow</name>
     <message>
         <location filename="../PicsDL/mainwindow.ui" line="14"/>
-        <source>MainWindow</source>
+        <source>PicsDL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1055,47 +1055,47 @@ Doing so can dramatically speed-up this process for next time.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="173"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="176"/>
         <source>No known device.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="174"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="177"/>
         <source>PicsDL does not know any of your devices! Please plug a device (smartphone, memory card, camera, USB key) in order to start downloading the pictures it contains.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="189"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="192"/>
         <source>PicsDL is running in the background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="190"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="193"/>
         <source>Please plug your device (smartphone, memory card, camera, USB key)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="196"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="199"/>
         <source>Are you sure you want to exit PicsDL?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="197"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="200"/>
         <source>PicsDL needs to run in the background in order to detect when you plug a camera or memory card to your computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="209"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="212"/>
         <source>Choose the directory where the pictures are located</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="226"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="229"/>
         <source>Choose the directory to reorganize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="245"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="248"/>
         <source>Choose the directory containing the files to geotag</source>
         <translation type="unfinished"></translation>
     </message>

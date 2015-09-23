@@ -118,6 +118,9 @@ void MainWindow::language_handle(QAction *action) {
         QLocale::setDefault(QLocale::system());
     }
     ui->retranslateUi(this);
+    delete about;
+    about = new About();
+
     dc->gui_params.insert("language",action->text());
     dc->saveGUIParams();
 }
