@@ -128,7 +128,7 @@ QDateTime DownloadModel::dateForNewName(File* fi) const{
 
 QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
     if (fi->parentFile != NULL) {
-        QString parentNewPath = newPath(fi->parentFile,keepDComStr);
+        QString parentNewPath = newPath(fi->parentFile);
         return parentNewPath.left(parentNewPath.lastIndexOf('.')) + "." + fi->fileName().split('.').last();
     } else {
         QJsonObject obj = dc->devices[id].toObject();
