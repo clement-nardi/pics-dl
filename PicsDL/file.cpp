@@ -948,8 +948,8 @@ int File::operator==(const File &other) const {
         /** https://github.com/clement-nardi/PicsDL/issues/9
          *  https://bugreports.qt-project.org/browse/QTBUG-43185#comment-267721
          */
-        if (abs(lastModified - other.lastModified) < (26 *60 *60) && // Time zones go from -12 to +14
-            abs(lastModified - other.lastModified)%(30*60) == 0    ) { // Some time zones have 30 minutes shift
+        if (abs(signed(lastModified - other.lastModified)) < (26 *60 *60) && // Time zones go from -12 to +14
+            abs(signed(lastModified - other.lastModified))%(30*60) == 0    ) { // Some time zones have 30 minutes shift
             //qDebug() << "Found the same file with a " << QString("%1").arg((((double)lastModified - (double)(other.lastModified)))/(60*60),0,'f',1) << " hour shift.";
             return true;
         }
