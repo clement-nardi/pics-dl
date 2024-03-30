@@ -818,147 +818,147 @@ on étées prises avec un %1</translation>
 <context>
     <name>DownloadModel</name>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="387"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="389"/>
         <source>Session Comment</source>
         <translation>Commentaire de session</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="466"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="468"/>
         <source>This file will not be downloaded.</source>
         <translation>Ce fichier ne sera pas transféré.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="470"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="472"/>
         <source>[same file]</source>
         <translation>[même fichier]</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="530"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="535"/>
         <source>This file is an attachment of %1</source>
         <translation>Ce fichier est associé à %1</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="533"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="538"/>
         <source>This file has %1 %2.</source>
         <translation>Ce fichier a %1 %2.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="535"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="540"/>
         <source>attachment</source>
         <translation>fichier associé</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="535"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="540"/>
         <source>attachments</source>
         <translation>fichiers associés</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="538"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="543"/>
         <source>This file was tranfered before</source>
         <translation>Ce fichier à déjà été transféré</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="540"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="545"/>
         <source>This is a new file</source>
         <translation>Ce fichier est inconnu de PicsDL</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="547"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="552"/>
         <source>%1 Bytes</source>
         <translation>%1 octets</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="568"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="573"/>
         <source>This file is being transfered</source>
         <translation>Ce fichier est en cours de transfert</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="571"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="576"/>
         <source>Same file, it will just be geotagged</source>
         <translation>Même fichier, il sera seulement géomarqué</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="573"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="578"/>
         <source>Same file, nothing will happen</source>
         <translation>Même fichier, rien ne se passera</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="577"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="582"/>
         <source>This file was just transfered</source>
         <translation>Ce fichier vient juste d&apos;être transféré</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="580"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="585"/>
         <source>This file already exists but it WILL be overwritten</source>
         <translation>Ce fichier existe déjà mais il SERA écrasé</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="582"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="587"/>
         <source>This file already exists and it will NOT be overwritten</source>
         <translation>Ce fichier existe déjà et il ne sera PAS écrasé</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="587"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="592"/>
         <source>The file will be moved here</source>
         <translation>Ce fichier sera déplacé ici</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="589"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="594"/>
         <source>The file will be transfered here</source>
         <translation>Ce fichier sera transféré ici</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="599"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="604"/>
         <source>These EXIF tags will be inserted in the file:</source>
         <translation>Ces tags EXIF seront insérés dans le fichier:</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="607"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="612"/>
         <source>The coordinates are being computed.</source>
         <translation>Les coordonnées GPS sont en train d&apos;être calculées.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="694"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="699"/>
         <source>File Path</source>
         <translation>Chemin du fichier</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="695"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="700"/>
         <source>File Name</source>
         <translation>Nom du fichier</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="696"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="701"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="697"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="702"/>
         <source>Date modified</source>
         <translation>Date de modification</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="698"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="703"/>
         <source>Date</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="699"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="704"/>
         <source>Destination</source>
         <translation>Destination</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="700"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="705"/>
         <source>GPS Coordinates</source>
         <translation>Coordonnées GPS</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="880"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="885"/>
         <source>Looking for files on the device</source>
         <translation>Recherche des fichiers sur l&apos;appareil</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="896"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="901"/>
         <source>Your device is being browsed, and this is taking a long time...
 Once this dialog window is finished, you will be able to setup
 some filters on the directories that may or may not be browsed.
@@ -969,7 +969,7 @@ pour décider quels dossiers doivent ou ne doivent pas être parcourus.
 En faisant cela vous pourrez réduire considérablement la durée de la recherche.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="1003"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="1008"/>
         <source>Loading EXIF Data</source>
         <translation>Chargement des données EXIF</translation>
     </message>
@@ -1074,47 +1074,47 @@ En faisant cela vous pourrez réduire considérablement la durée de la recherch
         <translation>Géomarquer des photos</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="176"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="178"/>
         <source>No known device.</source>
         <translation>Aucun appareil connu.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="177"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="179"/>
         <source>PicsDL does not know any of your devices! Please plug a device (smartphone, memory card, camera, USB key) in order to start downloading the pictures it contains.</source>
         <translation>PicsDL ne connait aucun de vos appareils! Branchez un appareil (smartphone, carte mémoire, appareil photo, clef USB) pour que PicsDL commence à transférer les photos qu&apos;il contient.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="192"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="194"/>
         <source>PicsDL is running in the background</source>
         <translation>PicsDL s&apos;exécute en arrière plan</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="193"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="195"/>
         <source>Please plug your device (smartphone, memory card, camera, USB key)</source>
         <translation>Branchez votre appareil s&apos;il-vous-plaît (smartphone, carte mémoire, appareil photo, clef USB)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="199"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="201"/>
         <source>Are you sure you want to exit PicsDL?</source>
         <translation>Etes-vous sûr de vouloir quitter PicsDL?</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="200"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="202"/>
         <source>PicsDL needs to run in the background in order to detect when you plug a camera or memory card to your computer.</source>
         <translation>PicsDL doit s&apos;exécuter en arrière plan pour pouvoir détecter quand vous branchez un appareil photo ou une carte mémoire à votre ordinateur.</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="212"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="214"/>
         <source>Choose the directory where the pictures are located</source>
         <translation>Choisir le dossier où se trouvent les photos</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="229"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="231"/>
         <source>Choose the directory to reorganize</source>
         <translation>Choisir le dossier à réorganiser</translation>
     </message>
     <message>
-        <location filename="../PicsDL/mainwindow.cpp" line="248"/>
+        <location filename="../PicsDL/mainwindow.cpp" line="250"/>
         <source>Choose the directory containing the files to geotag</source>
         <translation>Choisir le dossier contenant les fichiers à géomarquer</translation>
     </message>

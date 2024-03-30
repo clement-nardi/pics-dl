@@ -103,7 +103,7 @@ void DownloadModel::sort(int column, Qt::SortOrder order){
 
 void DownloadModel::sortSelection() {
     dpm_s = this;
-    qSort(selectedFileList.begin(),selectedFileList.end(),fileLessThan);
+    std::sort(selectedFileList.begin(),selectedFileList.end(),fileLessThan);
     for (int i = 0; i < selectedFileList.size(); i++) {
         File *fi = selectedFileList.at(i);
         fi->modelRow = i;
@@ -120,9 +120,9 @@ int DownloadModel::columnCount(const QModelIndex & parent __attribute__ ((unused
 QDateTime DownloadModel::dateForNewName(File* fi) const{
     if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool() &&
             dc->devices[id].toObject()[CONFIG_USEEXIFDATE].toBool()    ) {
-        return QDateTime::fromTime_t(fi->dateTaken());
+        return QDateTime::fromSecsSinceEpoch(fi->dateTaken());
     } else {
-        return QDateTime::fromTime_t(fi->lastModified);
+        return QDateTime::fromSecsSinceEpoch(fi->lastModified);
     }
 }
 
@@ -147,15 +147,16 @@ QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
         newName.replace("oName",oName);
 
         /* oFolder management */
-        int oFolderPos = 0;
-        QRegExp oFolderPattern = QRegExp("oFolder(-?)([1-9]\\d*)-(([1-9]\\d*)?)");
+        QRegularExpression oFolderPattern = QRegularExpression("oFolder(-?)([1-9]\\d*)-(([1-9]\\d*)?)");
         QStringList oFolderList = fi->absoluteFilePath().mid(obj[CONFIG_PATH].toString().size()).split('/');
         oFolderList.removeLast();
-        while ((oFolderPos = oFolderPattern.indexIn(newName,oFolderPos)) >= 0) {
+        QRegularExpressionMatchIterator i = oFolderPattern.globalMatch(newName);
+        while (i.hasNext()) {
+            QRegularExpressionMatch match = i.next();
             bool m_is_present;
-            int n = oFolderPattern.cap(2).toInt();
-            int m = oFolderPattern.cap(3).toInt(&m_is_present);
-            bool invert = oFolderPattern.cap(1).size()>0;
+            int n = match.captured(2).toInt();
+            int m = match.captured(3).toInt(&m_is_present);
+            bool invert = match.captured(1).size()>0;
             int first;
             int nb;
             if (m_is_present) {
@@ -175,21 +176,22 @@ QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
                     if (nb < 0) nb = 0;
                 }
             }
-            newName.replace(oFolderPattern.cap(),
+            newName.replace(match.captured(),
                             QStringList(oFolderList.mid(first,nb)).join('/'));
         }
-        oFolderPos = 0;
-        oFolderPattern = QRegExp("oFolder(-?)([1-9]\\d*)");
-        while ((oFolderPos = oFolderPattern.indexIn(newName,oFolderPos)) >= 0) {
-            int n = oFolderPattern.cap(2).toInt();
-            bool invert = oFolderPattern.cap(1).size()>0;
+        oFolderPattern = QRegularExpression("oFolder(-?)([1-9]\\d*)");
+        i = oFolderPattern.globalMatch(newName);
+        while (i.hasNext()) {
+            QRegularExpressionMatch match = i.next();
+            int n = match.captured(2).toInt();
+            bool invert = match.captured(1).size()>0;
             int idx;
             if (!invert) {
                 idx = n - 1;
             } else {
                 idx = oFolderList.size() - n;
             }
-            newName.replace(oFolderPattern.cap(),
+            newName.replace(match.captured(),
                             (idx>=0 && idx<oFolderList.size())?oFolderList.at(idx):"");
         }
 
@@ -213,7 +215,7 @@ QString DownloadModel::newPath(File *fi, bool keepDComStr) const{
         }
 
         /* These are forbidden characters under windows: \ : * ? " < > | */
-        newName.remove(QRegExp("[\\\\:*?\"<>|]"));
+        newName.remove(QRegularExpression("[\\\\:*?\"<>|]"));
 
         /* prevent folder and file names to start or end with a space character */
         newName.prepend("/");
@@ -285,7 +287,7 @@ QString DownloadModel::guessCameraName() {
 }
 
 QString DownloadModel::getDCom(File *fi) const{
-    QDateTime fileDate = QDateTime::fromTime_t(fi->lastModified);
+    QDateTime fileDate = QDateTime::fromSecsSinceEpoch(fi->lastModified);
     QString dayKey = fileDate.toString("yyyy-MM-dd");
     QJsonObject obj = dc->daily_comments;
     QJsonValue com = obj[dayKey];
@@ -342,20 +344,20 @@ bool DownloadModel::getAllCom(){
 
                         QStringList entries = QDir(dirToSearch).entryList((matchOnDirs?(QDir::Dirs):(QDir::Files))|QDir::NoDotAndDotDot);
                         patternToSearch.replace("dCom","(.*)");
-                        QRegExp pattern = QRegExp(patternToSearch);
+                        QRegularExpression pattern = QRegularExpression(patternToSearch);
                         qDebug() << "search " << dirToSearch << "(" << entries.size() << " entries) for" << patternToSearch;
                         for (int j = 0; j < entries.size(); j++) {
                             qDebug() << "   entry=" << entries.at(j);
-                            int pos = pattern.indexIn(entries.at(j));
-                            if (pos >= 0) {
-                                qDebug() << "      match at " << pos;
+                            QRegularExpressionMatch match = pattern.match(entries.at(j));
+                            if (match.hasMatch()) {
+                                qDebug() << "      match at " << match.capturedStart();
                                 matchCount++;
                                 if (matchCount >= 4) {
                                     qDebug() << "         -> too many matches, abandon this meaningless search.";
                                     comment = "";
                                     break;
                                 }
-                                QString cap1 = pattern.cap(1);
+                                QString cap1 = match.captured(1);
                                 if (cap1.size()>comment.size()) {
                                     comment = cap1;
                                 }
@@ -375,7 +377,7 @@ bool DownloadModel::getAllCom(){
         for (int i = 0; i < daylycomments->keys().size(); i++) {
             QString dayKey = daylycomments->keys().at(i);
             QString dayComment = daylycomments->value(dayKey);
-            QString dayName = QDateTime::fromString(dayKey,"yyyy-MM-dd").date().toString(Qt::SystemLocaleLongDate);
+            QString dayName = QDateTime::fromString(dayKey,"yyyy-MM-dd").date().toString(Qt::TextDate);
             QTableWidgetItem *keyItem = new QTableWidgetItem(dayName);
             keyItem->setFlags(Qt::ItemIsEnabled);
             QTableWidgetItem *valueItem = new QTableWidgetItem(dayComment);
@@ -451,7 +453,7 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             break;
         case COL_MODIFIED:
         {
-            QDateTime lm = QDateTime::fromTime_t(fi->lastModified);
+            QDateTime lm = QDateTime::fromSecsSinceEpoch(fi->lastModified);
             return lm.toString("yyyy/MM/dd HH:mm:ss");
         }
             break;
@@ -483,20 +485,23 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
                 emit requestGPSCoord(fi);
             }
             if (fi->geotags.size() > 0 ) {
-                QRegExp coord = QRegExp("(\\d+) (\\d+) (\\d*.?\\d*)");
+                QRegularExpression coord = QRegularExpression("(\\d+) (\\d+) (\\d*.?\\d*)");
                 QString latiref = fi->geotags["GPSLatitudeRef"];
                 QString longiref = fi->geotags["GPSLongitudeRef"];
                 if ((latiref  == "N" || latiref  == "S") &&
                     (longiref == "E" || longiref == "W")   ) {
-                    if (coord.indexIn(fi->geotags["GPSLatitude"]) >= 0) {
-                        double lati = (coord.cap(1).toDouble() +
-                                coord.cap(2).toDouble()/60 +
-                                coord.cap(3).toDouble()/60/60) * (double)((latiref  == "N")?1:-1) ;
+                    auto match = coord.match(fi->geotags["GPSLatitude"]);
+                    if (match.hasMatch()) {
+                        double lati = (match.captured(1).toDouble() +
+                                match.captured(2).toDouble()/60 +
+                                match.captured(3).toDouble()/60/60) * (double)((latiref  == "N")?1:-1) ;
                         //qDebug() << lati << coord.cap() << coord.cap(1) << coord.cap(2) << coord.cap(3);
-                        if (coord.indexIn(fi->geotags["GPSLongitude"]) >= 0) {
-                            double longi = (coord.cap(1).toDouble() +
-                                    coord.cap(2).toDouble()/60 +
-                                    coord.cap(3).toDouble()/60/60) * (double)((longiref  == "E")?1:-1) ;
+
+                        auto match2 = coord.match(fi->geotags["GPSLongitude"]);
+                        if (match2.hasMatch()) {
+                            double longi = (match2.captured(1).toDouble() +
+                                    match2.captured(2).toDouble()/60 +
+                                    match2.captured(3).toDouble()/60/60) * (double)((longiref  == "E")?1:-1) ;
                             //qDebug() << longi << coord.cap() << coord.cap(1) << coord.cap(2) << coord.cap(3);
                             return QGeoCoordinate(lati,longi).toString();
                         }
@@ -549,14 +554,14 @@ QVariant DownloadModel::data(const QModelIndex & index, int role) const{
             break;
         case COL_MODIFIED:
         {
-            QDateTime lm = QDateTime::fromTime_t(fi->lastModified);
-            return lm.toString(Qt::SystemLocaleLongDate);
+            QDateTime lm = QDateTime::fromSecsSinceEpoch(fi->lastModified);
+            return lm.toString(Qt::TextDate);
         }
             break;
         case COL_DATE:
         {
             QDateTime date = dateForNewName(fi);
-            return date.toString(Qt::SystemLocaleLongDate);
+            return date.toString(Qt::TextDate);
         }
             break;
         case COL_NEWPATH:
@@ -809,8 +814,8 @@ bool DownloadModel::isBlacklisted(File element) {
             bool patternMatchedOnce = false;
             for (int j = 0; j < patternList.size(); j++) {
                 QString temp = patternList.at(j);
-                QRegExp pattern = QRegExp("^" + temp.replace(".","\\.").replace("*",".*") + "$");
-                if (pattern.indexIn(directoryList.at(dirIdx)) >= 0) {
+                QRegularExpression pattern = QRegularExpression("^" + temp.replace(".","\\.").replace("*",".*") + "$");
+                if (pattern.match(directoryList.at(dirIdx)).hasMatch()) {
                     patternMatchedOnce = true;
                     //qDebug() << element.absoluteFilePath() << "matched on" << patternList.at(j) << pattern;
                 }
@@ -901,7 +906,7 @@ void DownloadModel::treatDir(File dirInfo) {
         }
     }
     /* find attached files in the same directory */
-    qSort(files.begin(),files.end(),pathLessThan);
+    std::sort(files.begin(),files.end(),pathLessThan);
     for (int i = 0; i < files.size(); ++i) {
         File *fi = files.at(i);
         if (fi->isPicture() || fi->isVideo()) {
@@ -957,11 +962,11 @@ void DownloadModel::reloadSelection(bool firstTime) {
     }
     if (sortNeeded || firstTime) {
         qDebug() << "sort completeFileList by path";
-        qSort(completeFileList.begin(), completeFileList.end(), pathLessThan);
+        std::sort(completeFileList.begin(), completeFileList.end(), pathLessThan);
         qDebug() << "copy completeFileList";
         completeFileList_byDate = completeFileList;
         qDebug() << "sort completeFileList by date";
-        qSort(completeFileList_byDate.begin(), completeFileList_byDate.end(), dateLessThan);
+        std::sort(completeFileList_byDate.begin(), completeFileList_byDate.end(), dateLessThan);
     }
 
 
@@ -1109,10 +1114,10 @@ void DownloadModel::freeUpSpace(bool isFakeRun,
         qint64 available = obj[CONFIG_BYTESAVAILABLE].toString().toLongLong();
         bool protect_days = obj[CONFIG_PROTECTDAYS].toBool();
         bool protect_selection = obj[CONFIG_PROTECTTRANSFER].toBool();
-        uint lastDate = QDateTime::currentDateTime().toTime_t();
+        uint lastDate = QDateTime::currentDateTime().toSecsSinceEpoch();
         if (protect_days) {
             lastDate -= obj[CONFIG_PROTECTDAYSVALUE].toInt()*24*60*60;
-            qDebug() << "Will not delete files modified after " << QDateTime::fromTime_t(lastDate).toString();
+            qDebug() << "Will not delete files modified after " << QDateTime::fromSecsSinceEpoch(lastDate).toString();
         }
         if (obj[CONFIG_TARGETNBPICS].toBool()) {
             qDebug() << "make space for " << obj[CONFIG_NBPICS].toString().toInt() << "NbFiles";
@@ -1146,7 +1151,7 @@ void DownloadModel::freeUpSpace(bool isFakeRun,
 
                 } else {
                     if (!isFakeRun)
-                        qDebug() << "Stop deleting because lastModified=" << QDateTime::fromTime_t(fi->lastModified).toString();
+                        qDebug() << "Stop deleting because lastModified=" << QDateTime::fromSecsSinceEpoch(fi->lastModified).toString();
                     break;
                 }
             } else {

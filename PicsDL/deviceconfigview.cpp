@@ -452,7 +452,7 @@ void DeviceConfigView::saveConfig() {
     qDebug() << "SaveConfig";
     if (dpm != NULL) {
         QString guessedCameraName = dpm->guessCameraName();
-        if (guessedCameraName > 0) {
+        if (guessedCameraName.size() > 0) {
             QJsonObject obj = dc->devices[id].toObject();
             obj.insert(CONFIG_CAMERANAME,QJsonValue(guessedCameraName));
             dc->devices[id] = obj;
@@ -531,7 +531,7 @@ void DeviceConfigView::go(){
         tm->launchDownloads();
 
         QJsonObject obj = dc->devices[id].toObject();
-        obj.insert(CONFIG_LASTTRANSFER,QJsonValue(QString("%1").arg(QDateTime::currentDateTime().toTime_t())));
+        obj.insert(CONFIG_LASTTRANSFER,QJsonValue(QString("%1").arg(QDateTime::currentDateTime().toSecsSinceEpoch())));
         dc->devices[id] = obj;
         dc->deviceFieldChanged(id);
         saveConfig();

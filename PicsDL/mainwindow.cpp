@@ -34,6 +34,7 @@
 #include <QFileDialog>
 #include <QFileInfoList>
 #include <QTranslator>
+#include <QActionGroup>
 
 
 MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  QWidget *parent) :
@@ -59,16 +60,17 @@ MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  
 #endif
 
     QFileInfoList languageFiles = QDir(QCoreApplication::applicationDirPath()).entryInfoList();
-    QRegExp languageFilePattern = QRegExp("picsdl_(.*)\\.qm");
+    QRegularExpression languageFilePattern = QRegularExpression("picsdl_(.*)\\.qm");
     languageActionGroup = new QActionGroup(this);
     connect(languageActionGroup,SIGNAL(triggered(QAction*)),this,SLOT(language_handle(QAction*)));
     addLanguage("en");
     for (int i = 0; i< languageFiles.size(); i++) {
         QFileInfo languageFile = languageFiles.at(i);
         //qDebug() << "listing content of executable directory: " << languageFile.absoluteFilePath();
-        if (languageFilePattern.indexIn(languageFile.fileName()) >= 0) {
+        auto match = languageFilePattern.match(languageFile.fileName());
+        if (match.hasMatch()) {
             qDebug() << "language file found: " << languageFile.absoluteFilePath();
-            QString languageCode = languageFilePattern.cap(1);
+            QString languageCode = match.captured(1);
             if (languageCode != "blank_translation") {
                 addLanguage(languageCode);
             }

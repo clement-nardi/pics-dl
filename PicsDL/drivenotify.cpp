@@ -79,7 +79,7 @@ DriveNotify::DriveNotify(Config *dc_, DRIVENOTIFY_PARENT_TYPE *parent) :
 #ifdef __APPLE__
     fileToWatch = "/Volumes/";
 #else
-    fileToWatch = "/etc/mtab";
+    fileToWatch = "/media/cnardi";
 #endif
 
     watch();

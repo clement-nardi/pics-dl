@@ -156,7 +156,7 @@ win32 {
     LIBS        += -LC:/Strawberry/perl/bin -lperl520
 }
 unix:!mac {
-    INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/perl/5.34.0/CORE/"
+    INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/perl/5.36.0/CORE/"
     LIBS        += -L/usr/lib/ -lperl
 }
 mac {

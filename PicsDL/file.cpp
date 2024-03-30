@@ -880,7 +880,7 @@ File::File(QFileInfo qfi)
 }
 
 void File::init(QFileInfo qfi) {
-    lastModified = qfi.lastModified().toTime_t();
+    lastModified = qfi.lastModified().toSecsSinceEpoch();
     setAbsoluteFilePath(qfi.absoluteFilePath());
     size = qfi.size();
     isDir = qfi.isDir();
@@ -982,8 +982,8 @@ bool File::nameMatchesPatterns(QString &patterns_) const{
     QStringList patterns = patterns_.replace(',',';').split(";");
     for (int i = 0; i < patterns.size(); i++) {
         QString pattern = patterns[i];
-        QRegExp regexp = QRegExp("^" + pattern.replace(".","\\.").replace("*",".*") + "$");
-        if (regexp.indexIn(fileName_p) >= 0) {
+        QRegularExpression regexp = QRegularExpression("^" + pattern.replace(".","\\.").replace("*",".*") + "$");
+        if (regexp.match(fileName_p).hasMatch()) {
             return true;
         }
     }
@@ -1217,7 +1217,7 @@ uint File::dateTaken() const{
                                        QTime(exifDateSplit.at(3).toInt(),
                                              exifDateSplit.at(4).toInt(),
                                              exifDateSplit.at(5).toInt()));
-            return date.toTime_t();
+            return date.toSecsSinceEpoch();
         } else {
             qDebug() << "not enough information: " << exifDate;
         }
@@ -1258,7 +1258,7 @@ QStringList File::getEXIFTags(){
                 results.append(tagInfoMap->keys().at(i));
             }
         }
-        qSort(results.begin(), results.end(), tagLessThan);
+        std::sort(results.begin(), results.end(), tagLessThan);
         exif_data_dump(exifData);
     }
     return results;
@@ -1319,7 +1319,7 @@ QList<File> File::ls(bool *theresMore) {
             //qDebug() << "appending element " << i << QString::fromWCharArray(WPDList[i].id) << QString::fromWCharArray(WPDList[i].name);
             //qDebug() << QString::fromWCharArray(WPDList[i].date);
             res.append(File(QDateTime::fromString(QString::fromWCharArray(WPDList[i].date),
-                                                      "yyyy/MM/dd:HH:mm:ss.zzz").toTime_t(),
+                                                      "yyyy/MM/dd:HH:mm:ss.zzz").toSecsSinceEpoch(),
                                 absoluteFilePath() + "/" + QString::fromWCharArray(WPDList[i].name),
                                 WPDList[i].size,
                                 WPDList[i].isDir,

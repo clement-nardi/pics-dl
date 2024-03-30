@@ -79,7 +79,7 @@ void DeviceModel::reload() {
         connect(dv,SIGNAL(changed(int)),this,SLOT(driveChanged(int)));
     }
 
-    qStableSort(deviceList.begin(),deviceList.end(),driveLessThan);
+    std::stable_sort(deviceList.begin(),deviceList.end(),driveLessThan);
     setIndexes();
 
     endResetModel();
@@ -160,7 +160,7 @@ QVariant DeviceModel::data(const QModelIndex & index, int role) const{
         case COL_LAUNCH: break;
         case COL_REMOVE: break;
         case COL_LASTTRANSFER: return obj[CONFIG_LASTTRANSFER].isNull()?tr("Never"):
-                                                                        (QDateTime::fromTime_t(obj[CONFIG_LASTTRANSFER].toString().toUInt()).toString("yyyy/MM/dd hh:mm:ss"));
+                                                                        (QDateTime::fromSecsSinceEpoch(obj[CONFIG_LASTTRANSFER].toString().toUInt()).toString("yyyy/MM/dd hh:mm:ss"));
         }
         break;
     case Qt::ToolTipRole:
@@ -180,7 +180,7 @@ QVariant DeviceModel::data(const QModelIndex & index, int role) const{
         case COL_REMOVE: return tr("Remove this device from this list");
         case COL_LASTTRANSFER: return obj[CONFIG_LASTTRANSFER].isNull()?tr("No file was ever downloaded from this device"):
                                                                         (QString(tr("The last time some files were transfered from this device was on %1"))
-                                                                         .arg(QDateTime::fromTime_t(obj[CONFIG_LASTTRANSFER].toString().toUInt()).toString()));
+                                                                         .arg(QDateTime::fromSecsSinceEpoch(obj[CONFIG_LASTTRANSFER].toString().toUInt()).toString()));
         }
         break;
     case Qt::DecorationRole:

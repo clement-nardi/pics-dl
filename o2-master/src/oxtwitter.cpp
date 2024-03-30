@@ -53,7 +53,7 @@ void OXTwitter::link() {
     oauthParams.append(O1RequestParameter(O2_OAUTH_SIGNATURE_METHOD, O2_SIGNATURE_TYPE_HMAC_SHA1));
     oauthParams.append(O1RequestParameter(O2_OAUTH_CONSUMER_KEY, clientId().toLatin1()));
     oauthParams.append(O1RequestParameter(O2_OAUTH_VERSION, "1.0"));
-    oauthParams.append(O1RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toTime_t()).toLatin1()));
+    oauthParams.append(O1RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toSecsSinceEpoch()).toLatin1()));
     oauthParams.append(O1RequestParameter(O2_OAUTH_NONCE, nonce()));
     oauthParams.append(O1RequestParameter(O2_OAUTH_TOKEN, QByteArray("")));
     oauthParams.append(O1RequestParameter(O2_OAUTH_VERFIER, QByteArray("")));

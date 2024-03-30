@@ -47,7 +47,7 @@ DriveView::DriveView(QString id_, Config *dc_, DriveNotify *dn_, QObject *parent
     managedLayout->addWidget(managedBox);
     managedLayout->addSpacerItem(new QSpacerItem(0,0,QSizePolicy::Expanding));
     managedLayout->setSpacing(0);
-    managedLayout->setMargin(0);
+    //managedLayout->setMargin(0);
     managedBox_centered->setLayout(managedLayout);
 
     managedBox->setChecked(obj[CONFIG_ISMANAGED].toBool());

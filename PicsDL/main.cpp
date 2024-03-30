@@ -34,6 +34,7 @@
 #include <QAbstractNativeEventFilter>
 #include <QTranslator>
 #include <QLibraryInfo>
+#include "file.h"
 
 static QFile * debugFile;
 
@@ -74,6 +75,8 @@ int main(int argc, char *argv[])
         qInstallMessageHandler(myMessageOutput);
         qDebug() << "Verbose Mode ON";
     }
+
+    qRegisterMetaType<File*>("File*");
 
     if (0) {
         Geotagger *gt = new Geotagger();
