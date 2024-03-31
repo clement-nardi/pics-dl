@@ -123,8 +123,6 @@ private:
     QList<LineEditView*> lines;
     QList<SpinBoxView*> spinBoxes;
 
-    QProgressDialog *pd;
-
     DownloadModel *dpm;
     TransferManager *tm;
     TransferDialog *td;

@@ -610,93 +610,93 @@ Or if you wish to select every file: &quot;*&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="167"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="165"/>
         <source>&amp;Select &amp;&amp; Download</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="168"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="166"/>
         <source>&amp;Organize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="169"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="167"/>
         <source>&amp;Geotag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="170"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="168"/>
         <source>&amp;Free Up Space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="171"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="169"/>
         <source>&amp;Custom Commands</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="251"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="249"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="434"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="431"/>
         <source>This feature is not available for devices connected via tha MTP or PTP protocols</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="442"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="439"/>
         <source>This feature is not available for folders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="446"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="443"/>
         <source>This feature is not implemented yet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="497"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="494"/>
         <source>Choose the directory where to download the picture files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="507"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="504"/>
         <source>Choose the directory containing the tracking files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="523"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="520"/>
         <source>%1 files are selected for download (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="535"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="532"/>
         <source>pictures. 1 picture = %1, so %2 pictures = %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="541"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="538"/>
         <source>files to delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="541"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="538"/>
         <source>files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="586"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="583"/>
         <source>PicsDL is about to delete %1 files (%2) from your device.
 Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="608"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="605"/>
         <source>None!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="612"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="609"/>
         <source>Files to delete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -822,142 +822,142 @@ where taken with a %1</source>
 <context>
     <name>DownloadModel</name>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="389"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="388"/>
         <source>Session Comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="468"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="467"/>
         <source>This file will not be downloaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="472"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="471"/>
         <source>[same file]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="535"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="534"/>
         <source>This file is an attachment of %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="538"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="537"/>
         <source>This file has %1 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="540"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="539"/>
         <source>attachment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="540"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="539"/>
         <source>attachments</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="543"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="542"/>
         <source>This file was tranfered before</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="545"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="544"/>
         <source>This is a new file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="552"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="551"/>
         <source>%1 Bytes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="573"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="572"/>
         <source>This file is being transfered</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="576"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="575"/>
         <source>Same file, it will just be geotagged</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="578"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="577"/>
         <source>Same file, nothing will happen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="582"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="581"/>
         <source>This file was just transfered</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="585"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="584"/>
         <source>This file already exists but it WILL be overwritten</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="587"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="586"/>
         <source>This file already exists and it will NOT be overwritten</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="592"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="591"/>
         <source>The file will be moved here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="594"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="593"/>
         <source>The file will be transfered here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="604"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="603"/>
         <source>These EXIF tags will be inserted in the file:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="612"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="611"/>
         <source>The coordinates are being computed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="699"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="698"/>
         <source>File Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="700"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="699"/>
         <source>File Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="701"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="700"/>
         <source>Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="702"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="701"/>
         <source>Date modified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="703"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="702"/>
         <source>Date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="704"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="703"/>
         <source>Destination</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="705"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="704"/>
         <source>GPS Coordinates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="885"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="762"/>
         <source>Looking for files on the device</source>
         <translation type="unfinished"></translation>
     </message>
@@ -970,7 +970,7 @@ Doing so can dramatically speed-up this process for next time.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../PicsDL/downloadmodel.cpp" line="1008"/>
+        <location filename="../PicsDL/downloadmodel.cpp" line="990"/>
         <source>Loading EXIF Data</source>
         <translation type="unfinished"></translation>
     </message>

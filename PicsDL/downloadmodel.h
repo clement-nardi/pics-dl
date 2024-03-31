@@ -52,7 +52,7 @@ class DownloadModel : public QAbstractTableModel
     friend class TransferWorker;
     Q_OBJECT
 public:
-    explicit DownloadModel(Config *dc, QProgressDialog *pd, bool editMode = false, QObject *parent = 0);
+    explicit DownloadModel(Config *dc, bool editMode = false, QObject *parent = 0);
     ~DownloadModel();
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -77,7 +77,6 @@ public:
     QString newPath(File *fi, bool keepDComStr) const;
     void markForDownload(QModelIndexList rows, bool mark);
 private:
-    QElapsedTimer pdTimer;
     Config *dc;
     bool editMode;
     QString id;
@@ -87,11 +86,10 @@ private:
     QList<File*> selectedFileList;
     QSet<File*> excludedFiles;
     bool isBlacklisted(File info);
-    void treatDir(File dirInfo);
+    void treatDir(File dirInfo, QProgressDialog *pd, QElapsedTimer *pdTimer);
     int itemBeingDownloaded;
     QString getDCom(File *fi) const;
     QString sessionComment;
-    QProgressDialog *pd;
     int discoveredFolders;
     int browsedFolders;
     int browsedFiles;

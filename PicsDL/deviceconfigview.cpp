@@ -150,8 +150,6 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
 }
 
 void DeviceConfigView::init() {
-    pd = new QProgressDialog(this);
-    pd->setMinimumDuration(0);
     td = new TransferDialog(this);
     ui->setupUi(this);
     QJsonObject obj = dc->devices[id].toObject();
@@ -187,7 +185,7 @@ void DeviceConfigView::init() {
     runCommandAsync(CONFIG_COMMAND_PLUGIN);
 
     if (!editMode) {
-        dpm = new DownloadModel(dc, pd, editMode);
+        dpm = new DownloadModel(dc, editMode);
         connect(dpm, SIGNAL(itemOfInterest(QModelIndex)), this, SLOT(makeVisible(QModelIndex)));
         //        connect(dpm, SIGNAL(reloaded()), ui->tableView, SLOT(resizeRowsToContents()));
         connect(dpm, SIGNAL(reloaded()), this, SLOT(resizeRows()));
@@ -277,7 +275,6 @@ DeviceConfigView::~DeviceConfigView() {
     saveConfig();
     delete ui;
     delete dpm;
-    delete pd;
 }
 
 void DeviceConfigView::runCommandAsync(QString commandId) {

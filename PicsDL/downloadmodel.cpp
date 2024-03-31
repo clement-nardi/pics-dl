@@ -69,13 +69,12 @@ static bool fileLessThan(File *a, File *b) {
 
 static QStringList dateKeywords = QString("yyyy;yy;MMMM;MMM;MM;dddd;ddd;dd;HH;mm;ss").split(";");
 
-DownloadModel::DownloadModel(Config *dc_, QProgressDialog *pd_, bool editMode_, QObject *parent) :
+DownloadModel::DownloadModel(Config *dc_, bool editMode_, QObject *parent) :
     QAbstractTableModel(parent)
 {
     dc = dc_;
     editMode = editMode_;
     itemBeingDownloaded = -1;
-    pd = pd_;
 
     sortColumnOrder.append(COL_DATE); /* show first oldest files */
     for (int i = 0; i<NB_COLUMNS; i++) {
@@ -757,9 +756,18 @@ void DownloadModel::loadPreview(QString id_) {
     discoveredFolders = 1;
     browsedFolders = 0;
     browsedFiles = 0;
+
+    QProgressDialog pd;
+    pd.setMinimumDuration(2000);
+    pd.setLabelText(tr("Looking for files on the device"));
+    pd.setMinimum(0);
+    pd.setMaximum(1);
+    pd.setWindowModality(Qt::WindowModal);
+    pd.setValue(0);
+
+    QElapsedTimer pdTimer = QElapsedTimer();
     pdTimer.start();
-    treatDir(File(0,path,0,true,IDPath));
-    pd->hide();
+    treatDir(File(0,path,0,true,IDPath), &pd, &pdTimer);
 
     reloadSelection(true);
 }
@@ -856,12 +864,13 @@ static bool bindFiles(File *file, File *attachment) {
     }
 }
 
-void DownloadModel::treatDir(File dirInfo) {
+void DownloadModel::treatDir(File dirInfo, QProgressDialog *pd = nullptr, QElapsedTimer *pdTimer = nullptr) {
     QList<File *> files;
     QList<File> directoriesToBrowse;
     bool theresMore = true;
     browsedFolders++;
     int estimatedTotalFiles = discoveredFolders*browsedFiles/browsedFolders;
+
     while (theresMore) {
         QApplication::processEvents();
         QList<File> contentPart = dirInfo.ls(&theresMore);
@@ -880,28 +889,20 @@ void DownloadModel::treatDir(File dirInfo) {
                 files.append(new File(element));
             }
         }
-        if (pdTimer.elapsed() > 2000 && !pd->isVisible()) {
-            pd->reset();
-            pd->setLabelText(tr("Looking for files on the device"));
-            pd->setMinimum(0);
-            pd->setMaximum(1);
-            pd->setWindowModality(Qt::WindowModal);
-            pd->setValue(0);
-            pd->show();
+        if (browsedFiles>=estimatedTotalFiles) {
+            estimatedTotalFiles = discoveredFolders*browsedFiles/browsedFolders;
         }
-        if (pd->isVisible()) {
-            if (browsedFiles>=estimatedTotalFiles) {
-                estimatedTotalFiles = discoveredFolders*browsedFiles/browsedFolders;
-            }
+        if (pd != nullptr) {
             pd->setMaximum(estimatedTotalFiles);
             pd->setValue(browsedFiles);
-            if (pdTimer.elapsed() > 10000 &&
+            if (pdTimer != nullptr && pdTimer->elapsed() > 10000 &&
                     (dc->devices[id].toObject()[CONFIG_FILTER].toString().size() == 0 ||
                      dc->devices[id].toObject()[CONFIG_FILTERTYPE].toInt() == 0)) {
                 pd->setLabelText(QString(tr("Your device is being browsed, and this is taking a long time...\n"\
-                                            "Once this dialog window is finished, you will be able to setup\n"\
-                                            "some filters on the directories that may or may not be browsed.\n"\
-                                            "Doing so can dramatically speed-up this process for next time.")));
+                                           "Once this dialog window is finished, you will be able to setup\n"\
+                                           "some filters on the directories that may or may not be browsed.\n"\
+                                           "Doing so can dramatically speed-up this process for next time.")));
+                pdTimer->restart();
             }
         }
     }
@@ -933,7 +934,7 @@ void DownloadModel::treatDir(File dirInfo) {
     completeFileList.append(files);
 
     for (int i = 0; i < directoriesToBrowse.size(); ++i) {
-        treatDir(directoriesToBrowse.at(i));
+        treatDir(directoriesToBrowse.at(i), pd, pdTimer);
     }
 }
 
@@ -949,7 +950,6 @@ void DownloadModel::reloadSelection(bool firstTime) {
     selectedFileList.clear();
 
     /* 1st step: check if some blacklisted directories need to be browsed */
-    pdTimer.start();
     QMutableListIterator<File> bli(blacklistedDirectories);
     bool sortNeeded = false;
     while (bli.hasNext()) {
@@ -984,40 +984,30 @@ void DownloadModel::reloadSelection(bool firstTime) {
             }
         }
     }
-    pd->hide();
+
+    QProgressDialog pd;
+    pd.setMinimumDuration(1000);
+    pd.setLabelText(tr("Loading EXIF Data"));
+    pd.setMinimum(0);
+    pd.setMaximum(selectedFileList.size());
+    pd.setWindowModality(Qt::WindowModal);
+
 
     if (dc->devices[id].toObject()[CONFIG_ALLOWEXIF].toBool()) {
         qDebug() << "load exif tags";
-        pdTimer.start();
         for (int i = 0; i < selectedFileList.size(); i++) {
             File *fi = selectedFileList.at(i);
-            if (pd->isVisible()) {
-                pd->setValue(i);
-                if (pd->wasCanceled()) {
-                    obj.insert(CONFIG_ALLOWEXIF,QJsonValue(false));
-                    dc->devices[id] = obj;
-                    dc->saveDevices();
-                    EXIFLoadCanceled(false);
-                    break;
-                }
+            pd.setValue(i);
+            if (pd.wasCanceled()) {
+                obj.insert(CONFIG_ALLOWEXIF,QJsonValue(false));
+                dc->devices[id] = obj;
+                dc->saveDevices();
+                EXIFLoadCanceled(false);
+                break;
             }
             fi->loadExifData();
-            if (pdTimer.elapsed() > 1000 && !pd->isVisible()) {
-                /* only show the progress bar if the process lasts more than a second. */
-                pd->reset();
-                pd->setLabelText(tr("Loading EXIF Data"));
-                pd->setMinimum(0);
-                pd->setMaximum(selectedFileList.size());
-                pd->setWindowModality(Qt::WindowModal);
-                pd->setValue(0);
-                qDebug() << "pd.show()";
-                pd->show();
-                qDebug() << "processEvents()";
-                QApplication::processEvents();
-                qDebug() << "processEvents() done";
-            }
         }
-        pd->hide();
+        pd.hide();
         qDebug() << "pd.hide()";
     }
     qDebug() << "looping on selected files list";
