@@ -190,4 +190,4 @@ PRE_TARGETDEPS += qm_files
 TRANSLATIONS = ../Translations/picsdl_fr.ts \
                ../Translations/picsdl_blank_translation.ts
 
-QMAKE_POST_LINK += lupdate ../PicsDL/PicsDL.pro
+QMAKE_POST_LINK += lupdate ../PicsDL/PicsDL.pro 2> /dev/null
