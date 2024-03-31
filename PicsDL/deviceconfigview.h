@@ -43,6 +43,7 @@ class DeviceConfigView;
 #define TAB_ORGANIZE    1
 #define TAB_GEOTAG      2
 #define TAB_FREEUPSPACE 3
+#define TAB_CUSTOM      4
 
 namespace Ui {
 class DeviceConfigView;
@@ -115,6 +116,7 @@ public:
 private:
     bool editMode;
     void FillWithConfig();
+    void runCommandAsync(QString commandId);
     Ui::DeviceConfigView *ui;
     QList<BoxView* > checkBoxes;
     QList<GroupBoxView* > groupBoxes;

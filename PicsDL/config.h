@@ -85,6 +85,11 @@
 #define CONFIG_PROTECTDAYSVALUE     "ProtectDaysValue"
 #define CONFIG_PROTECTTRANSFER      "ProtectTransfer"
 
+/* macros for the Custom Commands tab */
+#define CONFIG_COMMAND_PLUGIN       "CommandPlugIn"
+#define CONFIG_COMMAND_START        "CommandStart"
+#define CONFIG_COMMAND_END          "CommandEnd"
+
 /* Automation box */
 #define CONFIG_AUTOMATION           "automation"
 

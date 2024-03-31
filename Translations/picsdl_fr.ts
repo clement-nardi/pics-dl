@@ -140,70 +140,85 @@ Espace disponible souhaité:</translation>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="338"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="298"/>
+        <source>Command to run as soon as device is plugged in:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PicsDL/deviceconfigview.ui" line="308"/>
+        <source>Command to run when the download starts:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PicsDL/deviceconfigview.ui" line="318"/>
+        <source>Command to run when the download is complete:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PicsDL/deviceconfigview.ui" line="389"/>
         <source>Remember previously downloaded files</source>
         <translation>Se souvenir des fichiers précédemment transférés</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="350"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="401"/>
         <source>Select only NEW files (recommended)</source>
         <translation>Sélectionner uniquement les
 NOUVEAUX fichiers (recommandé)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="357"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="408"/>
         <source>Select ALL files, including those
 that were previously downloaded</source>
         <translation>Sélectionner TOUS les fichiers,
 même ceus précédemment transférés</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="368"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="419"/>
         <source>Directory filter</source>
         <translation>Filtre de dossiers</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="384"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="435"/>
         <source>All directories</source>
         <translation>Tous les dossiers</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="389"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="440"/>
         <source>All directories except:</source>
         <translation>Tous les dossiers, sauf:</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="394"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="445"/>
         <source>Only these directories:</source>
         <translation>Uniquement ces dossiers:</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="409"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="460"/>
         <source>Limit the depth of the search to</source>
         <translation>Limiter la profondeur de la recherche à</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="444"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="495"/>
         <source>sub-directories</source>
         <translation>sous-dossiers</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="469"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="520"/>
         <source>File types</source>
         <translation>Types de fichiers</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="475"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="526"/>
         <source>Pictures</source>
         <translation>Images</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="482"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="533"/>
         <source>Videos</source>
         <translation>Vidéos</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="489"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="540"/>
         <source>Please enter here a list of patterns, separated by &quot;;&quot;.
 For instance: &quot;*.gpx;*.kml;*.xml&quot;
 Or if you wish to select every file: &quot;*&quot;</source>
@@ -212,485 +227,490 @@ Par exemple: &quot;*.gpx;*.kml;*.xml&quot;
 Ou si vous souhaitez sélectionner tous les fichiers: &quot;*&quot;</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="494"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="545"/>
         <source>Others</source>
         <translation>Autres</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="506"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="557"/>
         <source>*.gpx;*.kml;*.xml</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="519"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="570"/>
         <source>Move Files instead of copying them
 (not recommended)</source>
         <translation>Déplacer les fichiers au lieu de les copier
 (non recommandé)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="527"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="578"/>
         <source>Overwrite existing files at destination
 (not recommended)</source>
         <translation>Ecraser les fichiers à destination s&apos;ils
 existent déjà (non recommandé)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="568"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="619"/>
         <source>Download files to:</source>
         <translation>Transférer les fichiers dans:</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="602"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1260"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="653"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1311"/>
         <source>Open</source>
         <translation>Ouvrir</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="617"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="668"/>
         <source>New arborescence/name:</source>
         <translation>Nouvelle arborescence/nom:</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="637"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="688"/>
         <source>Choose</source>
         <translation>Choisir</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="713"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="718"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="723"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="728"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="733"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="743"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="748"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="753"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="758"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="763"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="768"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="791"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="796"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="801"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="764"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="769"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="774"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="779"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="784"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="794"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="799"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="804"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="809"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="814"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="819"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="842"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="847"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="852"/>
         <source>New Row</source>
         <translation>Nouvelle ligne</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="738"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="789"/>
         <source>day</source>
         <translation>jour</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="773"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="824"/>
         <source>folderN</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="781"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="832"/>
         <source>folderN-M</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="786"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="837"/>
         <source>folderN-</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="806"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1042"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="857"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1093"/>
         <source>dCom</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="811"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1055"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="862"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1106"/>
         <source>sCom</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="816"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="867"/>
         <source>Keyword</source>
         <translation>Mot-clé</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="821"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="872"/>
         <source>Value</source>
         <translation>Valeur</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="826"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="877"/>
         <source>yyyy</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="831"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="882"/>
         <source>Year (4 digits)</source>
         <translation>Année (4 chiffres)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="836"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="887"/>
         <source>yy</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="841"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="892"/>
         <source>Year (2 digits)</source>
         <translation>Année (2 chiffres)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="846"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="897"/>
         <source>MMMM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="851"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="902"/>
         <source>Month (full)</source>
         <translation>Mois (entier)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="856"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="907"/>
         <source>MMM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="861"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="912"/>
         <source>Month (abbreviated)</source>
         <translation>Mois (abbrégé)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="866"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="917"/>
         <source>MM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="871"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="922"/>
         <source>Month (2 digits)</source>
         <translation>Mois (2 chiffres)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="876"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="927"/>
         <source>dddd</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="881"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="932"/>
         <source>Day of Week (full)</source>
         <translation>Jour de la semaine (entier)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="886"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="937"/>
         <source>ddd</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="891"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="942"/>
         <source>Day of Week (abbreviated)</source>
         <translation>Jour de la semaine (abbrégé)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="896"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="947"/>
         <source>dd</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="901"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="952"/>
         <source>Day (2 digits)</source>
         <translation>Jour (2 chiffres)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="906"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="957"/>
         <source>HH</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="911"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="962"/>
         <source>Hour (2 digits)</source>
         <translation>Heure (2 chiffres)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="916"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="967"/>
         <source>mm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="921"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="972"/>
         <source>Minute (2 digits)</source>
         <translation>Minute (2 chiffres)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="926"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="977"/>
         <source>ss</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="931"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="982"/>
         <source>Second (2 digits)</source>
         <translation>Seconde (2 chiffres)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="936"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="987"/>
         <source>oName</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="941"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="992"/>
         <source>Original file name</source>
         <translation>Nom de fichier original</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="946"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="997"/>
         <source>oFolderN</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="949"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="957"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="965"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="973"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="981"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="989"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="997"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1005"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1013"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1021"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1029"/>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1037"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1000"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1008"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1016"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1024"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1032"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1040"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1048"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1056"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1064"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1072"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1080"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1088"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;N and M should be replaced by actual numbers.&lt;/p&gt;&lt;p&gt;Take this file for instance: G:/&lt;span style=&quot; color:#00aaff;&quot;&gt;path&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;to&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;file&lt;/span&gt;/DSC00001.JPG&lt;/p&gt;&lt;p&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;1&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;path&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;2&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;to&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;3&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;file&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;p&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-1&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;file&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-2&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;to&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-3&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;path&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;p&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;1-2&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;path&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;to&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;1-&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;path&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;to&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;file&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;p&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-1-2&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;to&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;file&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-1-&lt;/span&gt; will be &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;path&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;to&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;file&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;N et M doivent être remplacés par de vrais nombres.&lt;/p&gt;&lt;p&gt;Prenez ce fichier par exemple: G:/&lt;span style=&quot; color:#00aaff;&quot;&gt;chemin&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;vers&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;fichier&lt;/span&gt;/DSC00001.JPG&lt;/p&gt;&lt;p&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;1&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;chemin&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;2&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;vers&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;3&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;fichier&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;p&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-1&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;fichier&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-2&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;vers&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-3&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;chemin&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;p&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;1-2&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;chemin&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;vers&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;1-&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;chemin&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;vers&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;fichier&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;p&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-1-2&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;vers&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;fichier&lt;/span&gt;&amp;quot;&lt;br/&gt;oFolder&lt;span style=&quot; color:#00aaff;&quot;&gt;-1-&lt;/span&gt; deviendra &amp;quot;&lt;span style=&quot; color:#00aaff;&quot;&gt;chemin&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;vers&lt;/span&gt;/&lt;span style=&quot; color:#00aaff;&quot;&gt;fichier&lt;/span&gt;&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="954"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1005"/>
         <source>Nth subfolder of the root</source>
         <translation>Nième sous-dossier de la racine</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="962"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1013"/>
         <source>oFolderN-M</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="970"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1021"/>
         <source>Nth to Mth subfolders</source>
         <translation>du Nième au Mième sous-dossier</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="978"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1029"/>
         <source>oFolderN-</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="986"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1037"/>
         <source>Nth to last subfolders</source>
         <translation>du Nième au dernier sous-dossier</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="994"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1045"/>
         <source>oFolder-N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1002"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1053"/>
         <source>Nth parent folder of the file</source>
         <translation>Nième dossier parent du fichier</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1010"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1061"/>
         <source>oFolder-N-M</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1018"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1069"/>
         <source>Nth to Mth parent folder</source>
         <translation>du Nième au Mième dossier parent</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1026"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1077"/>
         <source>oFolder-N-</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1034"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1085"/>
         <source>Nth parent up to the root</source>
         <translation>du Nième parent à la racine</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1047"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1098"/>
         <source>Dayly comment</source>
         <translation>Commentaire quotidien</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1050"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1101"/>
         <source>requires 1 user input per day</source>
         <translation>Vous devrez renseigner 1 commentaire par jour</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1060"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1111"/>
         <source>Session comment</source>
         <translation>Commentaire de session</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1063"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1114"/>
         <source>requires 1 user input per session</source>
         <translation>vous devrez renseigner 1 commentaire</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1092"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1143"/>
         <source>Fill Comments</source>
         <translation>Renseigner les commentaires</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1114"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1165"/>
         <source>Allow EXIF Tags. keyword = &lt;tagName&gt;</source>
         <translation>Autoriser les tags EXIF. mot-clé = &lt;NomDuTag&gt;</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1146"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1197"/>
         <source>See available tags for selected file</source>
         <translation>Voir les tags disponible pour le fichier sélectionné</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1168"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1219"/>
         <source>Use EXIF Date (recommended)</source>
         <translation>Utiliser la date EXIF (recommandé)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1212"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1263"/>
         <source>Geo-tag the downloaded pictures</source>
         <translation>Géomarquer les photos transférées</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1222"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1273"/>
         <source>Tracking method</source>
         <translation>Méthode de géolocalisation</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1228"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1279"/>
         <source>Folder containing tracking logs</source>
         <translation>Dossier contenant des fichiers de géolocalisation</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1273"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1324"/>
         <source>Currently supported track file formats are GPX, NMEA RMC/GGA/GLL, KML, IGC, Garmin XML and TCX, Magellan PMGNTRK, Honeywell PTNTHPR, and Winplus Beacon text files. </source>
         <translation>Les formats de fichiers supportés sont: GPX, NMEA RMC/GGA/GLL, KML, IGC, Garmin XML and TCX, Magellan PMGNTRK, Honeywell PTNTHPR, et les fichiers texte Winplus Beacon. </translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1287"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1338"/>
         <source>OpenPaths.cc</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1316"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1367"/>
         <source>Access Key:</source>
         <translation>Clé d&apos;accès:</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1334"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1385"/>
         <source>Secret Key:</source>
         <translation>Clé secrète:</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1406"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1457"/>
         <source>156 files to download for a total of 1.03GB</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.ui" line="1429"/>
+        <location filename="../PicsDL/deviceconfigview.ui" line="1480"/>
         <source>Go</source>
         <translation>Démarrer le transfer</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="137"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="138"/>
         <source>Do not download</source>
         <translation>Ne pas transférer</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="138"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="139"/>
         <source>Download</source>
         <translation>Transférer</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="165"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="167"/>
         <source>&amp;Select &amp;&amp; Download</source>
         <translation>&amp;Sélectionner &amp;&amp; Transférer</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="166"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="168"/>
         <source>&amp;Organize</source>
         <translation>&amp;Organiser</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="167"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="169"/>
         <source>&amp;Geotag</source>
         <translation>&amp;Géomarquer</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="168"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="170"/>
         <source>&amp;Free Up Space</source>
         <translation>&amp;Libérer de l&apos;espace</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="246"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="171"/>
+        <source>&amp;Custom Commands</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="251"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="403"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="434"/>
         <source>This feature is not available for devices connected via tha MTP or PTP protocols</source>
         <translation>Cette fonctionnalité n&apos;est pas disponible pour les appareils connectés en MTP ou PTP</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="411"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="442"/>
         <source>This feature is not available for folders</source>
         <translation>Cette fonctionnalité n&apos;est pas disponible pour les dossiers</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="415"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="446"/>
         <source>This feature is not implemented yet</source>
         <translation>Cette fonctionnalité n&apos;est pas encore implémentée</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="466"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="497"/>
         <source>Choose the directory where to download the picture files</source>
         <translation>Choisir le dossier ou seront transférées les photos</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="476"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="507"/>
         <source>Choose the directory containing the tracking files</source>
         <translation>Choisir le dossier contenant les fichiers de géolocalisation</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="492"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="523"/>
         <source>%1 files are selected for download (%2)</source>
         <translation>%1 fichiers vont être transférés (%2)</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="504"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="535"/>
         <source>pictures. 1 picture = %1, so %2 pictures = %3</source>
         <translation>photos. 1 photo = %1, donc %2 photos = %3</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="510"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="541"/>
         <source>files to delete</source>
         <translation>fichiers à supprimer</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="510"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="541"/>
         <source>files</source>
         <translation>fichiers</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="555"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="586"/>
         <source>PicsDL is about to delete %1 files (%2) from your device.
 Are you sure?</source>
         <translation>PicsDL est sur le point de supprimer %1 fichiers (%2) de votre appareil.
 Etes-vous sûr?</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="577"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="608"/>
         <source>None!</source>
         <translation>Aucun!</translation>
     </message>
     <message>
-        <location filename="../PicsDL/deviceconfigview.cpp" line="581"/>
+        <location filename="../PicsDL/deviceconfigview.cpp" line="612"/>
         <source>Files to delete</source>
         <translation>Fichiers à supprimer</translation>
     </message>

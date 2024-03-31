@@ -19,6 +19,7 @@
  **/
 
 #include "deviceconfigview.h"
+#include "qprocess.h"
 #include "ui_deviceconfigview.h"
 #include <QStandardPaths>
 #include <QFileDialog>
@@ -150,6 +151,7 @@ DeviceConfigView::DeviceConfigView(Config *dc_, QString id_, bool editMode_, QWi
 
 void DeviceConfigView::init() {
     pd = new QProgressDialog(this);
+    pd->setMinimumDuration(0);
     td = new TransferDialog(this);
     ui->setupUi(this);
     QJsonObject obj = dc->devices[id].toObject();
@@ -166,6 +168,7 @@ void DeviceConfigView::init() {
     ui->tabs->insertTab(TAB_ORGANIZE    ,QIcon(":/icons/tree"),tr("&Organize"));
     ui->tabs->insertTab(TAB_GEOTAG      ,QIcon(":/icons/gps"),tr("&Geotag"));
     ui->tabs->insertTab(TAB_FREEUPSPACE ,QIcon(":/icons/delete"),tr("&Free Up Space"));
+    ui->tabs->insertTab(TAB_CUSTOM      ,QIcon(":/icons/play"),tr("&Custom Commands"));
     connect(ui->tabs,SIGNAL(currentChanged(int)),this,SLOT(handleTabChange(int)));
 
     tableMenu.addAction(&do_not_download_action);
@@ -180,6 +183,8 @@ void DeviceConfigView::init() {
     setAttribute(Qt::WA_DeleteOnClose, true);
     setAttribute(Qt::WA_QuitOnClose, false);
     FillWithConfig();
+
+    runCommandAsync(CONFIG_COMMAND_PLUGIN);
 
     if (!editMode) {
         dpm = new DownloadModel(dc, pd, editMode);
@@ -273,6 +278,29 @@ DeviceConfigView::~DeviceConfigView() {
     delete ui;
     delete dpm;
     delete pd;
+}
+
+void DeviceConfigView::runCommandAsync(QString commandId) {
+    QJsonObject obj = dc->devices[id].toObject();
+    QString command = obj[commandId].toString();
+    if (command.size() > 0) {
+        QProcess process;
+        process.setProgram("bash");
+        QStringList args;
+        args << "-c" << command;
+        process.setArguments(args);
+        QStringList env = QProcess::systemEnvironment();
+        for (auto key: obj.keys()) {
+            if (obj[key].isString()) {
+                env << key + "=" + obj[key].toString();
+            } else if (obj[key].isBool()) {
+                env << key + "=" + (obj[key].toBool()?"true":"false");
+            }
+        }
+        process.setEnvironment(env);
+
+        process.startDetached();
+    }
 }
 
 void DeviceConfigView::resizeRows() {
@@ -382,6 +410,9 @@ void DeviceConfigView::FillWithConfig() {
     lines << new LineEditView(ui->OPSecretKeyLine,CONFIG_OPSECRETKEY,"",this);
     lines << new LineEditView(ui->nbPics,CONFIG_NBPICS,"200",this);
     lines << new LineEditView(ui->others_patterns,CONFIG_OTHERFILESPATTERNS,"*.gpx;*.kml;*.xml",this);
+    lines << new LineEditView(ui->commandPlugIn,CONFIG_COMMAND_PLUGIN, "", this);
+    lines << new LineEditView(ui->commandStart,CONFIG_COMMAND_START, "", this);
+    lines << new LineEditView(ui->commandEnd,CONFIG_COMMAND_END, "", this);
 
     spinBoxes << new SpinBoxView(ui->target_pct,CONFIG_TARGETPERCENTAGEVALUE,25,this);
     spinBoxes << new SpinBoxView(ui->protect_days,CONFIG_PROTECTDAYSVALUE,30,this);
@@ -604,8 +635,9 @@ void DeviceConfigView::do_not_download_handle(){
     dpm->markForDownload(rows,false);
 }
 
-#define L1_WITH_TABLEVIEW       1
-#define L1_WITHOUT_TABLEVIEW    0
+#define L1_WITH_TABLEVIEW       2
+#define L1_FREEUPSPACE          0
+#define L1_CUSTOM_COMMANDS      1
 #define L2_SELECT               0
 #define L2_ORGANIZE             1
 #define L2_GEOTAG               2
@@ -647,8 +679,11 @@ void DeviceConfigView::handleTabChange(int idx){
         ui->tableView->setColumnHidden(COL_NEWPATH,true);
         break;
     case TAB_FREEUPSPACE:
-        ui->level_1_stack->setCurrentIndex(L1_WITHOUT_TABLEVIEW);
+        ui->level_1_stack->setCurrentIndex(L1_FREEUPSPACE);
         updateFreeUpSimulation();
+        break;
+    case TAB_CUSTOM:
+        ui->level_1_stack->setCurrentIndex(L1_CUSTOM_COMMANDS);
         break;
     default:
         qDebug() << "Unknown tab index!!";

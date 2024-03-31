@@ -10,7 +10,7 @@
     <height>902</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_18" stretch="0,1,0">
+  <layout class="QVBoxLayout" name="verticalLayout_18" stretch="0,0,0">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -280,6 +280,57 @@ Target available space:</string>
             <size>
              <width>20</width>
              <height>464</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_6">
+      <layout class="QVBoxLayout" name="verticalLayout_20">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_19">
+         <item>
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Command to run as soon as device is plugged in:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="commandPlugIn"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>Command to run when the download starts:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="commandStart"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Command to run when the download is complete:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="commandEnd"/>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
             </size>
            </property>
           </spacer>
@@ -687,11 +738,11 @@ Or if you wish to select every file: &quot;*&quot;</string>
                <attribute name="horizontalHeaderVisible">
                 <bool>false</bool>
                </attribute>
-               <attribute name="horizontalHeaderDefaultSectionSize">
-                <number>100</number>
-               </attribute>
                <attribute name="horizontalHeaderMinimumSectionSize">
                 <number>50</number>
+               </attribute>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>100</number>
                </attribute>
                <attribute name="horizontalHeaderStretchLastSection">
                 <bool>true</bool>
@@ -699,11 +750,11 @@ Or if you wish to select every file: &quot;*&quot;</string>
                <attribute name="verticalHeaderVisible">
                 <bool>false</bool>
                </attribute>
-               <attribute name="verticalHeaderDefaultSectionSize">
-                <number>24</number>
-               </attribute>
                <attribute name="verticalHeaderMinimumSectionSize">
                 <number>20</number>
+               </attribute>
+               <attribute name="verticalHeaderDefaultSectionSize">
+                <number>24</number>
                </attribute>
                <attribute name="verticalHeaderStretchLastSection">
                 <bool>false</bool>
