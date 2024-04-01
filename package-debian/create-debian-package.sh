@@ -25,11 +25,12 @@ if echo; then
 	cd $packageName-$version
 	
 	mkdir -p ~/.config/qtchooser
-	cp -f $script_dir/qt5.5.0-static.conf ~/.config/qtchooser/
+	#cp -f $script_dir/qt5.5.0-static.conf ~/.config/qtchooser/
 	
 	#This is just to make sure the conf file is properly set
 	#QT_SELECT should also be set in the "debian/rules" file
-	export QT_SELECT=qt5.5.0-static
+	qtchooser -install QT6.4.2 /bin/qmake6
+	export QT_SELECT=QT6.4.2
 	qtchooser -print-env
 	
 	debuild -us -uc

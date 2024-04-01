@@ -1,13 +1,21 @@
-sudo apt-get install -y git qt5-default qtcreator qtscript5-dev curl g++ libexif-dev libperl-dev libudev-dev debhelper cdbs devscripts build-essential geany qttools5-dev-tools
+sudo apt install -y git qt6-default qtcreator qtscript6-dev curl g++ libexif-dev libperl-dev libudev-dev debhelper cdbs devscripts build-essential geany qttools6-dev-tools
 wget -O - http://cpanmin.us | perl - --self-upgrade --sudo
 cpanm Image::ExifTool --sudo
 cpanm IO::Scalar --sudo
 
-sudo apt-get install -y libfontconfig1-dev libfreetype6-dev libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libdbus-1-dev xz-utils
+sudo apt install -y libfontconfig1-dev libfreetype6-dev libx11-dev libxext-dev libxfixes-dev  libxcb1-dev libxcb-glx0-dev libdbus-1-dev xz-utils
+sudo apt install -y '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
+sudo apt install libx11-* libx11* libxcb-* libxcb* libxkbcommon-dev libxkbcommon-x11-dev libxkb* libsm-dev libpthread* libglib2.0-dev*
+sudo apt install -y libclang-16-dev libmd4c-dev libmd4c-html0-dev
 
-curl http://ftp.fau.de/qtproject/archive/qt/5.5/5.5.0/single/qt-everywhere-opensource-src-5.5.0.tar.xz -o qt-everywhere-opensource-src-5.5.0.tar.xz
-tar -xf qt-everywhere-opensource-src-5.5.0.tar.xz
-cd qt-everywhere-opensource-src-5.5.0
-./configure -static -qt-xcb -opensource -confirm-license
-make
-sudo make install
+QTVER=6.6.3
+QTVERMINOR=6.6
+
+curl http://ftp.fau.de/qtproject/archive/qt/$QTVERMINOR/$QTVER/single/qt-everywhere-src-$QTVER.tar.xz -o qt-everywhere-src-$QTVER.tar.xz
+tar -xf qt-everywhere-src-$QTVER.tar.xz
+cd qt-everywhere-src-$QTVER
+
+# Note: this doesn't work, xcb is reset, some dependency must be missing
+./configure -static -xcb -opensource -confirm-license
+time cmake --build . --parallel
+sudo cmake --install .

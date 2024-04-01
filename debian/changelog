@@ -1,3 +1,10 @@
+pics-dl (0.7.0-1) RELEASED; urgency=medium
+
+  * Adapt to QT 6
+  * New feature: run custom commands while downloading pictures.
+
+ -- Clement Nardi <clement@nardi.fr>  Wed, 01 Apr 2024 18:41:21 +0200
+
 pics-dl (0.6.3-1) RELEASED; urgency=medium
 
   * 3 new modes: reorganize a folder, geotag some files and download from a folder
