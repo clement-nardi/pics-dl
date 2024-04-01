@@ -1,11 +1,11 @@
-pics-dl (0.7.0-1) RELEASED; urgency=medium
+pics-dl (0.7.0-1) mantic; urgency=medium
 
   * Adapt to QT 6
   * New feature: run custom commands while downloading pictures.
 
- -- Clement Nardi <clement@nardi.fr>  Wed, 01 Apr 2024 18:41:21 +0200
+ -- Clement Nardi <clement@nardi.fr>  Mon, 01 Apr 2024 18:41:21 +0200
 
-pics-dl (0.6.3-1) RELEASED; urgency=medium
+pics-dl (0.6.3-1) mantic; urgency=medium
 
   * 3 new modes: reorganize a folder, geotag some files and download from a folder
   * New step: auto-delete old files on the device
@@ -14,7 +14,7 @@ pics-dl (0.6.3-1) RELEASED; urgency=medium
 
  -- Clement Nardi <clement@nardi.fr>  Wed, 23 Sep 2015 09:46:21 +0200
 
-pics-dl (0.3.0-1) RELEASED; urgency=medium
+pics-dl (0.3.0-1) mantic; urgency=medium
 
   * UI Enhancements
   * new multi-threaded architecture
