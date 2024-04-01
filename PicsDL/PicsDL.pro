@@ -183,11 +183,11 @@ INSTALLS += binaries
 
 lrelease.target = qm_files
 lrelease.commands = lrelease ../PicsDL/PicsDL.pro; \
-                    cp ../Translations/*.qm $$DESTDIR/
+                    cp $$PWD/resources/Translations/*.qm $$DESTDIR/
 QMAKE_EXTRA_TARGETS += lrelease
 PRE_TARGETDEPS += qm_files
 
-TRANSLATIONS = ../Translations/picsdl_fr.ts \
-               ../Translations/picsdl_blank_translation.ts
+TRANSLATIONS = resources/Translations/picsdl_fr.ts \
+               resources/Translations/picsdl_blank_translation.ts
 
 QMAKE_POST_LINK += lupdate ../PicsDL/PicsDL.pro 2> /dev/null

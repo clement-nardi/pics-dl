@@ -33,4 +33,7 @@
         <file>resources/flag_us.png</file>
         <file>resources/flag_zh.png</file>
     </qresource>
+    <qresource prefix="/translations">
+        <file alias="fr">resources/Translations/picsdl_fr.qm</file>
+    </qresource>
 </RCC>

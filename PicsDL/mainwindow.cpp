@@ -35,6 +35,7 @@
 #include <QFileInfoList>
 #include <QTranslator>
 #include <QActionGroup>
+#include <QResource>
 
 
 MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  QWidget *parent) :
@@ -59,22 +60,14 @@ MainWindow::MainWindow(Config *dc_, DriveNotify *dn_, DeviceManager *manager_,  
     menu->setAsDockMenu();
 #endif
 
-    QFileInfoList languageFiles = QDir(QCoreApplication::applicationDirPath()).entryInfoList();
-    QRegularExpression languageFilePattern = QRegularExpression("picsdl_(.*)\\.qm");
+    QFileInfoList languageFiles = QDir(":/translations").entryInfoList();
     languageActionGroup = new QActionGroup(this);
     connect(languageActionGroup,SIGNAL(triggered(QAction*)),this,SLOT(language_handle(QAction*)));
     addLanguage("en");
     for (int i = 0; i< languageFiles.size(); i++) {
         QFileInfo languageFile = languageFiles.at(i);
-        //qDebug() << "listing content of executable directory: " << languageFile.absoluteFilePath();
-        auto match = languageFilePattern.match(languageFile.fileName());
-        if (match.hasMatch()) {
-            qDebug() << "language file found: " << languageFile.absoluteFilePath();
-            QString languageCode = match.captured(1);
-            if (languageCode != "blank_translation") {
-                addLanguage(languageCode);
-            }
-        }
+        // qDebug() << "listing content of executable directory: " << languageFile.absoluteFilePath() << " " << languageFile.fileName();
+        addLanguage(languageFile.fileName());
     }
 
     connect(&sysTray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(sysTray_handle(QSystemTrayIcon::ActivationReason)));
@@ -111,7 +104,7 @@ void MainWindow::language_handle(QAction *action) {
 
     QApplication::removeTranslator(currentTranslator);
 
-    if (currentTranslator->load("picsdl_" + action->text(),QCoreApplication::applicationDirPath())) {
+    if (currentTranslator->load(QString(":/translations/%1").arg(action->text()))) {
         qDebug() << "language file was successfully loaded!";
         QApplication::installTranslator(currentTranslator);
         QLocale::setDefault(QLocale(action->text()));
