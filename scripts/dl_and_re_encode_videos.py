@@ -55,6 +55,70 @@ def copy_videos(videos, raw):
         print(f"Skipped {count} videos since they already exist in {raw}")
 
 
+
+def get_creation_time(video_path):
+    try:
+        # extract creation date from raw video with ffprobe:
+        # ffprobe -show_data -hide_banner {filename}
+        ffprobe_output = subprocess.run([
+            "/usr/bin/ffprobe",
+            "-show_data",
+            "-hide_banner",
+            video_path
+        ], capture_output=True).stderr.decode("utf-8").split("\n")
+        creation_time_str = next(line for line in ffprobe_output if "creation_time" in line).split(": ")[1]
+        #2024-04-04T19:10:00.000000Z
+        #to datetime object
+        creation_time_utc = datetime.fromisoformat(creation_time_str)
+        #print(f"Creation time   UTC: {creation_time_utc.strftime('%Y-%m-%d %H:%M:%S')}")
+        creation_time_local = creation_time_utc.astimezone(tz.tzlocal())
+        #print(f"Creation time local: {creation_time_local.strftime('%Y-%m-%d %H:%M:%S')}")
+        creation_time = creation_time_local.strftime('%Y-%m-%d_%H-%M-%S')
+    except:
+        print(os.stat(video_path))
+
+        #stat /media/cnardi/0123-4567/PRIVATE/M4ROOT/CLIP/20240404_C0117.MP4
+        #  File: /media/cnardi/0123-4567/PRIVATE/M4ROOT/CLIP/20240404_C0117.MP4
+        #  Size: 201603414       Blocks: 394240     IO Block: 262144 regular file
+        #Device: 8,1     Inode: 19407       Links: 1
+        #Access: (0755/-rwxr-xr-x)  Uid: ( 1000/  cnardi)   Gid: ( 1000/  cnardi)
+        #Access: 2024-04-04 21:29:06.000000000 +0200
+        #Modify: 2024-04-04 23:28:25.000000000 +0200
+        #Change: 2024-04-04 23:28:25.000000000 +0200
+        # Birth: 2024-04-04 23:28:25.000000000 +0200
+        #
+        #stat /home/cnardi/Pictures/SONY\ ZV-E1_raw/20240404_C0117.MP4
+        #  File: /home/cnardi/Pictures/SONY ZV-E1_raw/20240404_C0117.MP4
+        #  Size: 201603414       Blocks: 393760     IO Block: 4096   regular file
+        #Device: 259,6   Inode: 1607420     Links: 1
+        #Access: (0755/-rwxr-xr-x)  Uid: ( 1000/  cnardi)   Gid: ( 1000/  cnardi)
+        #Access: 2024-04-04 21:29:07.267463100 +0200
+        #Modify: 2024-04-04 23:28:25.000000000 +0200
+        #Change: 2024-04-04 21:29:07.097301400 +0200
+        # Birth: -
+        #
+        # The actual shoot time is 21:28 (Paris UTC+2 DST ON) = 19:28 UTC
+
+        mtime = datetime.fromtimestamp(os.path.getmtime(video_path))
+        mtime.replace(tzinfo=tz.tzlocal())
+        creation_time = mtime.astimezone(tz.tzutc()).strftime('%Y-%m-%d_%H-%M-%S')
+    return creation_time
+
+
+def re_encode_video(video_path, output_video_path, crf=25, preset="slow"):
+
+    print(f"Re-encoding video {video_path} to {output_video_path}")
+    # ffmpeg -i input.mp4 -c:v libx265 -crf 22 -preset slow -c:a aac -b:a 256k output.mp4
+    subprocess.run([
+        "ssh", 
+        "192.168.1.102",
+        "bash",
+        "-c",
+        f'sudo mount 192.168.1.158:/home/cnardi/Data /home/cnardi/Data ; ffmpeg -y -i "{video_path}" -map_metadata 0 -c:v libx265 -crf {crf} -preset {preset} -c:a aac -b:a 256k "{output_video_path}"'
+    ])
+    os.utime(output_video_path, (os.stat(video_path).st_atime, os.stat(video_path).st_mtime))
+
+
 # re-encode videos to x265 high quality
 def re_encode_videos(raw, output, keep_raw):
     # Re-encode all the videos to the output path
@@ -67,51 +131,8 @@ def re_encode_videos(raw, output, keep_raw):
                 os.makedirs(os.path.dirname(tmp_file), exist_ok=True)
                 os.makedirs(os.path.dirname(done_file), exist_ok=True)
                 print(f"Processing video {raw_video_path}")
-                try:
-                    # extract creation date from raw video with ffprobe:
-                    # ffprobe -show_data -hide_banner {filename}
-                    ffprobe_output = subprocess.run([
-                        "/usr/bin/ffprobe",
-                        "-show_data",
-                        "-hide_banner",
-                        raw_video_path
-                    ], capture_output=True).stderr.decode("utf-8").split("\n")
-                    creation_time_str = next(line for line in ffprobe_output if "creation_time" in line).split(": ")[1]
-                    #2024-04-04T19:10:00.000000Z
-                    #to datetime object
-                    creation_time_utc = datetime.fromisoformat(creation_time_str)
-                    #print(f"Creation time   UTC: {creation_time_utc.strftime('%Y-%m-%d %H:%M:%S')}")
-                    creation_time_local = creation_time_utc.astimezone(tz.tzlocal())
-                    #print(f"Creation time local: {creation_time_local.strftime('%Y-%m-%d %H:%M:%S')}")
-                    creation_time = creation_time_local.strftime('%Y-%m-%d_%H-%M-%S')
-                except:
-                    print(os.stat(raw_video_path))
 
-                    #stat /media/cnardi/0123-4567/PRIVATE/M4ROOT/CLIP/20240404_C0117.MP4
-                    #  File: /media/cnardi/0123-4567/PRIVATE/M4ROOT/CLIP/20240404_C0117.MP4
-                    #  Size: 201603414       Blocks: 394240     IO Block: 262144 regular file
-                    #Device: 8,1     Inode: 19407       Links: 1
-                    #Access: (0755/-rwxr-xr-x)  Uid: ( 1000/  cnardi)   Gid: ( 1000/  cnardi)
-                    #Access: 2024-04-04 21:29:06.000000000 +0200
-                    #Modify: 2024-04-04 23:28:25.000000000 +0200
-                    #Change: 2024-04-04 23:28:25.000000000 +0200
-                    # Birth: 2024-04-04 23:28:25.000000000 +0200
-                    #
-                    #stat /home/cnardi/Pictures/SONY\ ZV-E1_raw/20240404_C0117.MP4
-                    #  File: /home/cnardi/Pictures/SONY ZV-E1_raw/20240404_C0117.MP4
-                    #  Size: 201603414       Blocks: 393760     IO Block: 4096   regular file
-                    #Device: 259,6   Inode: 1607420     Links: 1
-                    #Access: (0755/-rwxr-xr-x)  Uid: ( 1000/  cnardi)   Gid: ( 1000/  cnardi)
-                    #Access: 2024-04-04 21:29:07.267463100 +0200
-                    #Modify: 2024-04-04 23:28:25.000000000 +0200
-                    #Change: 2024-04-04 21:29:07.097301400 +0200
-                    # Birth: -
-                    #
-                    # The actual shoot time is 21:28 (Paris UTC+2 DST ON) = 19:28 UTC
-
-                    mtime = datetime.fromtimestamp(os.path.getmtime(raw_video_path))
-                    mtime.replace(tzinfo=tz.tzlocal())
-                    creation_time = mtime.astimezone(tz.tzutc()).strftime('%Y-%m-%d_%H-%M-%S')
+                creation_time = get_creation_time(raw_video_path)
 
                 #print(f"Creation time: {creation_time}")
                 creation_date = creation_time.split("_")[0]
@@ -133,18 +154,7 @@ def re_encode_videos(raw, output, keep_raw):
                         exit(1)
                     print(f"Re-encoding video {raw_video_path} to {output_filepath}")
 
-                    # ffmpeg -i input.mp4 -c:v libx265 -crf 22 -preset slow -c:a aac -b:a 256k output.mp4
-                    subprocess.run([
-                        "ffmpeg",
-                        "-y",
-                        "-i", raw_video_path,
-                        "-map_metadata", "0",
-                        "-c:v", "libx265",
-                        "-crf", crf,
-                        "-preset", preset,
-                        "-c:a", "aac",
-                        "-b:a", "256k",
-                        tmp_file])
+                    re_encode_video(raw_video_path, tmp_file, crf, preset)
                     os.rename(tmp_file, output_filepath)
                     os.utime(output_filepath, (os.stat(raw_video_path).st_atime, os.stat(raw_video_path).st_mtime))
                     # mark as done
