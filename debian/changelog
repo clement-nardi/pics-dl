@@ -1,3 +1,9 @@
+pics-dl (0.7.1-0) mantic; urgency=medium
+
+  * Adapt to Ubuntu 24.04
+
+ -- Clement Nardi <clement@nardi.fr>  Fri, 07 Jun 2024 12:41:21 +0200
+
 pics-dl (0.7.0-1) mantic; urgency=medium
 
   * Adapt to QT 6

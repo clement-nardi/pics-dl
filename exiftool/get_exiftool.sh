@@ -1,12 +1,14 @@
+#!/bin/bash
+
 echo $0
-current_dir=`pwd`
-script_dir=$current_dir/`dirname $0`/
-script_dir=`cd $script_dir;pwd`
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 echo current_dir=$current_dir
-echo script_dir=$script_dir
+echo SCRIPT_DIR=$SCRIPT_DIR
 echo 1=$1
 
-cd $script_dir
+cd $SCRIPT_DIR
 
 missingPerlPackage=0;
 
@@ -39,7 +41,7 @@ fi
 
 if [ ! -f $1/exiftool.exe.config ]; then
 	echo "Copying exiftool.exe.config into target directory"
-	cp $script_dir/exiftool.exe.config $1/
+	cp $SCRIPT_DIR/exiftool.exe.config $1/
 fi
 if [ ! -f $1/exiftool.exe.config ]; then
 	echo "Unable to copy exiftool.exe.config into $1/ ..."

@@ -31,19 +31,19 @@ DESTDIR = bin
 
 MAJOR=0
 MINOR=7
-PATCH=0
+PATCH=1
 
 
 !contains(BUILD_NUMBER_UPDATE,false) {
     rcfile.target = PicsDL.rc
-    rcfile.commands = ../PicsDL/set_version_numbers.sh \"$$MAJOR\" \"$$MINOR\" \"$$PATCH\"
+    rcfile.commands = \"$$PWD/set_version_numbers.sh\" \"$$MAJOR\" \"$$MINOR\" \"$$PATCH\"
     QMAKE_EXTRA_TARGETS += rcfile
     PRE_TARGETDEPS += PicsDL.rc
 }
-BUILD=$$cat(../PicsDL/build_number.txt)
+BUILD=$$cat($$PWD/build_number.txt)
 
 exiftool.target = exiftool_app
-exiftool.commands = ../exiftool/get_exiftool.sh \"$$OUT_PWD/$$DESTDIR\"
+exiftool.commands = $$PWD/../exiftool/get_exiftool.sh \"$$OUT_PWD/$$DESTDIR\"
 QMAKE_EXTRA_TARGETS += exiftool
 PRE_TARGETDEPS += exiftool_app
 
@@ -156,7 +156,7 @@ win32 {
     LIBS        += -LC:/Strawberry/perl/bin -lperl520
 }
 unix:!mac {
-    INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/perl/5.36.0/CORE/"
+    INCLUDEPATH += "/usr/lib/x86_64-linux-gnu/perl/5.38/CORE/"
     LIBS        += -L/usr/lib/ -lperl
 }
 mac {
@@ -182,7 +182,7 @@ INSTALLS += binaries
 ########## Translations ############
 
 lrelease.target = qm_files
-lrelease.commands = lrelease ../PicsDL/PicsDL.pro; \
+lrelease.commands = lrelease $$PWD/PicsDL.pro; \
                     cp $$PWD/resources/Translations/*.qm $$DESTDIR/
 QMAKE_EXTRA_TARGETS += lrelease
 PRE_TARGETDEPS += qm_files
@@ -190,4 +190,4 @@ PRE_TARGETDEPS += qm_files
 TRANSLATIONS = resources/Translations/picsdl_fr.ts \
                resources/Translations/picsdl_blank_translation.ts
 
-QMAKE_POST_LINK += lupdate ../PicsDL/PicsDL.pro 2> /dev/null
+QMAKE_POST_LINK += lupdate $$PWD/PicsDL.pro 2> /dev/null

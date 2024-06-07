@@ -45,6 +45,9 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     case QtDebugMsg:
         prefix = "Debug   ";
         break;
+    case QtInfoMsg:
+        prefix = "Info    ";
+        break;
     case QtWarningMsg:
         prefix = "Warning ";
         break;

@@ -2,3 +2,4 @@ build*/
 **/.DS_Store
 *.qm
 Thumbs.db
+**/__pycache__
