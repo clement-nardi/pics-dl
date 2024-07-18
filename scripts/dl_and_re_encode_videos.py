@@ -108,14 +108,44 @@ def get_creation_time(video_path):
 def re_encode_video(video_path, output_video_path, crf=25, preset="slow"):
 
     print(f"Re-encoding video {video_path} to {output_video_path}")
-    # ffmpeg -i input.mp4 -c:v libx265 -crf 22 -preset slow -c:a aac -b:a 256k output.mp4
-    subprocess.run([
-        "ssh", 
-        "192.168.1.102",
-        "bash",
-        "-c",
-        f'sudo mount 192.168.1.158:/home/cnardi/Data /home/cnardi/Data ; ffmpeg -y -i "{video_path}" -map_metadata 0 -c:v libx265 -crf {crf} -preset {preset} -c:a aac -b:a 256k "{output_video_path}"'
-    ])
+
+    # probe input file to get audio bitrate
+    # ffprobe -v error -select_streams a:0 -show_entries stream=bit_rate -of default=noprint_wrappers=1:nokey=1 input.mp4
+    audio_bitrate = subprocess.run([
+        "/usr/bin/ffprobe",
+        "-v", "error",
+        "-select_streams", "a:0",
+        "-show_entries", "stream=bit_rate",
+        "-of", "default=noprint_wrappers=1:nokey=1",
+        video_path
+    ], capture_output=True).stdout.decode("utf-8").strip()
+    print(f"Audio bitrate: {audio_bitrate}")
+    if audio_bitrate == "":
+        print(" -> no audio stream found")
+        audio_options = "-an"
+    elif int(audio_bitrate) > 256000:
+        print(f" -> it's more than 256KB/s, re-encoding in AAC 256KB/s")
+        audio_options = "-c:a aac -b:a 256k"
+    else:
+        print(f" -> it's less than 256KB/s, copying audio")
+        audio_options = "-c:a copy"
+
+
+    command = f'ffmpeg -y -i "{video_path}" -map 0 -c copy -copy_unknown -map_metadata 0 -c:v libx265 -crf {crf} -preset {preset} -tune fastdecode {audio_options} "{output_video_path}"'
+    print(command)
+    remote = False
+    if remote:
+        subprocess.run([
+            "ssh", 
+            "192.168.1.102",
+            command
+        ])
+    else:
+        subprocess.run([
+            "bash",
+            "-c",
+            command
+        ])
     os.utime(output_video_path, (os.stat(video_path).st_atime, os.stat(video_path).st_mtime))
 
 
@@ -126,7 +156,7 @@ def re_encode_videos(raw, output, keep_raw):
         for file in files:
             if file.lower().endswith(".mp4"):
                 raw_video_path = os.path.join(root, file)
-                tmp_file = os.path.join(root, ".tmp", file)
+                tmp_file = os.path.join(root, ".tmp", file + ".mov")
                 done_file = os.path.join(root, ".done", f"{file}.done")
                 os.makedirs(os.path.dirname(tmp_file), exist_ok=True)
                 os.makedirs(os.path.dirname(done_file), exist_ok=True)
@@ -146,7 +176,7 @@ def re_encode_videos(raw, output, keep_raw):
                 crf="25"
                 preset="slow"
 
-                output_filename = f"{os.path.splitext(file)[0]}_{crf}{preset}{os.path.splitext(file)[1]}"
+                output_filename = f"{os.path.splitext(file)[0]}_{crf}{preset}.mov"
                 output_filepath = os.path.join(output_video_folder, output_filename)
                 if not os.path.exists(output_filepath) and not os.path.exists(done_file):
                     if os.path.exists(tmp_file):
@@ -181,6 +211,8 @@ if __name__ == "__main__":
     raw = os.path.abspath(args.raw) if args.raw else (output + "_raw")
     keep_raw = args.keep_raw
     filter = args.filter.split(",")
+
+    print(args)
     
     if not os.path.exists(input):
         print("Input path does not exist")
