@@ -33,8 +33,9 @@ if echo; then
 	qtchooser -install QT6.4.2 /bin/qmake6
 	export QT_SELECT=QT6.4.2
 	qtchooser -print-env
-	
-	debuild -us -uc
+
+	export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
+	DEB_BUILD_OPTIONS="parallel=20" debuild -e LD_LIBRARY_PATH -us -uc
 
 else
 	echo "You need to commit you latest changes before creating the debian package"

@@ -144,7 +144,7 @@ win32|mac {
     INCLUDEPATH += $$PWD/../libexif/libexif-0.6.21/
     LIBS      += -L$$PWD/../libexif/libexif-0.6.21/libexif/.libs/ -lexif
 } else {
-    LIBS      += -lexif -ludev
+    LIBS += -ludev -lexif
 }
 
 QMAKE_CXXFLAGS += -DUSETHREADS -DUSEITHREADS -DMULTIPLICITY -DMAJOR=$$MAJOR -DMINOR=$$MINOR -DPATCH=$$PATCH -DBUILD=$$BUILD
