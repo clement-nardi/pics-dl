@@ -3,3 +3,4 @@ build*/
 *.qm
 Thumbs.db
 **/__pycache__
+qt-every**
